@@ -197,7 +197,7 @@ export function OutputDisplay({
   ];
 
   return (
-    <motion.div 
+    <motion.div
       className="space-y-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -205,9 +205,8 @@ export function OutputDisplay({
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h3 className="text-lg font-semibold">Output</h3>
           {output && !isProcessing && (
-            <motion.div 
+            <motion.div
               className="flex gap-1"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
