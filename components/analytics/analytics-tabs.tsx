@@ -9,7 +9,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Shield, Network, Activity, LineChart, BarChart, Clock, AlertTriangle, Target, BarChart as ChartBar } from 'lucide-react';
+import { Brain, Shield, Network, Activity, LineChart, BarChart, Clock, AlertTriangle, Target, BarChart as ChartBar, Layers } from 'lucide-react';
 import { UsagePatterns } from './usage-patterns';
 import { ResourceUtilization } from './resource-utilization';
 import { CostAnalysis } from './cost-analysis';
@@ -22,6 +22,7 @@ import { APIGateway } from './api-gateway';
 import { SystemHealth } from './system-health';
 import { ModelComparison } from './model-comparison';
 import { AIScorecard } from './ai-scorecard';
+import { NeuralActivityMap } from './neural-activity-map';
 
 const tabs = [
   {
@@ -93,6 +94,13 @@ const tabs = [
     icon: Activity,
     component: SystemHealth,
     description: 'Real-time Recharts line graphs with 2-second updates displaying CPU, memory, disk, and network utilisation'
+  },
+  {
+    id: 'neural-map',
+    label: 'Neural Activity Map',
+    icon: Layers,
+    component: NeuralActivityMap,
+    description: 'Canvas-based 3D visualisation of neural network layer activations with real-time neuron firing patterns and data flow animation'
   }
 ];
 
