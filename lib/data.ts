@@ -36,7 +36,7 @@ type NeuralEdge = {
  * @param {number} [points=24] - Number of data points to generate (default: 24 hours)
  * @return {Array<{timestamp: string, gpt4: number, claude: number, deepseek: number, perplexity: number}>}
  */
-export function generateTimeSeriesData(points = 24) {
+export function generateAIModelTimeSeries(points = 24) {
   const data = [];
   const now = Date.now();
   const hour = 3600000;
@@ -48,6 +48,27 @@ export function generateTimeSeriesData(points = 24) {
       claude: Math.floor(Math.random() * 700) + 500,    // Claude: 500-1200ms
       deepseek: Math.floor(Math.random() * 600) + 400,  // DeepSeek: 400-1000ms
       perplexity: Math.floor(Math.random() * 900) + 700, // Perplexity: 700-1600ms
+    });
+  }
+  return data;
+}
+
+/**
+ * Generates generic time series data with three value dimensions for analytics
+ * @param {number} [points=24] - Number of data points to generate (default: 24 hours)
+ * @return {Array<{timestamp: string, value1: number, value2: number, value3: number}>}
+ */
+export function generateTimeSeriesData(points = 24) {
+  const data = [];
+  const now = Date.now();
+  const hour = 3600000;
+
+  for (let i = 0; i < points; i++) {
+    data.push({
+      timestamp: new Date(now - (points - 1 - i) * hour).toISOString(),
+      value1: Math.floor(Math.random() * 1000) + 500,
+      value2: Math.floor(Math.random() * 800) + 300,
+      value3: Math.floor(Math.random() * 600) + 200,
     });
   }
   return data;

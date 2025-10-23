@@ -17,18 +17,18 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { generateTimeSeriesData } from '@/lib/data';
+import { generateAIModelTimeSeries } from '@/lib/data';
 
 /**
  * @constructor
  */
 export default function AdvancedChart() {
-  const [data, setData] = useState(generateTimeSeriesData());
+  const [data, setData] = useState(generateAIModelTimeSeries());
 
   /** @constructs */
   useEffect(() => {
     const interval = setInterval(() => {
-      setData(generateTimeSeriesData());
+      setData(generateAIModelTimeSeries());
     }, 5000);
 
     return () => clearInterval(interval);

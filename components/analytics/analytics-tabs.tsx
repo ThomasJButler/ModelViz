@@ -140,6 +140,9 @@ export function AnalyticsTabs() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2 }}
               >
+                <div className="mb-4 p-3 rounded-lg bg-matrix-primary/5 border border-matrix-primary/20">
+                  <p className="text-sm text-foreground/70">{tab.description}</p>
+                </div>
                 <Component />
               </motion.div>
             );
