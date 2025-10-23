@@ -1,3 +1,10 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Tracks AI model health status including online/offline state, latency metrics,
+ *              and uptime percentages. Uses mock data for demo purposes with simulated updates.
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -12,6 +19,8 @@ interface ModelHealth {
   lastChecked: Date;
 }
 
+// Mock health data for demo mode
+// Production would fetch from real monitoring service
 const mockModelStatus: Record<string, ModelHealth> = {
   'gpt-4': {
     id: 'gpt-4',
@@ -71,11 +80,21 @@ const mockModelStatus: Record<string, ModelHealth> = {
   }
 };
 
+/**
+ * Monitors model health and provides status updates
+ * @param {string} modelId - Unique identifier for the AI model
+ * @return {{
+ *   health: ModelHealth | null
+ * }}
+ */
 export function useModelStatus(modelId: string) {
   const [health, setHealth] = useState<ModelHealth | null>(null);
 
+  /**
+   * @listens modelId - Reinitialises monitoring when model changes
+   */
   useEffect(() => {
-    // Initialize with mock data
+    // Initialise with mock data or offline status if model not found
     setHealth(mockModelStatus[modelId] || {
       id: modelId,
       status: 'offline',
@@ -84,12 +103,14 @@ export function useModelStatus(modelId: string) {
       lastChecked: new Date(),
     });
 
-    // Simulate status updates
+    // Simulate latency fluctuations every 5 seconds
+    // Real implementation would poll actual monitoring endpoint
     const interval = setInterval(() => {
       setHealth((prev) => {
         if (!prev) return null;
         return {
           ...prev,
+          // Simulated latency variation of ±1ms per update
           latency: Math.max(1, prev.latency + (Math.random() - 0.5) * 2),
           lastChecked: new Date(),
         };

@@ -1,16 +1,36 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Custom React hooks for UI interactions including magnetic cursor effects,
+ *              parallax scrolling, scroll reveals, keyboard shortcuts, drag and drop,
+ *              ripple effects, hover delays, counter animations, and typewriter effects
+ */
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 
-// Hook for magnetic cursor effect
+/**
+ * Creates magnetic cursor effect that attracts elements towards mouse position
+ * @param {number} [strength=0.3] - Magnetic pull strength (0-1 range recommended)
+ * @return {{
+ *   elementRef: React.RefObject<HTMLElement>,
+ *   x: MotionValue<number>,
+ *   y: MotionValue<number>
+ * }}
+ */
 export function useMagneticCursor(strength = 0.3) {
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
   const elementRef = useRef<HTMLElement>(null);
 
+  // Spring configuration provides smooth damped animation
   const springConfig = { damping: 15, stiffness: 150 };
   const x = useSpring(cursorX, springConfig);
   const y = useSpring(cursorY, springConfig);
 
+  /**
+   * @constructs - Initialises mouse tracking and magnetic effect calculations
+   */
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
@@ -20,14 +40,17 @@ export function useMagneticCursor(strength = 0.3) {
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
+      // Calculate distance from cursor to element centre
       const distanceX = e.clientX - centerX;
       const distanceY = e.clientY - centerY;
 
+      // Apply magnetic pull based on strength parameter
       cursorX.set(distanceX * strength);
       cursorY.set(distanceY * strength);
     };
 
     const handleMouseLeave = () => {
+      // Reset position when cursor leaves element
       cursorX.set(0);
       cursorY.set(0);
     };
@@ -44,11 +67,20 @@ export function useMagneticCursor(strength = 0.3) {
   return { elementRef, x, y };
 }
 
-// Hook for parallax effect
+/**
+ * Creates parallax scrolling effect with configurable offset
+ * @param {number} [offset=50] - Maximum parallax offset in pixels
+ * @return {MotionValue<number>} Transformed Y position for parallax effect
+ */
 export function useParallax(offset = 50) {
   const [scrollY, setScrollY] = useState(0);
+
+  // Transform scroll position to parallax offset
   const parallaxY = useTransform(useMotionValue(scrollY), [0, 1000], [0, -offset]);
 
+  /**
+   * @constructs - Initialises scroll position tracking
+   */
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -61,11 +93,21 @@ export function useParallax(offset = 50) {
   return parallaxY;
 }
 
-// Hook for intersection observer animations
+/**
+ * Reveals element when scrolled into viewport using IntersectionObserver
+ * @param {number} [threshold=0.1] - Percentage of element visibility to trigger reveal (0-1)
+ * @return {{
+ *   elementRef: React.RefObject<HTMLElement>,
+ *   isVisible: boolean
+ * }}
+ */
 export function useScrollReveal(threshold = 0.1) {
   const [isVisible, setIsVisible] = useState(false);
   const elementRef = useRef<HTMLElement>(null);
 
+  /**
+   * @listens threshold - Re-initialises observer when threshold changes
+   */
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
@@ -74,6 +116,7 @@ export function useScrollReveal(threshold = 0.1) {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+          // Unobserve after first reveal to prevent re-triggering
           observer.unobserve(element);
         }
       },
@@ -87,11 +130,21 @@ export function useScrollReveal(threshold = 0.1) {
   return { elementRef, isVisible };
 }
 
-// Hook for keyboard shortcuts
+/**
+ * Manages keyboard shortcuts with common command key combinations
+ * @return {{
+ *   activeShortcut: string | null,
+ *   setActiveShortcut: Function
+ * }}
+ */
 export function useKeyboardShortcuts() {
   const [activeShortcut, setActiveShortcut] = useState<string | null>(null);
 
+  /**
+   * @constructs - Initialises global keyboard event listeners
+   */
   useEffect(() => {
+    // Common keyboard shortcuts for application navigation
     const shortcuts: Record<string, () => void> = {
       'cmd+k': () => setActiveShortcut('search'),
       'cmd+/': () => setActiveShortcut('help'),
@@ -101,7 +154,7 @@ export function useKeyboardShortcuts() {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = `${e.metaKey ? 'cmd+' : ''}${e.key.toLowerCase()}`;
-      
+
       if (shortcuts[key]) {
         e.preventDefault();
         shortcuts[key]();
@@ -115,7 +168,19 @@ export function useKeyboardShortcuts() {
   return { activeShortcut, setActiveShortcut };
 }
 
-// Hook for drag and drop
+/**
+ * Manages drag and drop interactions with zone-based drop targets
+ * @return {{
+ *   isDragging: boolean,
+ *   draggedItem: any,
+ *   dropZone: string | null,
+ *   handleDragStart: Function,
+ *   handleDragEnd: Function,
+ *   handleDragEnter: Function,
+ *   handleDragLeave: Function,
+ *   handleDrop: Function
+ * }}
+ */
 export function useDragAndDrop() {
   const [isDragging, setIsDragging] = useState(false);
   const [draggedItem, setDraggedItem] = useState<any>(null);
@@ -162,7 +227,13 @@ export function useDragAndDrop() {
   };
 }
 
-// Hook for ripple effect
+/**
+ * Creates material design ripple effect on click
+ * @return {{
+ *   ripples: Array<{x: number, y: number, id: number}>,
+ *   addRipple: Function
+ * }}
+ */
 export function useRipple() {
   const [ripples, setRipples] = useState<Array<{ x: number; y: number; id: number }>>([]);
 
@@ -174,6 +245,7 @@ export function useRipple() {
 
     setRipples(prev => [...prev, { x, y, id }]);
 
+    // Auto-remove ripple after animation completes (600ms)
     setTimeout(() => {
       setRipples(prev => prev.filter(ripple => ripple.id !== id));
     }, 600);
@@ -182,7 +254,15 @@ export function useRipple() {
   return { ripples, addRipple };
 }
 
-// Hook for hover card delay
+/**
+ * Delays hover state change to prevent flickering on quick mouse movements
+ * @param {number} [delay=300] - Delay in milliseconds before hover activates
+ * @return {{
+ *   isHovered: boolean,
+ *   handleMouseEnter: Function,
+ *   handleMouseLeave: Function
+ * }}
+ */
 export function useHoverDelay(delay = 300) {
   const [isHovered, setIsHovered] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout>();
@@ -203,10 +283,18 @@ export function useHoverDelay(delay = 300) {
   return { isHovered, handleMouseEnter, handleMouseLeave };
 }
 
-// Hook for smooth counter animation
+/**
+ * Animates number from current value to target with smooth easing
+ * @param {number} target - Target number to animate towards
+ * @param {number} [duration=2000] - Animation duration in milliseconds
+ * @return {number} Current animated count value
+ */
 export function useCounter(target: number, duration = 2000) {
   const [count, setCount] = useState(0);
 
+  /**
+   * @listens target, duration - Re-animates counter when target or duration changes
+   */
   useEffect(() => {
     const startTime = Date.now();
     const startValue = count;
@@ -215,10 +303,10 @@ export function useCounter(target: number, duration = 2000) {
     const animate = () => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
-      // Easing function
+
+      // Exponential easing out for smooth deceleration
       const easeOutExpo = 1 - Math.pow(2, -10 * progress);
-      
+
       setCount(Math.round(startValue + difference * easeOutExpo));
 
       if (progress < 1) {
@@ -232,11 +320,22 @@ export function useCounter(target: number, duration = 2000) {
   return count;
 }
 
-// Hook for typewriter effect
+/**
+ * Creates typewriter effect for text animation
+ * @param {string} text - Text to display with typewriter effect
+ * @param {number} [speed=50] - Typing speed in milliseconds per character
+ * @return {{
+ *   displayedText: string,
+ *   isTyping: boolean
+ * }}
+ */
 export function useTypewriter(text: string, speed = 50) {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
 
+  /**
+   * @listens text, speed - Restarts typewriter animation when text or speed changes
+   */
   useEffect(() => {
     setDisplayedText('');
     setIsTyping(true);

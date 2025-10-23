@@ -1,175 +1,98 @@
-# AI Comparison Showcase 🤖
+# AI Comparison Showcase
 
-> An interactive tool for comparing multiple AI models side by side with real-time performance metrics and visualizations.
+Interactive tool for comparing OpenAI, Anthropic, DeepSeek, and Perplexity models side by side with real-time performance metrics and visualisations.
 
-## Overview
+## What It Does
 
-AI Comparison Showcase is a portfolio project demonstrating advanced AI model comparison capabilities. It allows users to test and compare various AI models including OpenAI's GPT, Anthropic's Claude, DeepSeek, and Perplexity models with real-time performance metrics and beautiful visualizations.
+Portfolio project demonstrating multi-AI model comparison. Test different models with the same prompt, compare response times, token usage, and export results. Includes 3D network visualisations and performance analytics.
 
 <img width="1329" height="743" alt="image" src="https://github.com/user-attachments/assets/f7c38e8f-5a41-40a7-809a-65745dfc6bc0" />
 
-## 🚀 Features
+## Installation
 
-### Core Functionality
-- **Multi-Model AI Playground**
-  - Support for OpenAI, Anthropic, DeepSeek, and Perplexity models
-  - Real-time response streaming
-  - Multiple input formats (JSON, text, code)
-  - Performance metrics tracking
-
-- **Model Comparison**
-  - Side-by-side model testing
-  - Response time analysis
-  - Token usage tracking
-  - Accuracy metrics
-  - Export comparison results
-
-- **Advanced Visualizations**
-  - Real-time performance charts
-  - Network analysis graphs
-  - 3D force-directed graphs
-  - Token usage heatmaps
-
-- **Modern UI/UX**
-  - Matrix-inspired design system
-  - Smooth animations with Framer Motion
-  - Responsive layouts
-  - Dark mode optimized
-
-## 🛠️ Technology Stack
-
-### Frontend
-- **Next.js 14** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **Framer Motion** - Smooth animations
-- **Recharts** - Data visualization
-- **Monaco Editor** - Code editing
-- **Three.js** - 3D visualizations
-
-### AI Integration
-- **OpenAI API** - GPT models
-- **Anthropic API** - Claude models
-- **DeepSeek API** - DeepSeek models
-- **Perplexity API** - Search-enhanced models
-
-### UI Components
-- **shadcn/ui** - Component system
-- **Radix UI** - Accessible components
-- **Lucide Icons** - Icon library
-
-## 🏃‍♂️ Getting Started
-
-### Prerequisites
-- Node.js 18+ and npm
-- API keys for AI providers (optional, demo mode available)
-
-### Installation
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/[your-username]/ai-comparison-showcase.git
+git clone https://github.com/ThomasJButler/ai-comparison-showcase.git
 cd ai-comparison-showcase
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
-
-3. Set up environment variables:
-```bash
 cp .env.example .env.local
-```
-
-4. Configure your AI provider API keys in `.env.local` (optional):
-```env
-OPENAI_API_KEY=your_openai_key
-ANTHROPIC_API_KEY=your_anthropic_key
-DEEPSEEK_API_KEY=your_deepseek_key
-PERPLEXITY_API_KEY=your_perplexity_key
-```
-
-5. Run the development server:
-```bash
 npm run dev
 ```
 
-6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
-## 📁 Project Structure
+## Environment Variables
 
-```
-├── app/              # Next.js app directory
-│   ├── playground/   # AI testing playground
-│   ├── models/       # Model management
-│   ├── analytics/    # Analytics dashboard
-│   └── profile/      # User settings
-├── components/       # React components
-│   ├── ui/          # Reusable UI components
-│   └── visualizations/ # Data viz components
-├── lib/             # Utility libraries
-│   ├── api/         # API clients
-│   └── playground/  # Playground logic
-└── hooks/           # Custom React hooks
+API keys are optional - demo mode works without them:
+
+```env
+OPENAI_API_KEY=your_key_here
+ANTHROPIC_API_KEY=your_key_here
+DEEPSEEK_API_KEY=your_key_here
+PERPLEXITY_API_KEY=your_key_here
 ```
 
-## 🎨 Design System
+See [.env.example](.env.example) for feature flags and rate limiting configuration.
 
-The project uses a Matrix-inspired design system with:
-- Custom color palette with green accent colors
-- Monospace typography (JetBrains Mono)
-- Glowing effects and animations
-- Dark theme optimized
+## Tech Stack
 
-## 🧪 Testing
+**Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion
+**Visualisations**: Three.js, D3.js, Recharts
+**UI Components**: Radix UI, shadcn/ui
+**Code Editor**: Monaco Editor
 
-Run the test suite:
+## Key Features
+
+- Playground for testing AI models with JSON, text, or code input
+- Side-by-side model comparison with metrics
+- Model recommender based on use case
+- Custom model builder
+- 12+ visualisation types (3D graphs, heatmaps, network analysis)
+- Performance monitoring and analytics
+
+## Project Structure
+
+```
+app/              # Next.js pages (playground, models, analytics, dashboard)
+components/       # React components and visualisations
+lib/              # API clients, caching, analytics, performance monitoring
+hooks/            # Custom React hooks for animations and interactions
+```
+
+See [CLAUDE.md](CLAUDE.md) for architecture details and development guidance.
+
+## Testing
+
 ```bash
-npm test
+npm test                # Run test suite
+npm run test:coverage   # Coverage report
+npm run test:watch      # Watch mode
 ```
 
-Run tests with coverage:
+Coverage thresholds: 80% for branches, functions, lines, statements.
+
+## Building
+
 ```bash
-npm run test:coverage
+npm run build           # Production build
+npm start               # Start production server
+npm run analyze         # Analyse bundle size
 ```
 
-## 📦 Building for Production
+## Deployment
 
-Build the application:
-```bash
-npm run build
-```
+Optimised for Vercel. Bundle splitting configured for framework, UI, visualisations, and editor chunks. See [next.config.js](next.config.js) for webpack configuration.
 
-Start the production server:
-```bash
-npm start
-```
+## Common Issues
 
-## 🚀 Deployment
+- **Bundle size**: Visualisation components are dynamically imported - use `npm run analyze` to check
+- **API rate limits**: Demo mode activates when API keys missing
+- **TypeScript errors**: Run `npm run build` to check types
 
-The application can be deployed to:
-- Vercel (recommended for Next.js)
-- Netlify
-- AWS Amplify
-- Any Node.js hosting platform
+## Licence
 
-## 📝 License
+MIT - see [LICENSE](LICENSE)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Author
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 👨‍💻 Author
-
-**[Thomas Butler]**
-- Portfolio: [https://thomasjbutler.me]
-- GitHub: [https://github.com/ThomasJButler]
-
-## 🙏 Acknowledgments
-
-- Inspired by the need for better AI model comparison tools
-- Built as a portfolio project to showcase full-stack development skills
-- Special thanks to the open-source community
+Thomas Butler
+[thomasjbutler.me](https://thomasjbutler.me) | [GitHub](https://github.com/ThomasJButler)

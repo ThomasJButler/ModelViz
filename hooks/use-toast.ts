@@ -1,6 +1,13 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Toast notification system inspired by react-hot-toast. Manages toast lifecycle
+ *              including adding, updating, dismissing, and auto-removing notifications. Uses
+ *              reducer pattern for state management with global listener system.
+ */
+
 'use client';
 
-// Inspired by react-hot-toast library
 import * as React from 'react';
 
 import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
@@ -24,6 +31,10 @@ const actionTypes = {
 
 let count = 0;
 
+/**
+ * Generates sequential unique IDs for toast instances
+ * @return {string} Unique toast identifier
+ */
 function genId() {
   count = (count + 1) % Number.MAX_SAFE_INTEGER;
   return count.toString();
@@ -55,6 +66,10 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
+/**
+ * Schedules toast removal after configured delay
+ * @param {string} toastId - Toast identifier to remove
+ */
 const addToRemoveQueue = (toastId: string) => {
   if (toastTimeouts.has(toastId)) {
     return;
@@ -71,9 +86,16 @@ const addToRemoveQueue = (toastId: string) => {
   toastTimeouts.set(toastId, timeout);
 };
 
+/**
+ * Reducer managing toast state transitions
+ * @param {State} state - Current toast state
+ * @param {Action} action - State transition action
+ * @return {State} Updated state after action applied
+ */
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'ADD_TOAST':
+      // Limit enforced to prevent notification spam
       return {
         ...state,
         toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
@@ -90,8 +112,7 @@ export const reducer = (state: State, action: Action): State => {
     case 'DISMISS_TOAST': {
       const { toastId } = action;
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
+      // Side effect: schedule removal after dismiss animation completes
       if (toastId) {
         addToRemoveQueue(toastId);
       } else {
@@ -126,10 +147,14 @@ export const reducer = (state: State, action: Action): State => {
   }
 };
 
+// Global state management with observer pattern
 const listeners: Array<(state: State) => void> = [];
-
 let memoryState: State = { toasts: [] };
 
+/**
+ * Dispatches actions to all registered toast listeners
+ * @param {Action} action - State transition to broadcast
+ */
 function dispatch(action: Action) {
   memoryState = reducer(memoryState, action);
   listeners.forEach((listener) => {
@@ -139,6 +164,15 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, 'id'>;
 
+/**
+ * Creates and displays a toast notification
+ * @param {Toast} props - Toast configuration (title, description, variant, etc.)
+ * @return {{
+ *   id: string,
+ *   dismiss: Function,
+ *   update: Function
+ * }}
+ */
 function toast({ ...props }: Toast) {
   const id = genId();
 
@@ -168,9 +202,20 @@ function toast({ ...props }: Toast) {
   };
 }
 
+/**
+ * Hook for managing toast notifications within components
+ * @return {{
+ *   toasts: ToasterToast[],
+ *   toast: Function,
+ *   dismiss: Function
+ * }}
+ */
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState);
 
+  /**
+   * @constructs - Registers component as toast state listener
+   */
   React.useEffect(() => {
     listeners.push(setState);
     return () => {
