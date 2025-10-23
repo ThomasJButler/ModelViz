@@ -7,13 +7,14 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Code, Activity, Shield, Sparkles, Zap, Network, AlertTriangle, CheckCircle2, Timer, Braces, Terminal, Maximize2, Minimize2, Download, Share2, Loader2 } from 'lucide-react';
+import { Brain, Code, Activity, Shield, Sparkles, Zap, Network, AlertTriangle, CheckCircle2, Timer, Braces, Terminal, Maximize2, Minimize2, Download, Share2, Loader2, Settings } from 'lucide-react';
 import { ModelSelector } from '@/components/model-selector';
 import { CodeEditor } from '@/components/code-editor';
 import { OutputDisplay } from '@/components/output-display';
 import { PlaygroundGuide } from '@/components/playground-guide';
 import { ProviderSelector } from '@/components/provider-selector';
 import { EnhancedInput } from '@/components/enhanced-input';
+import { ApiConfigModal } from '@/components/settings/api-config-modal';
 import { getAvailableModels, type ModelOption, type ProviderGroupedModels } from '@/lib/playground/models';
 import { generatePlaygroundResponse, type PlaygroundRequest, type PlaygroundResponse } from '@/lib/playground/api-cached';
 
@@ -175,6 +176,7 @@ export default function PlaygroundPage() {
   const [output, setOutput] = useState<PlaygroundResponse | null>(null);
   const [showGuide, setShowGuide] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [isApiConfigOpen, setIsApiConfigOpen] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [metrics, setMetrics] = useState({
     requestCount: 0,
@@ -323,6 +325,15 @@ export default function PlaygroundPage() {
                 ) : (
                   <Maximize2 className="w-5 h-5" />
                 )}
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsApiConfigOpen(true)}
+                className="px-4 py-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary hover:bg-matrix-primary/20 transition-colors flex items-center gap-2"
+              >
+                <Settings className="w-4 h-4" />
+                API Config
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -608,6 +619,12 @@ export default function PlaygroundPage() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* API Configuration Modal */}
+      <ApiConfigModal
+        isOpen={isApiConfigOpen}
+        onClose={() => setIsApiConfigOpen(false)}
+      />
     </div>
   );
 }

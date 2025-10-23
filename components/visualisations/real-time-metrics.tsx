@@ -1,7 +1,7 @@
 /**
  * @author Tom Butler
  * @date 2025-10-23
- * @description Real-time system metrics visualisation displaying CPU, memory, and network usage
+ * @description Real-time AI performance metrics visualisation displaying token usage, request rates, costs, and success rates
  */
 
 "use client";
@@ -63,8 +63,7 @@ export default function RealTimeMetrics() {
           />
           <YAxis
             stroke="#666"
-            domain={[0, 100]}
-            tickFormatter={(value) => `${value}%`}
+            domain={[0, 'auto']}
           />
           <Tooltip
             contentStyle={{
@@ -77,27 +76,30 @@ export default function RealTimeMetrics() {
           <Legend />
           <Line
             type="monotone"
-            dataKey="cpu"
-            name="CPU Usage"
+            dataKey="tokenUsageRate"
+            name="Tokens/min"
             stroke="#00ff00"
             dot={false}
             strokeWidth={2}
+            yAxisId={0}
           />
           <Line
             type="monotone"
-            dataKey="memory"
-            name="Memory Usage"
+            dataKey="requestsPerMin"
+            name="Requests/min"
             stroke="#00ffff"
             dot={false}
             strokeWidth={2}
+            yAxisId={0}
           />
           <Line
             type="monotone"
-            dataKey="network"
-            name="Network Usage"
+            dataKey="successRate"
+            name="Success Rate (%)"
             stroke="#ff00ff"
             dot={false}
             strokeWidth={2}
+            yAxisId={0}
           />
         </LineChart>
       </ResponsiveContainer>

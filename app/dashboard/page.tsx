@@ -7,27 +7,25 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Brain, 
-  LineChart, 
-  Network, 
-  Activity, 
-  Zap, 
-  Shield, 
-  Boxes, 
-  Trees as TreeStructure, 
-  Sparkles, 
-  Atom, 
-  EuroIcon as Neurons, 
-  Cpu,
-  Settings as SettingsIcon
+import {
+  Brain,
+  LineChart,
+  Network,
+  Activity,
+  Zap,
+  Shield,
+  Boxes,
+  Trees as TreeStructure,
+  Sparkles,
+  Atom,
+  EuroIcon as Neurons,
+  Cpu
 } from "lucide-react";
 import dynamic from 'next/dynamic';
 import { VisualisationLoader } from '@/components/visualisation-loader';
 import Loading from '../loading';
 import { analytics } from '@/lib/analytics';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { ApiConfigModal } from '@/components/settings/api-config-modal';
 
 // Dynamically import Visualisation components with loading states
 const AdvancedChart = dynamic(() => import('@/components/visualisations/advanced-chart'), {
@@ -96,8 +94,8 @@ const Visualisations = [
   },
   {
     id: 'api-network',
-    title: 'API Network',
-    description: 'Real-time visualization of API connections and data flow',
+    title: 'API Provider Network',
+    description: 'Interactive visualisation of AI provider connections and endpoint topology',
     icon: Network,
     component: EnhancedNetworkGraph
   },
@@ -117,8 +115,8 @@ const Visualisations = [
   },
   {
     id: 'advanced-chart',
-    title: 'Time Series Analysis',
-    description: 'Advanced time series Visualisation with real-time data updates',
+    title: 'Model Response Times',
+    description: 'Real-time comparison of AI model response latencies across providers',
     icon: LineChart,
     component: AdvancedChart
   },
@@ -138,8 +136,8 @@ const Visualisations = [
   },
   {
     id: 'real-time',
-    title: 'Real-time Metrics',
-    description: 'Live system metrics and performance monitoring',
+    title: 'AI Performance Metrics',
+    description: 'Live monitoring of token usage, request rates, and success metrics',
     icon: Zap,
     component: RealTimeMetrics
   },
@@ -173,7 +171,6 @@ export default function DashboardPage() {
   const [selectedTab, setSelectedTab] = useState(Visualisations[0].id);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [isApiConfigOpen, setIsApiConfigOpen] = useState(false);
 
   /** @constructs */
   useEffect(() => {
@@ -231,14 +228,6 @@ export default function DashboardPage() {
               Explore advanced data visualisations and insights
             </p>
           </div>
-          
-          <button
-            onClick={() => setIsApiConfigOpen(true)}
-            className="self-start md:self-auto flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-background hover:bg-card hover:border-matrix-primary/50 transition-all"
-          >
-            <SettingsIcon className="w-4 h-4 text-matrix-primary" />
-            <span>API Configuration</span>
-          </button>
         </motion.div>
 
         {/* Visualisation Tabs */}
@@ -327,12 +316,6 @@ export default function DashboardPage() {
           </motion.div>
         </ErrorBoundary>
       </div>
-      
-      {/* API Configuration Modal */}
-      <ApiConfigModal 
-        isOpen={isApiConfigOpen} 
-        onClose={() => setIsApiConfigOpen(false)} 
-      />
     </div>
   );
 }

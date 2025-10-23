@@ -1,7 +1,7 @@
 /**
  * @author Tom Butler
  * @date 2025-10-23
- * @description Advanced area chart visualisation displaying time-series data with multiple data streams
+ * @description Advanced area chart visualisation displaying AI model response times across GPT-4, Claude, DeepSeek, and Perplexity
  */
 
 "use client";
@@ -73,24 +73,24 @@ export default function AdvancedChart() {
           />
           <Area
             type="monotone"
-            dataKey="value1"
-            name="Base Load"
+            dataKey="deepseek"
+            name="DeepSeek"
             stroke="#00ff00"
             fillOpacity={1}
             fill="url(#gradient1)"
           />
           <Area
             type="monotone"
-            dataKey="value2"
-            name="API Calls"
+            dataKey="claude"
+            name="Claude"
             stroke="#00ffff"
             fillOpacity={1}
             fill="url(#gradient2)"
           />
           <Area
             type="monotone"
-            dataKey="value3"
-            name="Active Users"
+            dataKey="gpt4"
+            name="GPT-4"
             stroke="#ff00ff"
             fillOpacity={1}
             fill="url(#gradient3)"

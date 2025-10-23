@@ -1,8 +1,8 @@
 /**
  * @author Tom Butler
  * @date 2025-10-23
- * @description Mock data generators for visualisations and demo mode. Provides functions
- *              for generating time series, network graphs, neural networks, system metrics,
+ * @description Mock data generators for AI comparison visualisations and demo mode. Provides functions
+ *              for generating model response times, API provider networks, neural networks, AI performance metrics,
  *              and privacy-related data for dashboard components.
  */
 
@@ -32,9 +32,9 @@ type NeuralEdge = {
 };
 
 /**
- * Generates time series data with three value dimensions
+ * Generates AI model response time series data for GPT-4, Claude, DeepSeek, and Perplexity
  * @param {number} [points=24] - Number of data points to generate (default: 24 hours)
- * @return {Array<{timestamp: string, value1: number, value2: number, value3: number}>}
+ * @return {Array<{timestamp: string, gpt4: number, claude: number, deepseek: number, perplexity: number}>}
  */
 export function generateTimeSeriesData(points = 24) {
   const data = [];
@@ -44,60 +44,78 @@ export function generateTimeSeriesData(points = 24) {
   for (let i = 0; i < points; i++) {
     data.push({
       timestamp: new Date(now - (points - 1 - i) * hour).toISOString(),
-      value1: Math.floor(Math.random() * 1000) + 500,
-      value2: Math.floor(Math.random() * 800) + 300,
-      value3: Math.floor(Math.random() * 600) + 200,
+      gpt4: Math.floor(Math.random() * 800) + 600,      // GPT-4: 600-1400ms
+      claude: Math.floor(Math.random() * 700) + 500,    // Claude: 500-1200ms
+      deepseek: Math.floor(Math.random() * 600) + 400,  // DeepSeek: 400-1000ms
+      perplexity: Math.floor(Math.random() * 900) + 700, // Perplexity: 700-1600ms
     });
   }
   return data;
 }
 
 /**
- * Generates randomised system resource metrics
- * @return {{cpu: number, memory: number, network: number, disk: number}}
+ * Generates randomised AI performance metrics for real-time monitoring
+ * @return {{tokenUsageRate: number, requestsPerMin: number, costPerHour: number, successRate: number}}
  */
 export function generateSystemMetrics() {
   return {
-    cpu: Math.random() * 100,
-    memory: Math.random() * 100,
-    network: Math.random() * 100,
-    disk: Math.random() * 100,
+    tokenUsageRate: Math.floor(Math.random() * 5000) + 3000,  // 3000-8000 tokens/min
+    requestsPerMin: Math.floor(Math.random() * 150) + 50,     // 50-200 requests/min
+    costPerHour: parseFloat((Math.random() * 2 + 0.5).toFixed(2)),  // £0.50-£2.50/hour
+    successRate: parseFloat((98 + Math.random() * 1.8).toFixed(1)), // 98.0-99.8% success
   };
 }
 
 /**
- * Generates network graph data with nodes and links
- * @param {number} [nodes=20] - Number of nodes to generate
+ * Generates AI provider network graph with API endpoints and connections
+ * @param {number} [endpoints=20] - Number of API endpoints to generate
  * @param {number} [density=0.3] - Connection density (0-1 range)
  * @return {{nodes: NodeItem[], links: LinkItem[]}}
  */
-export function generateNetworkData(nodes = 20, density = 0.3) {
+export function generateNetworkData(endpoints = 20, density = 0.3) {
   const data = {
     nodes: [] as NodeItem[],
     links: [] as LinkItem[]
   };
 
-  // Generate nodes with random groups and values
-  for (let i = 0; i < nodes; i++) {
-    data.nodes.push({
-      id: `node-${i}`,
-      group: Math.floor(Math.random() * 3),
-      value: Math.random() * 100
-    });
-  }
+  const providers = ['OpenAI', 'Anthropic', 'DeepSeek', 'Perplexity'];
 
-  // Generate links based on density parameter
-  for (let i = 0; i < nodes; i++) {
-    const numConnections = Math.floor(Math.random() * (nodes * density));
-    for (let j = 0; j < numConnections; j++) {
-      const target = Math.floor(Math.random() * nodes);
-      if (target !== i) {
-        data.links.push({
-          source: `node-${i}`,
-          target: `node-${target}`,
-          value: Math.random()
-        });
-      }
+  // Core provider nodes (group 0)
+  providers.forEach((provider, i) => {
+    data.nodes.push({
+      id: provider,
+      group: 0,
+      value: Math.floor(Math.random() * 50) + 50 // Higher value for core nodes
+    });
+  });
+
+  // Generate endpoint nodes connected to providers
+  for (let i = 0; i < endpoints; i++) {
+    const provider = providers[Math.floor(Math.random() * providers.length)];
+    const endpointId = `${provider}-endpoint-${i}`;
+
+    data.nodes.push({
+      id: endpointId,
+      group: providers.indexOf(provider) + 1, // Groups 1-4 for different providers
+      value: Math.floor(Math.random() * 30) + 10
+    });
+
+    // Connect endpoint to its provider
+    data.links.push({
+      source: provider,
+      target: endpointId,
+      value: Math.random() * 0.8 + 0.2 // Strong connection to provider
+    });
+
+    // Generate cross-endpoint connections based on density
+    if (Math.random() < density && i > 0) {
+      const targetEndpoint = Math.floor(Math.random() * i);
+      const targetProvider = providers[Math.floor(Math.random() * providers.length)];
+      data.links.push({
+        source: endpointId,
+        target: `${targetProvider}-endpoint-${targetEndpoint}`,
+        value: Math.random() * 0.5
+      });
     }
   }
 
