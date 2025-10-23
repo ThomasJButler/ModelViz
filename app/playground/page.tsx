@@ -505,6 +505,7 @@ export default function PlaygroundPage() {
             className="space-y-4"
           >
             <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-matrix-primary">Output</h2>
               <div className="flex items-center gap-4">
                 <motion.div
                   initial={{ opacity: 0 }}
