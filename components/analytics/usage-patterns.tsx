@@ -1,3 +1,10 @@
+/**
+ * @file usage-patterns.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Usage pattern analytics showing token consumption and request distribution over time.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -6,6 +13,9 @@ import { ResponsiveContainer, LineChart, Line, AreaChart, Area, Tooltip, XAxis, 
 import { generateTimeSeriesData } from '@/lib/data';
 import { TokenUsageHeatmap } from './token-usage-heatmap';
 
+/**
+ * @constructor
+ */
 export function UsagePatterns() {
   const [timeRange, setTimeRange] = useState('7d');
   const data = generateTimeSeriesData(24);

@@ -1,3 +1,10 @@
+/**
+ * @file empty-state.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Empty state component displaying placeholders when no data is available.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -13,6 +20,9 @@ interface EmptyStateProps {
   };
 }
 
+/**
+ * @constructor
+ */
 export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
   return (
     <motion.div

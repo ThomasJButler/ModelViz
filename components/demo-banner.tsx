@@ -1,9 +1,19 @@
+/**
+ * @file demo-banner.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Demo mode banner notification for development and testing environments.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
 import { AlertTriangle, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
+/**
+ * @constructor
+ */
 export function DemoBanner() {
   return (
     <motion.div

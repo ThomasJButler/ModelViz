@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Collapsible primitive wrapper
+ */
+
 'use client';
 
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible';

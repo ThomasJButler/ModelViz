@@ -1,3 +1,10 @@
+/**
+ * @file feature-grid.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Feature showcase grid displaying application capabilities and highlights.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -26,6 +33,9 @@ const features = [
   }
 ];
 
+/**
+ * @constructor
+ */
 export function FeatureGrid() {
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background/50">

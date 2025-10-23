@@ -1,3 +1,10 @@
+/**
+ * @file enhanced-input.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Enhanced input component with validation, autocomplete, and formatting.
+ */
+
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -76,6 +83,9 @@ const templates = [
   }
 ];
 
+/**
+ * @constructor
+ */
 export function EnhancedInput({
   value,
   onChange,
@@ -95,6 +105,7 @@ export function EnhancedInput({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Automatically adjust the height of the textarea based on content
+  /** @constructs */
   useEffect(() => {
     if (textareaRef.current) {
       // Reset height to auto to get the correct scrollHeight

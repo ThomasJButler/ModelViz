@@ -1,3 +1,10 @@
+/**
+ * @file performance-monitor.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Performance monitoring component tracking render times and resource usage.
+ */
+
 'use client';
 
 /**
@@ -37,6 +44,9 @@ interface PerformanceMetrics {
   cacheSize: number;
 }
 
+/**
+ * @constructor
+ */
 export function PerformanceMonitor() {
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [isMonitoring, setIsMonitoring] = useState(false);
@@ -60,6 +70,7 @@ export function PerformanceMonitor() {
     });
   }, [fpsMonitor]);
 
+  /** @constructs */
   useEffect(() => {
     if (isMonitoring) {
       fpsMonitor.start();

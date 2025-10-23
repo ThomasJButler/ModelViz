@@ -1,7 +1,16 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Card container component
+ */
+
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * @constructor
+ */
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -70,7 +79,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex items-center p-6 pt-0', className)}
+    className={cn('flex items-centre p-6 pt-0', className)}
     {...props}
   />
 ));

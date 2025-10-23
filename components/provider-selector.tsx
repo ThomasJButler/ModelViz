@@ -1,3 +1,10 @@
+/**
+ * @file provider-selector.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description AI provider selection component for choosing between different services.
+ */
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -20,6 +27,9 @@ const providerIcons: Record<string, any> = {
   Demo: Brain
 };
 
+/**
+ * @constructor
+ */
 export function ProviderSelector({ 
   providers, 
   selectedProvider, 
@@ -30,6 +40,7 @@ export function ProviderSelector({
   const [selectedProviderData, setSelectedProviderData] = useState<ProviderGroupedModels | null>(null);
 
   // Update selected provider data when providers or selected provider changes
+  /** @constructs */
   useEffect(() => {
     const provider = providers.find(p => p.provider === selectedProvider);
     setSelectedProviderData(provider || null);
@@ -102,6 +113,9 @@ export function ProviderSelector({
 }
 
 // A styled badge showing the provider name
+/**
+ * @constructor
+ */
 export function ProviderBadge({ provider }: { provider: string }) {
   const Icon = providerIcons[provider] || Brain;
   

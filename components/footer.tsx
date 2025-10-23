@@ -1,9 +1,19 @@
+/**
+ * @file footer.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Application footer component with navigation links and information.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
 import { Github, Twitter, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
+/**
+ * @constructor
+ */
 export function Footer() {
   return (
     <footer className="border-t border-border mt-auto">

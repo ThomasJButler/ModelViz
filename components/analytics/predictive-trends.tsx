@@ -1,3 +1,10 @@
+/**
+ * @file predictive-trends.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description AI-powered predictive analytics showing usage trends and anomaly detection with confidence intervals.
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -5,18 +12,20 @@ import { motion } from 'framer-motion';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { Brain, TrendingUp, AlertTriangle } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function PredictiveTrends() {
   const [data, setData] = useState<any[]>([]);
   const [prediction, setPrediction] = useState<any[]>([]);
 
+  /** @constructs */
   useEffect(() => {
-    // Generate historical data
     const historical = Array.from({ length: 24 }, (_, i) => ({
       time: new Date(Date.now() - (23 - i) * 3600000).toISOString(),
       actual: Math.floor(Math.random() * 1000) + 500,
     }));
 
-    // Generate predictions
     const future = Array.from({ length: 12 }, (_, i) => ({
       time: new Date(Date.now() + (i + 1) * 3600000).toISOString(),
       predicted: Math.floor(Math.random() * 1000) + 500,
@@ -46,15 +55,14 @@ export function PredictiveTrends() {
         </div>
       </div>
 
-      {/* Prediction Chart */}
       <div className="p-4 rounded-lg border border-matrix-primary/20 bg-background/50">
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart>
               <defs>
                 <linearGradient id="confidenceGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#00ff00" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#00ff00" stopOpacity={0} />
+                  <stop offset="5%" stopColour="#00ff00" stopOpacity={0.2} />
+                  <stop offset="95%" stopColour="#00ff00" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis
@@ -71,8 +79,7 @@ export function PredictiveTrends() {
                 }}
               />
               <Legend />
-              
-              {/* Historical Data */}
+
               <Line
                 data={data}
                 type="monotone"
@@ -82,8 +89,7 @@ export function PredictiveTrends() {
                 strokeWidth={2}
                 dot={false}
               />
-              
-              {/* Predictions */}
+
               <Line
                 data={prediction}
                 type="monotone"
@@ -99,7 +105,6 @@ export function PredictiveTrends() {
         </div>
       </div>
 
-      {/* Anomaly Predictions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
           {
@@ -135,8 +140,8 @@ export function PredictiveTrends() {
                 <p className="text-sm text-foreground/70">In {anomaly.time}</p>
               </div>
               <AlertTriangle className={`w-5 h-5 ${
-                anomaly.impact === 'high' 
-                  ? 'text-red-500' 
+                anomaly.impact === 'high'
+                  ? 'text-red-500'
                   : anomaly.impact === 'medium'
                   ? 'text-yellow-500'
                   : 'text-matrix-primary'

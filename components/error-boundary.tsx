@@ -1,3 +1,10 @@
+/**
+ * @file error-boundary.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Error boundary component for catching and handling React component errors gracefully.
+ */
+
 "use client";
 
 import { Component, ErrorInfo, ReactNode } from 'react';
@@ -15,6 +22,9 @@ interface State {
   errorInfo: ErrorInfo | null;
 }
 
+/**
+ * @constructor
+ */
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,

@@ -1,3 +1,10 @@
+/**
+ * @file enhanced-loading.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Enhanced loading component with animated progress indicators and skeleton screens.
+ */
+
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,6 +18,9 @@ interface EnhancedLoadingProps {
   variant?: 'default' | 'minimal' | 'matrix' | 'ai';
 }
 
+/**
+ * @constructor
+ */
 export function EnhancedLoading({ 
   message = "Processing your request", 
   submessages = [
@@ -25,6 +35,7 @@ export function EnhancedLoading({
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
 
+  /** @constructs */
   useEffect(() => {
     const messageInterval = setInterval(() => {
       setCurrentMessageIndex((prev) => (prev + 1) % submessages.length);

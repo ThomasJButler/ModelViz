@@ -1,4 +1,11 @@
 /**
+ * @file lazy-wrappers.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Lazy loading wrapper components for code splitting and performance optimisation.
+ */
+
+/**
  * Lazy loading wrappers for heavy components to improve initial bundle size
  */
 
@@ -44,6 +51,9 @@ const ChartSkeleton = () => (
 );
 
 // Lazy loaded Code Editor
+/**
+ * @constructor
+ */
 export const LazyCodeEditor = dynamic(
   () => import('@/components/code-editor').then(mod => ({ default: mod.CodeEditor })),
   {
@@ -53,6 +63,9 @@ export const LazyCodeEditor = dynamic(
 );
 
 // Lazy loaded 3D visualizations
+/**
+ * @constructor
+ */
 export const LazyNetwork3D = dynamic(
   () => import('@/components/visualisations/network-3d'),
   {
@@ -61,6 +74,9 @@ export const LazyNetwork3D = dynamic(
   }
 );
 
+/**
+ * @constructor
+ */
 export const LazyParticleUniverse = dynamic(
   () => import('@/components/visualisations/particle-universe'),
   {
@@ -69,6 +85,9 @@ export const LazyParticleUniverse = dynamic(
   }
 );
 
+/**
+ * @constructor
+ */
 export const LazyAIConsciousness = dynamic(
   () => import('@/components/visualisations/ai-consciousness'),
   {
@@ -78,6 +97,9 @@ export const LazyAIConsciousness = dynamic(
 );
 
 // Lazy loaded D3 visualizations
+/**
+ * @constructor
+ */
 export const LazyResourceTree = dynamic(
   () => import('@/components/visualisations/resource-tree'),
   {
@@ -86,6 +108,9 @@ export const LazyResourceTree = dynamic(
   }
 );
 
+/**
+ * @constructor
+ */
 export const LazyModelEvolution = dynamic(
   () => import('@/components/visualisations/scientific/model-evolution'),
   {
@@ -95,6 +120,9 @@ export const LazyModelEvolution = dynamic(
 );
 
 // Lazy loaded chart components
+/**
+ * @constructor
+ */
 export const LazyPerformanceChart = dynamic(
   () => import('@/components/performance-chart').then(mod => ({ default: mod.PerformanceChart })),
   {
@@ -102,6 +130,9 @@ export const LazyPerformanceChart = dynamic(
   }
 );
 
+/**
+ * @constructor
+ */
 export const LazyUsageChart = dynamic(
   () => import('@/components/usage-chart').then(mod => ({ default: mod.UsageChart })),
   {
@@ -110,6 +141,9 @@ export const LazyUsageChart = dynamic(
 );
 
 // Lazy loaded analytics components
+/**
+ * @constructor
+ */
 export const LazyAnalyticsTabs = dynamic(
   () => import('@/components/analytics/analytics-tabs').then(mod => ({ default: mod.AnalyticsTabs })),
   {
@@ -123,6 +157,9 @@ export const LazyAnalyticsTabs = dynamic(
 );
 
 // Generic lazy wrapper with custom loading
+/**
+ * @constructor
+ */
 export function createLazyComponent<P extends object>(
   importFn: () => Promise<{ default: ComponentType<P> }>,
   LoadingComponent?: ComponentType
@@ -134,6 +171,9 @@ export function createLazyComponent<P extends object>(
 }
 
 // Intersection Observer wrapper for viewport-based lazy loading
+/**
+ * @constructor
+ */
 export const LazyLoad = ({ 
   children, 
   fallback,
@@ -146,6 +186,7 @@ export const LazyLoad = ({
   const [isIntersecting, setIsIntersecting] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  /** @constructs */
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -172,6 +213,9 @@ export const LazyLoad = ({
 };
 
 // Preload component on hover
+/**
+ * @constructor
+ */
 export const PreloadOnHover = ({
   children,
   load

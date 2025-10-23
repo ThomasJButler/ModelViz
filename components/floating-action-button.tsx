@@ -1,3 +1,10 @@
+/**
+ * @file floating-action-button.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Floating action button for quick access to primary actions.
+ */
+
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,6 +24,9 @@ interface FloatingActionButtonProps {
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
 }
 
+/**
+ * @constructor
+ */
 export function FloatingActionButton({ 
   actions, 
   position = 'bottom-right' 

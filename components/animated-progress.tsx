@@ -1,3 +1,10 @@
+/**
+ * @file animated-progress.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Animated progress bar component with customisable transitions and colours.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -11,6 +18,9 @@ interface AnimatedProgressProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+/**
+ * @constructor
+ */
 export function AnimatedProgress({
   value,
   max = 100,
@@ -105,6 +115,9 @@ export function AnimatedProgress({
 }
 
 // Circular progress variant
+/**
+ * @constructor
+ */
 export function CircularProgress({
   value,
   max = 100,

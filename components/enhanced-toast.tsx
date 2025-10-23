@@ -1,3 +1,10 @@
+/**
+ * @file enhanced-toast.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Enhanced toast notification component with animations and action buttons.
+ */
+
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +27,9 @@ interface EnhancedToastProps {
   removeToast: (id: string) => void;
 }
 
+/**
+ * @constructor
+ */
 export function EnhancedToast({ toasts, removeToast }: EnhancedToastProps) {
   return (
     <div className="fixed bottom-4 right-4 z-50 pointer-events-none">
@@ -44,6 +54,7 @@ function ToastItem({ toast, onRemove, index }: {
 }) {
   const [isLeaving, setIsLeaving] = useState(false);
 
+  /** @constructs */
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLeaving(true);
@@ -197,6 +208,9 @@ function ToastItem({ toast, onRemove, index }: {
 }
 
 // Hook for managing toasts
+/**
+ * @constructor
+ */
 export function useToast() {
   const [toasts, setToasts] = useState<Toast[]>([]);
 

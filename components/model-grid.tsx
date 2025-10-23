@@ -1,3 +1,10 @@
+/**
+ * @file model-grid.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Model grid layout component displaying models in a responsive grid.
+ */
+
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,6 +20,9 @@ interface ModelGridProps {
   isLoading?: boolean;
 }
 
+/**
+ * @constructor
+ */
 export function ModelGrid({ models, onCompare, isLoading = false }: ModelGridProps) {
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
 

@@ -1,3 +1,10 @@
+/**
+ * @file cost-analysis.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Cost analysis dashboard showing inference, training, and storage costs with optimisation recommendations.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -5,6 +12,9 @@ import { motion } from 'framer-motion';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { DollarSign, TrendingDown, TrendingUp, AlertCircle } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function CostAnalysis() {
   const [timeRange, setTimeRange] = useState('7d');
 
@@ -35,7 +45,7 @@ export function CostAnalysis() {
       title: 'Storage Efficiency',
       value: '+15%',
       trend: 'up',
-      description: 'Better resource utilization'
+      description: 'Better resource utilisation'
     }
   ];
 
@@ -59,7 +69,6 @@ export function CostAnalysis() {
 
   return (
     <div className="space-y-6">
-      {/* Cost Insights */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {insights.map((insight) => (
           <motion.div
@@ -81,7 +90,6 @@ export function CostAnalysis() {
         ))}
       </div>
 
-      {/* Cost Chart */}
       <div className="p-4 rounded-lg border border-matrix-primary/20 bg-background/50">
         <div className="flex justify-between items-center mb-4">
           <h4 className="text-sm font-medium text-matrix-primary">Cost Distribution</h4>
@@ -126,7 +134,6 @@ export function CostAnalysis() {
         </div>
       </div>
 
-      {/* Cost Recommendations */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {recommendations.map((rec) => (
           <motion.div

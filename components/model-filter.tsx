@@ -1,3 +1,10 @@
+/**
+ * @file model-filter.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Model filtering component for searching and filtering AI models by various criteria.
+ */
+
 "use client";
 
 import { Filter, Search, SortAsc } from 'lucide-react';
@@ -13,6 +20,9 @@ interface ModelFilterProps {
   sortOptions: { value: string; label: string; }[];
 }
 
+/**
+ * @constructor
+ */
 export function ModelFilter({
   searchQuery,
   selectedCategory,

@@ -1,5 +1,14 @@
+/**
+ * @fileoverview Skeleton loading placeholder component
+ * @author Tom Butler
+ * @date 2025-10-23
+ */
+
 import { cn } from '@/lib/utils';
 
+/**
+ * @constructor
+ */
 function Skeleton({
   className,
   ...props

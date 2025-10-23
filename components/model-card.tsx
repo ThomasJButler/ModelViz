@@ -1,3 +1,10 @@
+/**
+ * @file model-card.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Model card component displaying AI model information, capabilities, and metrics.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -26,6 +33,9 @@ export interface ModelCardProps {
   limitations?: string[];
 }
 
+/**
+ * @constructor
+ */
 export function ModelCard({
   id,
   title,

@@ -1,3 +1,10 @@
+/**
+ * @file optimized-image.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Optimised image component with lazy loading and responsive sizing.
+ */
+
 'use client';
 
 /**
@@ -22,6 +29,9 @@ interface OptimizedImageProps {
   onLoadingComplete?: () => void;
 }
 
+/**
+ * @constructor
+ */
 export function OptimizedImage({
   src,
   alt,
@@ -39,6 +49,7 @@ export function OptimizedImage({
   const [isInView, setIsInView] = useState(false);
   const imgRef = useRef<HTMLDivElement>(null);
 
+  /** @constructs */
   useEffect(() => {
     if (priority) {
       setIsInView(true);
@@ -107,6 +118,9 @@ export function OptimizedImage({
 }
 
 // Blur data URL generator for placeholder
+/**
+ * @constructor
+ */
 export function generateBlurDataURL(width: number = 10, height: number = 10): string {
   const canvas = document.createElement('canvas');
   canvas.width = width;
@@ -126,6 +140,9 @@ export function generateBlurDataURL(width: number = 10, height: number = 10): st
 }
 
 // Picture component for art direction
+/**
+ * @constructor
+ */
 export function ResponsivePicture({
   sources,
   alt,

@@ -1,3 +1,10 @@
+/**
+ * @file performance-chart.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Performance chart visualisation showing metrics and trends over time.
+ */
+
 "use client";
 
 import { Bar, BarChart as RechartsBarChart, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
@@ -16,6 +23,9 @@ interface PerformanceChartProps {
   metric?: 'latency' | 'success' | 'cost' | 'tokens';
 }
 
+/**
+ * @constructor
+ */
 export function PerformanceChart({ timeRange, metric = 'latency' }: PerformanceChartProps) {
   const metricConfig = {
     latency: {

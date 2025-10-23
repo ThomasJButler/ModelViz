@@ -1,3 +1,10 @@
+/**
+ * @file security-insights.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Security monitoring dashboard tracking threats, events, and system vulnerability insights.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -5,6 +12,9 @@ import { motion } from 'framer-motion';
 import { Shield, AlertTriangle, Lock, Key, UserX, FileWarning, RefreshCw } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 
+/**
+ * @constructor
+ */
 export function SecurityInsights() {
   const [timeRange, setTimeRange] = useState('7d');
 

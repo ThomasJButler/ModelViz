@@ -1,3 +1,10 @@
+/**
+ * @file enhanced-navigation.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Enhanced navigation component with breadcrumbs and contextual menus.
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -25,6 +32,9 @@ const navigationItems = [
   { href: '/profile', label: 'Settings', icon: Settings },
 ];
 
+/**
+ * @constructor
+ */
 export function EnhancedNavigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -35,6 +45,7 @@ export function EnhancedNavigation() {
   const navbarOpacity = useTransform(scrollY, [0, 100], [0.8, 1]);
   const navbarBlur = useTransform(scrollY, [0, 100], [8, 16]);
 
+  /** @constructs */
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);

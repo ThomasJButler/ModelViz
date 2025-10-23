@@ -1,3 +1,10 @@
+/**
+ * @file model-stats.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Model statistics display showing usage metrics and performance data.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -46,6 +53,9 @@ const models = [
   }
 ];
 
+/**
+ * @constructor
+ */
 export function ModelStats() {
   return (
     <div className="rounded-lg border border-border bg-card overflow-hidden">

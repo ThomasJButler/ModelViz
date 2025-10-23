@@ -1,3 +1,10 @@
+/**
+ * @file model-recommender.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description AI model recommendation engine suggesting optimal models for tasks.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -96,6 +103,9 @@ const questions: Question[] = [
   }
 ];
 
+/**
+ * @constructor
+ */
 export function ModelRecommender({ models, onModelSelect }: ModelRecommenderProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});

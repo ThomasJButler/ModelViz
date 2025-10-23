@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Textarea component for multi-line text input
+ * @author Tom Butler
+ * @date 2025-10-23
+ */
+
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
@@ -5,6 +11,9 @@ import { cn } from '@/lib/utils';
 export interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
+/**
+ * @constructor
+ */
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, ...props }, ref) => {
     return (

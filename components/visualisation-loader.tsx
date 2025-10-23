@@ -1,8 +1,18 @@
+/**
+ * @file visualisation-loader.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Visualisation loader component for loading and displaying data visualisations.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
 import { Brain, Sparkles } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function VisualisationLoader() {
   return (
     <motion.div

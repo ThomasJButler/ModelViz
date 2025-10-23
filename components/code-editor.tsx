@@ -1,3 +1,10 @@
+/**
+ * @file code-editor.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Code editor component with syntax highlighting and execution capabilities.
+ */
+
 "use client";
 
 import { useEffect, useRef } from 'react';
@@ -14,6 +21,9 @@ interface CodeEditorProps {
   language: string;
 }
 
+/**
+ * @constructor
+ */
 export function CodeEditor({
   value,
   onChange,

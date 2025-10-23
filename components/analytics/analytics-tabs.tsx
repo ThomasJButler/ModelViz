@@ -1,3 +1,10 @@
+/**
+ * @file analytics-tabs.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Analytics dashboard tab navigation component for switching between different analytics views.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -22,11 +29,11 @@ const tabs = [
     label: 'Usage Patterns',
     icon: LineChart,
     component: UsagePatterns,
-    description: 'Analyze usage patterns and trends'
+    description: 'Analyse usage patterns and trends'
   },
   {
     id: 'resources',
-    label: 'Resource Utilization',
+    label: 'Resource Utilisation',
     icon: BarChart,
     component: ResourceUtilization,
     description: 'Monitor system resource usage'
@@ -50,7 +57,7 @@ const tabs = [
     label: 'Model Performance',
     icon: Brain,
     component: ModelPerformance,
-    description: 'Monitor and analyze model performance metrics'
+    description: 'Monitor and analyse model performance metrics'
   },
   {
     id: 'comparison',
@@ -89,12 +96,14 @@ const tabs = [
   }
 ];
 
+/**
+ * @constructor
+ */
 export function AnalyticsTabs() {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
 
   return (
     <div className="space-y-6">
-      {/* Tab Navigation */}
       <div className="flex flex-wrap gap-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -119,7 +128,6 @@ export function AnalyticsTabs() {
         })}
       </div>
 
-      {/* Tab Content */}
       <AnimatePresence mode="wait">
         {tabs.map((tab) => {
           if (tab.id === activeTab) {

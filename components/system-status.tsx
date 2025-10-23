@@ -1,3 +1,10 @@
+/**
+ * @file system-status.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description System status component showing health, uptime, and service availability.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -12,6 +19,9 @@ interface SystemStatusProps {
   };
 }
 
+/**
+ * @constructor
+ */
 export function SystemStatus({ metrics }: SystemStatusProps) {
   const getStatusColor = (value: number) => {
     if (value > 90) return 'text-red-500';

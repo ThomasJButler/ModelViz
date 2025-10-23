@@ -1,3 +1,10 @@
+/**
+ * @file system-health.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Real-time system health monitoring displaying CPU, memory, disk, and network metrics.
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -5,6 +12,9 @@ import { motion } from 'framer-motion';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
 import { Cpu, MemoryStick as Memory, HardDrive, Network, Activity, Gauge } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function SystemHealth() {
   const [metrics, setMetrics] = useState({
     cpu: 45,
@@ -14,6 +24,7 @@ export function SystemHealth() {
   });
 
   // Simulate real-time updates
+  /** @constructs */
   useEffect(() => {
     const interval = setInterval(() => {
       setMetrics(prev => ({

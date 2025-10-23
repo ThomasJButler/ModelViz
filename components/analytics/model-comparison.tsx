@@ -1,3 +1,10 @@
+/**
+ * @file model-comparison.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Model comparison tool for analysing and contrasting different AI model capabilities side by side.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -5,6 +12,9 @@ import { motion } from 'framer-motion';
 import { ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, Tooltip } from 'recharts';
 import { Brain, Zap, Shield, Target } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function ModelComparison() {
   const [selectedModels, setSelectedModels] = useState<string[]>(['gpt-4', 'claude-3']);
 

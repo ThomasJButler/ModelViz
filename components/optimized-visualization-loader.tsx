@@ -1,3 +1,10 @@
+/**
+ * @file optimized-visualization-loader.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Optimised visualisation loader with performance enhancements and lazy loading.
+ */
+
 'use client';
 
 import React, { Suspense, lazy, useState, useEffect, useRef } from 'react';
@@ -151,6 +158,9 @@ const visualisations = {
   ),
 };
 
+/**
+ * @constructor
+ */
 export function OptimizedVisualisationLoader({ 
   type, 
   data, 
@@ -161,6 +171,7 @@ export function OptimizedVisualisationLoader({
   const containerRef = useRef<HTMLDivElement>(null);
   const VisualisationComponent = visualisations[type];
 
+  /** @constructs */
   useEffect(() => {
     if (priority || isVisible) return;
 
@@ -186,6 +197,7 @@ export function OptimizedVisualisationLoader({
     return () => observer.disconnect();
   }, [priority, isVisible]);
 
+  /** @constructs */
   useEffect(() => {
     if (isVisible && onLoadComplete) {
       // Notify when component starts loading
@@ -221,6 +233,9 @@ export function OptimizedVisualisationLoader({
 }
 
 // Preload visualization modules
+/**
+ * @constructor
+ */
 export const preloadVisualization = (type: VisualisationType) => {
   const component = visualisations[type];
   if (component) {
@@ -231,6 +246,9 @@ export const preloadVisualization = (type: VisualisationType) => {
 };
 
 // Batch preload multiple visualizations
+/**
+ * @constructor
+ */
 export const preloadVisualizations = (types: VisualisationType[]) => {
   types.forEach(type => preloadVisualization(type));
 };

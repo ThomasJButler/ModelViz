@@ -1,7 +1,17 @@
+/**
+ * @file loading-skeleton.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Skeleton loading placeholders for content that is being fetched.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
 
+/**
+ * @constructor
+ */
 export function LoadingSkeleton() {
   return (
     <div className="w-full space-y-4">

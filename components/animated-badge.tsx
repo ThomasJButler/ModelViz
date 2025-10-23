@@ -1,3 +1,10 @@
+/**
+ * @file animated-badge.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Animated badge component for displaying status indicators and notifications.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -11,6 +18,9 @@ interface AnimatedBadgeProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+/**
+ * @constructor
+ */
 export function AnimatedBadge({
   children,
   variant = 'default',
@@ -100,6 +110,9 @@ export function AnimatedBadge({
 }
 
 // Badge group for multiple badges
+/**
+ * @constructor
+ */
 export function BadgeGroup({ children }: { children: React.ReactNode }) {
   return (
     <motion.div

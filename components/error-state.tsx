@@ -1,3 +1,10 @@
+/**
+ * @file error-state.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Error state display component showing error messages and recovery actions.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -11,6 +18,9 @@ interface ErrorStateProps {
   showHomeButton?: boolean;
 }
 
+/**
+ * @constructor
+ */
 export function ErrorState({
   title = "Something went wrong",
   description = "An unexpected error occurred. Please try again.",

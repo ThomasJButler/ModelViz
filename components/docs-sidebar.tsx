@@ -1,3 +1,10 @@
+/**
+ * @file docs-sidebar.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Documentation sidebar navigation component with search and category filtering.
+ */
+
 "use client";
 
 import { Book, Code, Terminal, FileText, ChevronRight } from 'lucide-react';
@@ -55,6 +62,9 @@ interface DocsSidebarProps {
   onSelectSection: (section: string) => void;
 }
 
+/**
+ * @constructor
+ */
 export function DocsSidebar({ selectedSection, onSelectSection }: DocsSidebarProps) {
   const scrollToSection = (sectionId: string, subsectionId?: string) => {
     onSelectSection(sectionId);

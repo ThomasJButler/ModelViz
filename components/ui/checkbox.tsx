@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Checkbox primitive wrapper
+ */
+
 'use client';
 
 import * as React from 'react';
@@ -6,6 +12,9 @@ import { Check } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * @constructor
+ */
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
@@ -19,7 +28,7 @@ const Checkbox = React.forwardRef<
     {...props}
   >
     <CheckboxPrimitive.Indicator
-      className={cn('flex items-center justify-center text-current')}
+      className={cn('flex items-centre justify-centre text-current')}
     >
       <Check className="h-4 w-4" />
     </CheckboxPrimitive.Indicator>

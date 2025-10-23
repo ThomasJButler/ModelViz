@@ -1,31 +1,46 @@
+/**
+ * @fileoverview Pagination components for page navigation
+ * @author Tom Butler
+ * @date 2025-10-23
+ */
+
 import * as React from 'react';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { ButtonProps, buttonVariants } from '@/components/ui/button';
 
+/**
+ * @constructor
+ */
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
     role="navigation"
     aria-label="pagination"
-    className={cn('mx-auto flex w-full justify-center', className)}
+    className={cn('mx-auto flex w-full justify-centre', className)}
     {...props}
   />
 );
 Pagination.displayName = 'Pagination';
 
+/**
+ * @constructor
+ */
 const PaginationContent = React.forwardRef<
   HTMLUListElement,
   React.ComponentProps<'ul'>
 >(({ className, ...props }, ref) => (
   <ul
     ref={ref}
-    className={cn('flex flex-row items-center gap-1', className)}
+    className={cn('flex flex-row items-centre gap-1', className)}
     {...props}
   />
 ));
 PaginationContent.displayName = 'PaginationContent';
 
+/**
+ * @constructor
+ */
 const PaginationItem = React.forwardRef<
   HTMLLIElement,
   React.ComponentProps<'li'>
@@ -39,6 +54,9 @@ type PaginationLinkProps = {
 } & Pick<ButtonProps, 'size'> &
   React.ComponentProps<'a'>;
 
+/**
+ * @constructor
+ */
 const PaginationLink = ({
   className,
   isActive,
@@ -59,6 +77,9 @@ const PaginationLink = ({
 );
 PaginationLink.displayName = 'PaginationLink';
 
+/**
+ * @constructor
+ */
 const PaginationPrevious = ({
   className,
   ...props
@@ -75,6 +96,9 @@ const PaginationPrevious = ({
 );
 PaginationPrevious.displayName = 'PaginationPrevious';
 
+/**
+ * @constructor
+ */
 const PaginationNext = ({
   className,
   ...props
@@ -91,13 +115,16 @@ const PaginationNext = ({
 );
 PaginationNext.displayName = 'PaginationNext';
 
+/**
+ * @constructor
+ */
 const PaginationEllipsis = ({
   className,
   ...props
 }: React.ComponentProps<'span'>) => (
   <span
     aria-hidden
-    className={cn('flex h-9 w-9 items-center justify-center', className)}
+    className={cn('flex h-9 w-9 items-centre justify-centre', className)}
     {...props}
   >
     <MoreHorizontal className="h-4 w-4" />

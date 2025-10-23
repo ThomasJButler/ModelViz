@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Carousel primitive wrapper
+ */
+
 'use client';
 
 import * as React from 'react';
@@ -42,6 +48,9 @@ function useCarousel() {
   return context;
 }
 
+/**
+ * @constructor
+ */
 const Carousel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CarouselProps
@@ -98,6 +107,9 @@ const Carousel = React.forwardRef<
       [scrollPrev, scrollNext]
     );
 
+    /**
+     * @constructs
+     */
     React.useEffect(() => {
       if (!api || !setApi) {
         return;
@@ -106,6 +118,9 @@ const Carousel = React.forwardRef<
       setApi(api);
     }, [api, setApi]);
 
+    /**
+     * @listens
+     */
     React.useEffect(() => {
       if (!api) {
         return;
