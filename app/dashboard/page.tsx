@@ -81,84 +81,84 @@ const Visualisations = [
   {
     id: 'ai-consciousness',
     title: 'AI Consciousness',
-    description: 'Immersive simulation of artificial consciousness and thought processes',
+    description: 'WebGL particle system demonstrating GPU-accelerated rendering with 10,000+ interactive nodes',
     icon: Cpu,
     component: AIConsciousness
   },
   {
     id: 'particle-universe',
     title: 'Particle Universe',
-    description: 'Immersive 3D particle system with dynamic interactions',
+    description: 'Three.js 3D scene with physics-based particle interactions and mouse-responsive gravity fields',
     icon: Sparkles,
     component: ParticleUniverse
   },
   {
     id: 'api-network',
     title: 'API Provider Network',
-    description: 'Interactive visualisation of AI provider connections and endpoint topology',
+    description: 'D3.js force-directed graph showing API provider relationships with 24 nodes and dynamic connections',
     icon: Network,
     component: EnhancedNetworkGraph
   },
   {
     id: 'quantum-field',
     title: 'Quantum Field',
-    description: 'Interactive quantum particle simulation with field effects',
+    description: 'Canvas-based wave interference simulation with real-time magnetic field interaction physics',
     icon: Atom,
     component: QuantumField
   },
   {
     id: 'neural-flow',
     title: 'Neural Flow',
-    description: 'Dynamic Visualisation of neural network signal propagation',
+    description: 'Animated neural network (4-6-6-3 architecture) showing forward propagation with weighted connections',
     icon: Neurons,
     component: NeuralFlow
   },
   {
     id: 'advanced-chart',
     title: 'Model Response Times',
-    description: 'Real-time comparison of AI model response latencies across providers',
+    description: 'Recharts area chart tracking 24-hour response time trends for GPT-4, Claude, DeepSeek & Perplexity',
     icon: LineChart,
     component: AdvancedChart
   },
   {
     id: 'data-flow',
     title: 'Data Flow',
-    description: 'Interactive Visualisation of data flow patterns and connections',
+    description: 'SVG-based animated pipeline showing data transformation stages with throughput and latency metrics',
     icon: Activity,
     component: DataFlowDiagram
   },
   {
     id: 'network-graph',
     title: 'Network Analysis',
-    description: 'Dynamic network graph Visualisation with force-directed layout',
+    description: 'D3.js simulation with Barnes-Hut approximation for efficient multi-body collision detection',
     icon: Network,
     component: NetworkGraph
   },
   {
     id: 'real-time',
     title: 'AI Performance Metrics',
-    description: 'Live monitoring of token usage, request rates, and success metrics',
+    description: 'Recharts line graph with 1-second updates showing token consumption, API throughput, and success rates',
     icon: Zap,
     component: RealTimeMetrics
   },
   {
     id: 'data-cleaner',
     title: 'Data Privacy Scanner',
-    description: 'Advanced data privacy and cleaning Visualisation',
+    description: 'Pattern recognition demo detecting PII (SSN, credit cards, API keys) with Framer Motion animations',
     icon: Shield,
     component: DataCleaner
   },
   {
     id: 'model-evolution',
     title: 'Neural Network',
-    description: 'Visual representation of neural network evolution',
+    description: 'Animated network topology evolution showing layer formation and connection pruning over time',
     icon: Brain,
     component: ModelEvolution
   },
   {
     id: 'resource-tree',
     title: 'Resource Tree',
-    description: 'Hierarchical Visualisation of AI system resources',
+    description: 'D3.js collapsible tree diagram visualising hierarchical resource allocation and dependencies',
     icon: TreeStructure,
     component: ResourceTree
   }
