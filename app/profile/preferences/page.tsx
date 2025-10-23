@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description User preferences page for customising theme, interface settings, and default model configuration
+ */
 "use client";
 
 import { useState } from "react";
@@ -16,6 +21,9 @@ import {
   Check
 } from "lucide-react";
 
+/**
+ * @constructor
+ */
 export default function PreferencesPage() {
   const [theme, setTheme] = useState<"light" | "dark" | "system">("dark");
   const [accentColor, setAccentColor] = useState<string>("matrix");
@@ -124,7 +132,7 @@ export default function PreferencesPage() {
                 <Eye className="w-5 h-5 text-foreground/70" />
                 <div>
                   <p className="font-medium">Reduced animations</p>
-                  <p className="text-sm text-foreground/50">Minimize motion for a more stable interface</p>
+                  <p className="text-sm text-foreground/50">Minimise motion for a more stable interface</p>
                 </div>
               </div>
               <button

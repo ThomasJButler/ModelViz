@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Health check endpoint for monitoring system status
+ */
 import { NextResponse } from 'next/server';
 
 export async function GET() {

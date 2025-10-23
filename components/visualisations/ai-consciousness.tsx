@@ -1,16 +1,24 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description 3D consciousness sphere visualisation with neural pathways and thought particles using Three.js
+ */
+
 "use client";
 
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
+/**
+ * @constructor
+ */
 export default function AIConsciousness() {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  /** @constructs */
   useEffect(() => {
     if (!containerRef.current) return;
-
-    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });

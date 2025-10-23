@@ -1,3 +1,11 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Analytics singleton for tracking application events, page views, feature usage,
+ *              errors, and performance metrics. Uses queue-based processing with automatic
+ *              retry logic and browser unload flushing.
+ */
+
 type EventType = 'page_view' | 'feature_usage' | 'error' | 'performance';
 
 interface AnalyticsEvent {
@@ -13,12 +21,16 @@ class Analytics {
   private isProcessing = false;
 
   private constructor() {
-    // Initialize analytics
+    // Flush remaining events when user closes browser/tab
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', () => this.flush());
     }
   }
 
+  /**
+   * Gets singleton instance of Analytics
+   * @return {Analytics} Singleton instance
+   */
   public static getInstance(): Analytics {
     if (!Analytics.instance) {
       Analytics.instance = new Analytics();
@@ -26,6 +38,10 @@ class Analytics {
     return Analytics.instance;
   }
 
+  /**
+   * Tracks generic analytics event
+   * @param {AnalyticsEvent} event - Event to track
+   */
   public trackEvent(event: AnalyticsEvent) {
     this.queue.push({
       ...event,
@@ -34,6 +50,10 @@ class Analytics {
     this.processQueue();
   }
 
+  /**
+   * Tracks page view navigation
+   * @param {string} path - Page path being viewed
+   */
   public trackPageView(path: string) {
     this.trackEvent({
       type: 'page_view',
@@ -41,6 +61,11 @@ class Analytics {
     });
   }
 
+  /**
+   * Tracks feature usage with optional context data
+   * @param {string} feature - Feature identifier
+   * @param {Record<string, any>} [data] - Additional context data
+   */
   public trackFeatureUsage(feature: string, data?: Record<string, any>) {
     this.trackEvent({
       type: 'feature_usage',
@@ -49,6 +74,11 @@ class Analytics {
     });
   }
 
+  /**
+   * Tracks application errors with stack traces
+   * @param {Error} error - Error instance to track
+   * @param {Record<string, any>} [context] - Additional error context
+   */
   public trackError(error: Error, context?: Record<string, any>) {
     this.trackEvent({
       type: 'error',
@@ -61,6 +91,11 @@ class Analytics {
     });
   }
 
+  /**
+   * Tracks performance metrics
+   * @param {string} metric - Metric name (e.g., 'page_load', 'api_response')
+   * @param {number} value - Metric value in milliseconds
+   */
   public trackPerformance(metric: string, value: number) {
     this.trackEvent({
       type: 'performance',
@@ -69,6 +104,9 @@ class Analytics {
     });
   }
 
+  /**
+   * Processes queued events with retry logic on failure
+   */
   private async processQueue() {
     if (this.isProcessing || this.queue.length === 0) return;
 
@@ -77,13 +115,13 @@ class Analytics {
     this.queue = [];
 
     try {
-      // In a real implementation, send to analytics service
+      // Production would send to analytics service (Google Analytics, Mixpanel, etc.)
       console.log('Analytics events:', events);
-      
-      // Simulate API call
+
+      // Simulate network request
       await new Promise(resolve => setTimeout(resolve, 100));
     } catch (error) {
-      // Re-queue failed events
+      // Re-queue failed events for retry
       this.queue.unshift(...events);
       console.error('Failed to process analytics events:', error);
     } finally {
@@ -94,6 +132,9 @@ class Analytics {
     }
   }
 
+  /**
+   * Flushes remaining queued events (called on page unload)
+   */
   private async flush() {
     if (this.queue.length > 0) {
       await this.processQueue();

@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description 3D force-directed network graph visualisation with interactive camera controls
+ */
+
 "use client";
 
 import { useRef, useCallback } from 'react';
@@ -6,10 +12,13 @@ import ForceGraph3D from 'react-force-graph-3d';
 import { generateNetworkData } from '@/lib/data';
 import SpriteText from 'three-spritetext';
 
+/**
+ * @constructor
+ */
 export default function Network3D() {
   const fgRef = useRef(undefined);
 
-  const data = generateNetworkData(50, 0.2); // More nodes for 3D Visualisation
+  const data = generateNetworkData(50, 0.2);
 
   const handleNodeClick = useCallback((node: { x?: number; y?: number; z?: number }) => {
     if (!node.x || !node.y || !node.z) return;

@@ -1,8 +1,7 @@
 /**
- * Anthropic API Types
- * 
- * Type definitions for Anthropic API requests and responses.
- * Based on Anthropic API reference: https://docs.anthropic.com/claude/reference/
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description TypeScript type definitions for Anthropic Claude API requests and responses
  */
 
 // Basic types

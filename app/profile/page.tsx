@@ -1,19 +1,27 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description User profile overview page displaying account information and platform feature guides
+ */
 "use client";
 
 import { motion } from "framer-motion";
-import { 
-  User, 
-  Mail, 
-  Calendar, 
-  ExternalLink, 
-  Key, 
-  FileCode, 
-  Zap, 
-  LineChart, 
-  BarChart3, 
-  Terminal 
+import {
+  User,
+  Mail,
+  Calendar,
+  ExternalLink,
+  Key,
+  FileCode,
+  Zap,
+  LineChart,
+  BarChart3,
+  Terminal
 } from "lucide-react";
 
+/**
+ * @constructor
+ */
 export default function ProfilePage() {
   return (
     <div className="space-y-8">
@@ -106,7 +114,7 @@ export default function ProfilePage() {
                 <h3 className="text-lg font-semibold">2. Create Models</h3>
               </div>
               <p className="text-sm text-foreground/70 mb-3">
-                Build and customize your own AI models in the{" "}
+                Build and customise your own AI models in the{" "}
                 <a href="/models" className="text-matrix-primary hover:underline">
                   Models
                 </a>{" "}
@@ -161,7 +169,7 @@ export default function ProfilePage() {
               <h3 className="text-lg font-semibold">Analytics</h3>
             </div>
             <p className="text-sm text-foreground/70 mb-3">
-              Dive deep into performance data, cost analysis, and usage patterns across all your AI models and providers. Gain insights to optimize your AI strategy.
+              Dive deep into performance data, cost analysis, and usage patterns across all your AI models and providers. Gain insights to optimise your AI strategy.
             </p>
             <a 
               href="/analytics" 

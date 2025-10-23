@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Data privacy scanner visualisation displaying sensitive data detection and warnings
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -5,9 +11,13 @@ import { motion } from 'framer-motion';
 import { Shield, AlertTriangle, Check } from 'lucide-react';
 import { generatePrivacyData } from '@/lib/data';
 
+/**
+ * @constructor
+ */
 export default function DataCleaner() {
   const [data, setData] = useState(generatePrivacyData());
 
+  /** @constructs */
   useEffect(() => {
     const interval = setInterval(() => {
       setData(generatePrivacyData());

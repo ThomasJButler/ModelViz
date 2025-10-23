@@ -1,11 +1,8 @@
 /**
- * Network Graph Data Transformer
- * 
- * Transforms API data into a format suitable for network graph visualization.
- * This enables visualizing real API connections and data flow.
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Network graph data transformer that converts API relationships into visualisable node-edge structures
  */
-
-// Types to describe network graph data structure
 export interface NetworkNode {
   id: string;
   name: string;
@@ -31,7 +28,9 @@ export interface NetworkGraphData {
 }
 
 /**
- * Create network graph data for API connections
+ * Creates network graph data representing API connections and data flow
+ * @param options - Configuration for which APIs and nodes to include
+ * @return Network graph with nodes and connections
  */
 export function createApiNetworkData(options: {
   includeOpenAI?: boolean;
@@ -229,7 +228,10 @@ export function createApiNetworkData(options: {
 }
 
 /**
- * Generate random network graph data for testing
+ * Generates random network graph data for testing and demonstrations
+ * @param nodeCount - Number of nodes to generate
+ * @param connectionDensity - Ratio of connections to possible connections (0-1)
+ * @return Randomly generated network graph
  */
 export function generateRandomNetworkData(
   nodeCount: number = 20,

@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description User models management page displaying custom, fine-tuned, and saved models with filtering and sorting
+ */
 "use client";
 
 import { useState } from "react";
@@ -158,11 +163,13 @@ function ModelCard({
   );
 }
 
+/**
+ * @constructor
+ */
 export default function ModelsPage() {
   const [view, setView] = useState<"all" | "fine-tuned" | "custom" | "saved">("all");
   const [sortBy, setSortBy] = useState<"name" | "date" | "usage">("date");
-  
-  // Sample data
+
   const models: ModelCardProps[] = [
     {
       id: "model-1",
@@ -178,7 +185,7 @@ export default function ModelsPage() {
     {
       id: "model-2",
       name: "SQL Query Generator",
-      description: "Custom model that generates SQL queries based on natural language descriptions. Optimized for PostgreSQL syntax.",
+      description: "Custom model that generates SQL queries based on natural language descriptions. Optimised for PostgreSQL syntax.",
       type: "custom",
       baseModel: "Claude 3 Sonnet (Anthropic)",
       lastModified: "Mar 22, 2024",
@@ -199,7 +206,7 @@ export default function ModelsPage() {
     {
       id: "model-4",
       name: "Technical Documentation Writer",
-      description: "Saved model configuration optimized for generating technical documentation with proper formatting.",
+      description: "Saved model configuration optimised for generating technical documentation with proper formatting.",
       type: "saved",
       baseModel: "GPT-4o (OpenAI)",
       lastModified: "Mar 10, 2024",
@@ -236,7 +243,6 @@ export default function ModelsPage() {
     if (sortBy === "name") {
       return a.name.localeCompare(b.name);
     } else if (sortBy === "date") {
-      // Simple date string comparison, in a real app would use proper date objects
       return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime();
     } else {
       return (b.usage || 0) - (a.usage || 0);

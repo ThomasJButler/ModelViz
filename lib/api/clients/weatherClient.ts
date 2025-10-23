@@ -1,9 +1,7 @@
 /**
- * Weather API Client
- * 
- * Client for interacting with the Open-Meteo Weather API.
- * This API is free to use and doesn't require authentication.
- * https://open-meteo.com/
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Weather API client for Open-Meteo with forecast, current conditions, and geocoding support
  */
 
 import { ApiClient } from '../apiClient';
@@ -15,10 +13,11 @@ export class WeatherClient extends ApiClient {
   }
   
   /**
-   * Get weather forecast for a location
+   * Gets detailed weather forecast for geographical coordinates
+   * @param params - Query parameters including location and desired data
+   * @return Complete weather forecast with hourly and daily data
    */
   async getForecast(params: WeatherTypes.WeatherQueryParams): Promise<WeatherTypes.WeatherForecastResponse> {
-    // Build query string from params
     const queryParams = new URLSearchParams();
     
     // Add required parameters
@@ -67,7 +66,12 @@ export class WeatherClient extends ApiClient {
   }
   
   /**
-   * Get current weather for a location
+   * Gets current weather conditions for a location
+   * @param latitude - Latitude coordinate
+   * @param longitude - Longitude coordinate
+   * @param temperatureUnit - Temperature unit preference
+   * @param timezone - Timezone for time values
+   * @return Current weather conditions
    */
   async getCurrentWeather(
     latitude: number,
@@ -91,7 +95,13 @@ export class WeatherClient extends ApiClient {
   }
   
   /**
-   * Get daily forecast for a location
+   * Gets daily weather forecast with temperature ranges and precipitation
+   * @param latitude - Latitude coordinate
+   * @param longitude - Longitude coordinate
+   * @param days - Number of forecast days
+   * @param temperatureUnit - Temperature unit preference
+   * @param timezone - Timezone for time values
+   * @return Daily forecast data with min/max temperatures
    */
   async getDailyForecast(
     latitude: number,
@@ -131,7 +141,13 @@ export class WeatherClient extends ApiClient {
   }
   
   /**
-   * Get hourly forecast for a location
+   * Gets hourly weather forecast with detailed conditions
+   * @param latitude - Latitude coordinate
+   * @param longitude - Longitude coordinate
+   * @param hours - Number of forecast hours
+   * @param temperatureUnit - Temperature unit preference
+   * @param timezone - Timezone for time values
+   * @return Hourly forecast data
    */
   async getHourlyForecast(
     latitude: number,
@@ -174,7 +190,10 @@ export class WeatherClient extends ApiClient {
   }
   
   /**
-   * Search for locations using geocoding
+   * Searches for locations by name using geocoding API
+   * @param query - Location name to search for
+   * @param count - Maximum number of results
+   * @return Geocoding results with coordinates
    */
   async searchLocation(query: string, count: number = 5): Promise<WeatherTypes.GeocodingResponse> {
     const geocodingClient = new ApiClient('https://geocoding-api.open-meteo.com/v1');
@@ -187,7 +206,9 @@ export class WeatherClient extends ApiClient {
   }
   
   /**
-   * Get weather code description
+   * Converts numeric weather code to human-readable description
+   * @param code - WMO weather code
+   * @return Weather condition description
    */
   getWeatherDescription(code: number): string {
     const weatherCodes: Record<number, string> = {

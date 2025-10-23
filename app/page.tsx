@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Landing page with animated portal entrance to showcase
+ */
 "use client";
 
 import { useState } from 'react';
@@ -6,6 +11,10 @@ import { Brain } from 'lucide-react';
 import { LoadingAnimation } from '@/components/loading-animation';
 import { MainContent } from '@/components/main-content';
 
+/**
+ * Landing page component
+ * @constructor
+ */
 export default function LandingPage() {
   const [isEntering, setIsEntering] = useState(false);
   const [showMainContent, setShowMainContent] = useState(false);
@@ -31,33 +40,26 @@ export default function LandingPage() {
             exit={{ opacity: 0 }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            {/* Portal Container */}
             <motion.div
               className="text-center"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              {/* Central Portal Ring */}
               <motion.div
                 className="relative w-64 h-64 mx-auto mb-8"
                 whileHover={{ scale: 1.05 }}
               >
-                {/* Outer Ring */}
                 <motion.div
                   className="absolute inset-0 rounded-full border-2 border-matrix-primary/30"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 />
-                
-                {/* Middle Ring */}
                 <motion.div
                   className="absolute inset-4 rounded-full border-2 border-matrix-secondary/30"
                   animate={{ rotate: -360 }}
                   transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                 />
-                
-                {/* Inner Ring with Glow */}
                 <motion.div
                   className="absolute inset-8 rounded-full bg-background/30 backdrop-blur-sm flex items-center justify-center"
                   animate={{
@@ -73,7 +75,6 @@ export default function LandingPage() {
                 </motion.div>
               </motion.div>
 
-              {/* Welcome Text */}
               <motion.h1
                 className="text-4xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-matrix-primary via-matrix-secondary to-matrix-tertiary text-transparent bg-clip-text"
                 initial={{ opacity: 0, y: 20 }}
@@ -92,7 +93,6 @@ export default function LandingPage() {
                 Compare Leading AI Models Side by Side
               </motion.p>
 
-              {/* Enter Button */}
               <motion.button
                 onClick={handleEnter}
                 className="px-8 py-3 text-lg rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary hover:bg-matrix-primary hover:text-background transition-all duration-300"
@@ -105,7 +105,6 @@ export default function LandingPage() {
                 Enter Showcase
               </motion.button>
 
-              {/* Creator Credit */}
               <motion.p
                 className="absolute bottom-8 left-1/2 -translate-x-1/2 text-sm text-foreground/50 hover:text-matrix-primary transition-colors"
                 initial={{ opacity: 0 }}

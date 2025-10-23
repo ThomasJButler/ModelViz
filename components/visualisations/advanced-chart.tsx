@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Advanced area chart visualisation displaying time-series data with multiple data streams
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -13,9 +19,13 @@ import {
 } from 'recharts';
 import { generateTimeSeriesData } from '@/lib/data';
 
+/**
+ * @constructor
+ */
 export default function AdvancedChart() {
   const [data, setData] = useState(generateTimeSeriesData());
 
+  /** @constructs */
   useEffect(() => {
     const interval = setInterval(() => {
       setData(generateTimeSeriesData());

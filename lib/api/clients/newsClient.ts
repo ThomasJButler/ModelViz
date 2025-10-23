@@ -1,8 +1,7 @@
 /**
- * News API Client
- * 
- * Client for interacting with the News API.
- * Requires an API key from https://newsapi.org/
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description News API client for accessing headlines, articles, and news sources worldwide
  */
 
 import { ApiClient } from '../apiClient';
@@ -16,11 +15,11 @@ export class NewsClient extends ApiClient {
   }
   
   /**
-   * Get top headlines
-   * https://newsapi.org/docs/endpoints/top-headlines
+   * Gets top headlines from news sources
+   * @param params - Filter parameters for country, category, sources, etc.
+   * @return Top headlines response with articles
    */
   async getTopHeadlines(params: NewsTypes.TopHeadlinesParams = {}): Promise<NewsTypes.TopHeadlinesResponse> {
-    // Build query string from params
     const queryParams = new URLSearchParams();
     
     // Add optional parameters if provided
@@ -47,11 +46,11 @@ export class NewsClient extends ApiClient {
   }
   
   /**
-   * Get everything
-   * https://newsapi.org/docs/endpoints/everything
+   * Searches all articles with advanced filtering options
+   * @param params - Search and filter parameters
+   * @return Everything response with matching articles
    */
   async getEverything(params: NewsTypes.EverythingParams = {}): Promise<NewsTypes.EverythingResponse> {
-    // Build query string from params
     const queryParams = new URLSearchParams();
     
     // Add optional parameters if provided
@@ -93,11 +92,11 @@ export class NewsClient extends ApiClient {
   }
   
   /**
-   * Get sources
-   * https://newsapi.org/docs/endpoints/sources
+   * Gets available news sources
+   * @param params - Filter parameters for category, language, country
+   * @return Sources response with available news sources
    */
   async getSources(params: NewsTypes.SourcesParams = {}): Promise<NewsTypes.SourcesResponse> {
-    // Build query string from params
     const queryParams = new URLSearchParams();
     
     // Add optional parameters if provided
@@ -120,12 +119,11 @@ export class NewsClient extends ApiClient {
   }
   
   /**
-   * Test connection
-   * A simplified method just to verify the API key works
+   * Tests the API connection by making a minimal request
+   * @return True if connection is successful
    */
   async testConnection(): Promise<boolean> {
     try {
-      // Use a minimal call to verify the API key
       const queryParams = new URLSearchParams();
       queryParams.append('language', 'en');
       queryParams.append('pageSize', '1');
@@ -149,8 +147,10 @@ export class NewsClient extends ApiClient {
   }
   
   /**
-   * Search news by keyword
-   * Convenience method that searches everything
+   * Searches news articles by keyword with customisable options
+   * @param query - Search query
+   * @param options - Language, sorting, and pagination options
+   * @return Array of matching articles
    */
   async searchNews(
     query: string,
@@ -173,8 +173,11 @@ export class NewsClient extends ApiClient {
   }
   
   /**
-   * Get headlines by category
-   * Convenience method that gets top headlines by category
+   * Gets top headlines filtered by category
+   * @param category - News category to filter by
+   * @param country - Country code for regional news
+   * @param pageSize - Number of results to return
+   * @return Array of category headlines
    */
   async getHeadlinesByCategory(
     category: 'business' | 'entertainment' | 'general' | 'health' | 'science' | 'sports' | 'technology',
@@ -191,8 +194,10 @@ export class NewsClient extends ApiClient {
   }
   
   /**
-   * Get latest news
-   * Convenience method that gets the latest news
+   * Gets the latest breaking news headlines
+   * @param country - Country code for regional news
+   * @param pageSize - Number of results to return
+   * @return Array of latest articles
    */
   async getLatestNews(
     country: string = 'us',

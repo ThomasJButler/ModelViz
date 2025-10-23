@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description API settings page for configuring and testing AI provider API keys
+ */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -71,6 +76,9 @@ const providers = [
   }
 ];
 
+/**
+ * @constructor
+ */
 export default function ApiSettingsPage() {
   const [config, setConfig] = useState<ApiConfig>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -82,7 +90,7 @@ export default function ApiSettingsPage() {
   const [testResults, setTestResults] = useState<Record<string, boolean | null>>({});
   const [activeProviders, setActiveProviders] = useState<Record<string, boolean>>({});
 
-  // Initialize state for each provider
+  /** @constructs */
   useEffect(() => {
     const initialIsTesting: Record<string, boolean> = {};
     const initialTestResults: Record<string, boolean | null> = {};
@@ -99,7 +107,7 @@ export default function ApiSettingsPage() {
     setActiveProviders(initialActiveProviders);
   }, []);
 
-  // Load saved config on mount
+  /** @constructs */
   useEffect(() => {
     const loadSavedConfig = () => {
       try {
@@ -149,7 +157,7 @@ export default function ApiSettingsPage() {
     };
 
     loadSavedConfig();
-  }, []);
+  }, [activeProviders]);
 
   const handleSave = () => {
     setIsLoading(true);
@@ -207,8 +215,7 @@ export default function ApiSettingsPage() {
       ...prev,
       [providerId]: { apiKey: value }
     }));
-    
-    // Reset test results when input changes
+
     setTestResults(prev => ({
       ...prev,
       [providerId]: null
@@ -220,8 +227,7 @@ export default function ApiSettingsPage() {
       ...prev,
       [providerId]: !prev[providerId]
     }));
-    
-    // Reset test results when toggling provider
+
     setTestResults(prev => ({
       ...prev,
       [providerId]: null
@@ -235,8 +241,7 @@ export default function ApiSettingsPage() {
       // Get the actual API key
       const savedConfig = localStorage.getItem('ai_comparison_api_config');
       let apiKey = config[providerId]?.apiKey || '';
-      
-      // If the key is masked, use the saved one
+
       if (apiKey.includes('...') && savedConfig) {
         const parsedConfig = JSON.parse(savedConfig) as ApiConfig;
         apiKey = parsedConfig[providerId]?.apiKey || '';
@@ -250,13 +255,11 @@ export default function ApiSettingsPage() {
       
       const tempConfig: Partial<ApiConfig> = {};
       tempConfig[providerId] = { apiKey };
-      
-      // Try to initialize and make a test call
+
       let api: any;
       try {
         ApiService.getInstance().updateConfig(tempConfig);
-        
-        // Get the right client based on provider ID
+
         switch(providerId) {
           case 'openai':
             api = ApiService.getInstance().getOpenAI();
@@ -277,7 +280,6 @@ export default function ApiSettingsPage() {
             throw new Error(`Unknown provider: ${providerId}`);
         }
       } catch (error) {
-        // Try again with a new instance
         ApiService.getInstance(tempConfig as ApiConfig);
         
         switch(providerId) {
@@ -300,12 +302,10 @@ export default function ApiSettingsPage() {
             throw new Error(`Unknown provider: ${providerId}`);
         }
       }
-      
-      // Make test request based on provider
+
       if (providerId === 'openai') {
         await api.listModels();
       } else {
-        // Use test connection method for other providers
         const success = await api.testConnection();
         if (!success) {
           throw new Error(`${providerId} API connection test failed`);

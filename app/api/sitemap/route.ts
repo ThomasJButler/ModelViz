@@ -1,9 +1,13 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Generates XML sitemap for search engine indexing
+ */
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ai-comparison-showcase.vercel.app';
-  
-  // Define your site's pages
+
   const pages = [
     { loc: '/', changefreq: 'weekly', priority: 1.0 },
     { loc: '/playground', changefreq: 'weekly', priority: 0.9 },

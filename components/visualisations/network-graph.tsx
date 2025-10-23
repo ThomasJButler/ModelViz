@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Interactive network graph with physics-based node positioning and mouse interaction
+ */
+
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -13,10 +19,14 @@ interface Node {
   connections: number[];
 }
 
+/**
+ * @constructor
+ */
 export default function NetworkGraph() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   let animationId: number;
 
+  /** @constructs */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -29,8 +39,6 @@ export default function NetworkGraph() {
     const nodes: Node[] = [];
     const nodeCount = 30;
     const colors = ["#00FF00", "#00FFFF", "#FF00FF", "#FFA500", "#FF4500"];
-
-    // Create nodes with extra randomness
     for (let i = 0; i < nodeCount; i++) {
       nodes.push({
         x: Math.random() * canvas.width,
@@ -42,8 +50,6 @@ export default function NetworkGraph() {
         connections: [],
       });
     }
-
-    // Create connections
     nodes.forEach((node, i) => {
       const connectionCount = Math.floor(Math.random() * 4) + 1;
       for (let j = 0; j < connectionCount; j++) {
@@ -54,8 +60,6 @@ export default function NetworkGraph() {
         }
       }
     });
-
-    // Mouse interaction
     let mouseX = canvas.width / 2;
     let mouseY = canvas.height / 2;
     const handleMouseMove = (e: MouseEvent) => {
@@ -69,8 +73,6 @@ export default function NetworkGraph() {
       if (!canvas || !ctx) return;
       ctx.fillStyle = "rgba(13, 13, 13, 0.15)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Update node positions
       nodes.forEach((node) => {
         // Repel from mouse
         const dxMouse = node.x - mouseX;
@@ -82,8 +84,6 @@ export default function NetworkGraph() {
           node.vx += Math.cos(angle) * force * 0.3;
           node.vy += Math.sin(angle) * force * 0.3;
         }
-
-        // Apply forces among nodes
         nodes.forEach((other) => {
           if (other === node) return;
 
@@ -106,16 +106,10 @@ export default function NetworkGraph() {
             }
           }
         });
-
-        // Apply velocity
         node.x += node.vx;
         node.y += node.vy;
-
-        // Damping
         node.vx *= 0.94;
         node.vy *= 0.94;
-
-        // Boundary checking
         if (node.x < 0) {
           node.x = 0;
           node.vx *= -1;
@@ -133,8 +127,6 @@ export default function NetworkGraph() {
           node.vy *= -1;
         }
       });
-
-      // Draw connections
       nodes.forEach((node) => {
         node.connections.forEach((targetIndex) => {
           const target = nodes[targetIndex];
@@ -150,8 +142,6 @@ export default function NetworkGraph() {
           ctx.stroke();
         });
       });
-
-      // Draw nodes
       nodes.forEach((node) => {
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
@@ -163,8 +153,6 @@ export default function NetworkGraph() {
     }
 
     animate();
-
-    // Cleanup
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationId);

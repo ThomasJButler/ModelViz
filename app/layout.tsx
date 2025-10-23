@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Root layout with theme provider, navigation, and global styles
+ */
 import { Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -7,14 +12,10 @@ import { DemoBanner } from '@/components/demo-banner';
 import { MatrixBackground } from '@/components/matrix-background';
 import { PageTransition } from '@/components/page-transition';
 import { Toaster } from '@/components/ui/toaster';
-// import { Analytics } from '@vercel/analytics/react';
-// import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
-
-// Optimise font loading
-const jetBrainsMono = JetBrains_Mono({ 
+const jetBrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  display: 'swap', // Improve font loading performance
+  display: 'swap',
   preload: true,
   adjustFontFallback: true
 });
@@ -25,8 +26,7 @@ export const metadata: Metadata = {
     default: 'AI Comparison Showcase',
     template: '%s | AI Comparison Showcase',
   },
-  description: 'Compare leading AI models side by side with real-time performance metrics and interactive visualizations',
-  // Add OpenGraph metadata
+  description: 'Compare leading AI models side by side with real-time performance metrics and interactive visualisations',
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -35,16 +35,13 @@ export const metadata: Metadata = {
     description: 'Interactive AI Model Comparison Tool',
     siteName: 'AI Comparison Showcase'
   },
-  // Add Twitter metadata
   twitter: {
     card: 'summary_large_image',
     title: 'AI Comparison Showcase',
     description: 'Interactive AI Model Comparison Tool',
     creator: 'Thomas J Butler'
   },
-  // Add manifest
   manifest: '/manifest.json',
-  // Add icons
   icons: {
     icon: '/icons/favicon-32x32.svg',
     shortcut: '/icons/favicon-16x16.svg',
@@ -52,19 +49,22 @@ export const metadata: Metadata = {
   }
 };
 
+/**
+ * Root layout component
+ * @constructor
+ */
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html 
-      lang="en" 
+    <html
+      lang="en"
       suppressHydrationWarning
-      className="scroll-smooth" // Enable smooth scrolling
+      className="scroll-smooth"
     >
       <head>
-        {/* Add PWA meta tags */}
         <meta name="application-name" content="AI Comparison" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -72,8 +72,6 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#0d0d0d" />
-        
-        {/* Icons */}
         <link rel="icon" type="image/svg+xml" sizes="16x16" href="/icons/favicon-16x16.svg" />
         <link rel="icon" type="image/svg+xml" sizes="32x32" href="/icons/favicon-32x32.svg" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.svg" />
@@ -96,8 +94,6 @@ export default function RootLayout({
           </PageTransition>
           <Toaster />
         </ThemeProvider>
-        {/* <Analytics />
-        <SpeedInsights /> */}
       </body>
     </html>
   );

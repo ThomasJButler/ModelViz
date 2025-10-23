@@ -1,4 +1,11 @@
-// Define types for the objects
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Mock data generators for visualisations and demo mode. Provides functions
+ *              for generating time series, network graphs, neural networks, system metrics,
+ *              and privacy-related data for dashboard components.
+ */
+
 type NodeItem = {
   id: string;
   group: number;
@@ -24,23 +31,31 @@ type NeuralEdge = {
   weight: number;
 };
 
-// Utility functions for generating realistic fake data
+/**
+ * Generates time series data with three value dimensions
+ * @param {number} [points=24] - Number of data points to generate (default: 24 hours)
+ * @return {Array<{timestamp: string, value1: number, value2: number, value3: number}>}
+ */
 export function generateTimeSeriesData(points = 24) {
   const data = [];
   const now = Date.now();
-  const hour = 3600000; // 1 hour in milliseconds
+  const hour = 3600000;
 
   for (let i = 0; i < points; i++) {
     data.push({
       timestamp: new Date(now - (points - 1 - i) * hour).toISOString(),
-      value1: Math.floor(Math.random() * 1000) + 500, // Base load
-      value2: Math.floor(Math.random() * 800) + 300,  // API calls
-      value3: Math.floor(Math.random() * 600) + 200,  // Active users
+      value1: Math.floor(Math.random() * 1000) + 500,
+      value2: Math.floor(Math.random() * 800) + 300,
+      value3: Math.floor(Math.random() * 600) + 200,
     });
   }
   return data;
 }
 
+/**
+ * Generates randomised system resource metrics
+ * @return {{cpu: number, memory: number, network: number, disk: number}}
+ */
 export function generateSystemMetrics() {
   return {
     cpu: Math.random() * 100,
@@ -50,13 +65,19 @@ export function generateSystemMetrics() {
   };
 }
 
+/**
+ * Generates network graph data with nodes and links
+ * @param {number} [nodes=20] - Number of nodes to generate
+ * @param {number} [density=0.3] - Connection density (0-1 range)
+ * @return {{nodes: NodeItem[], links: LinkItem[]}}
+ */
 export function generateNetworkData(nodes = 20, density = 0.3) {
   const data = {
     nodes: [] as NodeItem[],
     links: [] as LinkItem[]
   };
 
-  // Generate nodes
+  // Generate nodes with random groups and values
   for (let i = 0; i < nodes; i++) {
     data.nodes.push({
       id: `node-${i}`,
@@ -65,7 +86,7 @@ export function generateNetworkData(nodes = 20, density = 0.3) {
     });
   }
 
-  // Generate links with specified density
+  // Generate links based on density parameter
   for (let i = 0; i < nodes; i++) {
     const numConnections = Math.floor(Math.random() * (nodes * density));
     for (let j = 0; j < numConnections; j++) {
@@ -83,6 +104,10 @@ export function generateNetworkData(nodes = 20, density = 0.3) {
   return data;
 }
 
+/**
+ * Generates mock privacy scanning data showing sensitive data detection
+ * @return {Array<{id: string, type: string, value: string, reason?: string}>}
+ */
 export function generatePrivacyData() {
   const sensitiveTypes = [
     'SSN', 'Credit Card', 'Email', 'Phone', 'Address',
@@ -92,15 +117,19 @@ export function generatePrivacyData() {
   return Array.from({ length: 10 }, (_, i) => ({
     id: `data-${i}`,
     type: Math.random() > 0.7 ? 'sensitive' : Math.random() > 0.5 ? 'warning' : 'clean',
-    value: Math.random() > 0.7 
-      ? '********' 
+    value: Math.random() > 0.7
+      ? '********'
       : `Sample data point ${i}`,
-    reason: Math.random() > 0.7 
+    reason: Math.random() > 0.7
       ? `${sensitiveTypes[Math.floor(Math.random() * sensitiveTypes.length)]} detected`
       : undefined
   }));
 }
 
+/**
+ * Generates neural network structure with layers and connections
+ * @return {{nodes: NeuralNode[], connections: NeuralEdge[]}}
+ */
 export function generateNeuralNetworkData() {
   const layers = [4, 6, 6, 3];
   const data = {
@@ -111,7 +140,7 @@ export function generateNeuralNetworkData() {
   let nodeId = 0;
   layers.forEach((size, layerIndex) => {
     const layerX = (layerIndex + 1) * (1 / (layers.length + 1));
-    
+
     for (let i = 0; i < size; i++) {
       const layerY = (i + 1) * (1 / (size + 1));
       data.nodes.push({
@@ -121,7 +150,7 @@ export function generateNeuralNetworkData() {
         layer: layerIndex
       });
 
-      // Connect to previous layer
+      // Connect to all nodes in previous layer (fully connected network)
       if (layerIndex > 0) {
         const prevLayerSize = layers[layerIndex - 1];
         for (let j = nodeId - prevLayerSize; j < nodeId; j++) {
@@ -141,6 +170,10 @@ export function generateNeuralNetworkData() {
   return data;
 }
 
+/**
+ * Generates data flow performance metrics
+ * @return {{throughput: number, latency: number, errorRate: number, successRate: number}}
+ */
 export function generateDataFlowMetrics() {
   return {
     throughput: Math.floor(Math.random() * 1000) + 500,

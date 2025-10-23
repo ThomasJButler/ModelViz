@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Real-time system metrics visualisation displaying CPU, memory, and network usage
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -14,19 +20,20 @@ import {
 } from 'recharts';
 import { generateSystemMetrics } from '@/lib/data';
 
+/**
+ * @constructor
+ */
 export default function RealTimeMetrics() {
   const [data, setData] = useState<Array<any>>([]);
 
+  /** @constructs */
   useEffect(() => {
-    // Initialize with some data
     const initialData = Array.from({ length: 20 }, (_, i) => ({
       time: new Date(Date.now() - (19 - i) * 1000).toISOString(),
       ...generateSystemMetrics()
     }));
 
     setData(initialData);
-
-    // Update data every second
     const interval = setInterval(() => {
       setData(prevData => {
         const newData = [...prevData.slice(1), {

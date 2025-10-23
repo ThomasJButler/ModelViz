@@ -44,10 +44,13 @@ export class ApiClient {
   }
 
   /**
-   * Make a request to the API
+   * Makes an HTTP request to the API with error handling and timeout support
+   * @param endpoint - API endpoint or full URL
+   * @param options - Request options including method, headers, body, timeout
+   * @return Parsed JSON response
    */
   async request<T>(
-    endpoint: string, 
+    endpoint: string,
     options: RequestOptions = {}
   ): Promise<T> {
     try {
@@ -127,24 +130,54 @@ export class ApiClient {
   }
 
   /**
-   * Convenience methods for different HTTP methods
+   * Makes a GET request to the API
+   * @param endpoint - API endpoint
+   * @param options - Request options
+   * @return Parsed JSON response
    */
   async get<T>(endpoint: string, options: Omit<RequestOptions, 'method'> = {}): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'GET' });
   }
 
+  /**
+   * Makes a POST request to the API
+   * @param endpoint - API endpoint
+   * @param body - Request body
+   * @param options - Additional request options
+   * @return Parsed JSON response
+   */
   async post<T>(endpoint: string, body: any, options: Omit<RequestOptions, 'method' | 'body'> = {}): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'POST', body });
   }
 
+  /**
+   * Makes a PUT request to the API
+   * @param endpoint - API endpoint
+   * @param body - Request body
+   * @param options - Additional request options
+   * @return Parsed JSON response
+   */
   async put<T>(endpoint: string, body: any, options: Omit<RequestOptions, 'method' | 'body'> = {}): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'PUT', body });
   }
 
+  /**
+   * Makes a DELETE request to the API
+   * @param endpoint - API endpoint
+   * @param options - Request options
+   * @return Parsed JSON response
+   */
   async delete<T>(endpoint: string, options: Omit<RequestOptions, 'method'> = {}): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'DELETE' });
   }
 
+  /**
+   * Makes a PATCH request to the API
+   * @param endpoint - API endpoint
+   * @param body - Request body
+   * @param options - Additional request options
+   * @return Parsed JSON response
+   */
   async patch<T>(endpoint: string, body: any, options: Omit<RequestOptions, 'method' | 'body'> = {}): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'PATCH', body });
   }

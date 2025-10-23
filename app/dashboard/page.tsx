@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Dashboard page displaying interactive data visualisations with dynamic loading and error handling
+ */
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
@@ -25,53 +30,53 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { ApiConfigModal } from '@/components/settings/api-config-modal';
 
 // Dynamically import Visualisation components with loading states
-const AdvancedChart = dynamic(() => import('@/components/visualisations/advanced-chart'), { 
+const AdvancedChart = dynamic(() => import('@/components/visualisations/advanced-chart'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const DataFlowDiagram = dynamic(() => import('@/components/visualisations/data-flow'), { 
+const DataFlowDiagram = dynamic(() => import('@/components/visualisations/data-flow'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const NetworkGraph = dynamic(() => import('@/components/visualisations/network-graph'), { 
+const NetworkGraph = dynamic(() => import('@/components/visualisations/network-graph'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const EnhancedNetworkGraph = dynamic(() => import('@/components/visualisations/enhanced-network-graph'), { 
+const EnhancedNetworkGraph = dynamic(() => import('@/components/visualisations/enhanced-network-graph'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const RealTimeMetrics = dynamic(() => import('@/components/visualisations/real-time-metrics'), { 
+const RealTimeMetrics = dynamic(() => import('@/components/visualisations/real-time-metrics'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const DataCleaner = dynamic(() => import('@/components/visualisations/scientific/data-cleaner'), { 
+const DataCleaner = dynamic(() => import('@/components/visualisations/scientific/data-cleaner'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const ModelEvolution = dynamic(() => import('@/components/visualisations/scientific/model-evolution'), { 
+const ModelEvolution = dynamic(() => import('@/components/visualisations/scientific/model-evolution'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const ResourceTree = dynamic(() => import('@/components/visualisations/resource-tree'), { 
+const ResourceTree = dynamic(() => import('@/components/visualisations/resource-tree'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const ParticleUniverse = dynamic(() => import('@/components/visualisations/particle-universe'), { 
+const ParticleUniverse = dynamic(() => import('@/components/visualisations/particle-universe'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const QuantumField = dynamic(() => import('@/components/visualisations/quantum-field'), { 
+const QuantumField = dynamic(() => import('@/components/visualisations/quantum-field'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const NeuralFlow = dynamic(() => import('@/components/visualisations/neural-flow'), { 
+const NeuralFlow = dynamic(() => import('@/components/visualisations/neural-flow'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const AIConsciousness = dynamic(() => import('@/components/visualisations/ai-consciousness'), { 
+const AIConsciousness = dynamic(() => import('@/components/visualisations/ai-consciousness'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
 
 const Visualisations = [
@@ -161,18 +166,20 @@ const Visualisations = [
   }
 ];
 
+/**
+ * @constructor
+ */
 export default function DashboardPage() {
   const [selectedTab, setSelectedTab] = useState(Visualisations[0].id);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isApiConfigOpen, setIsApiConfigOpen] = useState(false);
 
-  // Set random Visualisation on initial load
+  /** @constructs */
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * Visualisations.length);
     setSelectedTab(Visualisations[randomIndex].id);
-    
-    // Track page view
+
     analytics.trackPageView('/dashboard');
   }, []);
 

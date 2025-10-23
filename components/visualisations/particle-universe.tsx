@@ -1,16 +1,24 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description 3D particle universe with multiple particle systems and dynamic motion effects
+ */
+
 "use client";
 
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
+/**
+ * @constructor
+ */
 export default function ParticleUniverse() {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  /** @constructs */
   useEffect(() => {
     if (!containerRef.current) return;
-
-    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -21,8 +29,6 @@ export default function ParticleUniverse() {
     // Particle systems
     const particleSystems: THREE.Points[] = [];
     const particleCount = 10000;
-
-    // Create multiple particle systems with different behaviors
     const createParticleSystem = (baseColor: THREE.Color, size: number, speed: number) => {
       const particles = new THREE.BufferGeometry();
       const positions = new Float32Array(particleCount * 3);
@@ -104,8 +110,6 @@ export default function ParticleUniverse() {
 
       return new THREE.Points(particles, material);
     };
-
-    // Create three particle systems with different colors and behaviors
     const system1 = createParticleSystem(new THREE.Color(0x00ff00), 3, 0.1);
     const system2 = createParticleSystem(new THREE.Color(0x00ffff), 2, 0.15);
     const system3 = createParticleSystem(new THREE.Color(0xff00ff), 1.5, 0.2);
@@ -114,8 +118,6 @@ export default function ParticleUniverse() {
     particleSystems.push(system1, system2, system3);
 
     camera.position.z = 100;
-
-    // Mouse interaction
     const mouse = new THREE.Vector2();
     const target = new THREE.Vector2();
     
@@ -124,20 +126,14 @@ export default function ParticleUniverse() {
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
     });
-
-    // Animation
     let frame = 0;
     const animate = () => {
       frame = requestAnimationFrame(animate);
       const time = performance.now() * 0.001;
-
-      // Smooth camera movement following mouse
       target.lerp(mouse, 0.05);
       camera.position.x = target.x * 20;
       camera.position.y = target.y * 20;
       camera.lookAt(scene.position);
-
-      // Update particle systems
       particleSystems.forEach((system, index) => {
         const material = system.material as THREE.ShaderMaterial;
         material.uniforms.time.value = time * (1 + index * 0.2);
@@ -147,8 +143,6 @@ export default function ParticleUniverse() {
     };
 
     animate();
-
-    // Handle resize
     const handleResize = () => {
       if (!containerRef.current) return;
       

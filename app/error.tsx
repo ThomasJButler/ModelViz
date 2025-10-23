@@ -1,8 +1,17 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Global error boundary component for application-wide error handling
+ */
 "use client";
 
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 
+/**
+ * Error boundary component
+ * @constructor
+ */
 export default function Error({
   error,
   reset,
@@ -10,6 +19,7 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  /** @listens error */
   useEffect(() => {
     console.error(error);
   }, [error]);
