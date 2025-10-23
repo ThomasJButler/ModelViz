@@ -29,70 +29,70 @@ const tabs = [
     label: 'Usage Patterns',
     icon: LineChart,
     component: UsagePatterns,
-    description: 'Analyse usage patterns and trends'
+    description: 'Recharts area charts showing token consumption trends with heatmap visualisation for peak usage periods'
   },
   {
     id: 'resources',
     label: 'Resource Utilisation',
     icon: BarChart,
     component: ResourceUtilization,
-    description: 'Monitor system resource usage'
+    description: 'Recharts pie charts displaying CPU, memory, network, and storage allocation with detailed breakdowns'
   },
   {
     id: 'costs',
     label: 'Cost Analysis',
     icon: Clock,
     component: CostAnalysis,
-    description: 'Track and optimise costs'
+    description: 'Recharts stacked bar charts tracking inference, training, and storage costs with optimisation recommendations'
   },
   {
     id: 'predictions',
     label: 'Predictive Trends',
     icon: AlertTriangle,
     component: PredictiveTrends,
-    description: 'AI-powered usage predictions'
+    description: 'Recharts dual-line forecast combining 24h historical data with 12h predictions and confidence intervals'
   },
   {
     id: 'performance',
     label: 'Model Performance',
     icon: Brain,
     component: ModelPerformance,
-    description: 'Monitor and analyse model performance metrics'
+    description: 'Recharts radar charts comparing 6 metrics (accuracy, latency, reliability, throughput, cost, scalability) across GPT-4, Claude, and LLaMA'
   },
   {
     id: 'comparison',
     label: 'Model Comparison',
     icon: Target,
     component: ModelComparison,
-    description: 'Compare different model capabilities'
+    description: 'Multi-model radar chart overlay for side-by-side performance analysis across 6 key dimensions'
   },
   {
     id: 'f1score',
     label: 'AI F1 Score',
     icon: ChartBar,
     component: AIScorecard,
-    description: 'Detailed AI model evaluation metrics'
+    description: 'Recharts time series tracking precision, recall, F1 score, and accuracy trends with confusion matrix data'
   },
   {
     id: 'security',
     label: 'Security Insights',
     icon: Shield,
     component: SecurityInsights,
-    description: 'Track security events and system vulnerabilities'
+    description: 'Recharts area chart monitoring security events with threat categorisation and severity tracking'
   },
   {
     id: 'api',
     label: 'API Gateway',
     icon: Network,
     component: APIGateway,
-    description: 'Monitor API traffic and endpoint performance'
+    description: 'Dual charts showing request volume, endpoint latency (ms), and error rate distribution across 4 API routes'
   },
   {
     id: 'health',
     label: 'System Health',
     icon: Activity,
     component: SystemHealth,
-    description: 'Track overall system health and performance'
+    description: 'Real-time Recharts line graphs with 2-second updates displaying CPU, memory, disk, and network utilisation'
   }
 ];
 
