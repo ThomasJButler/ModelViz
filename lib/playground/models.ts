@@ -33,7 +33,25 @@ export interface ProviderGroupedModels {
 export async function getAvailableModels(): Promise<ProviderGroupedModels[]> {
   // Initialize result array
   const result: ProviderGroupedModels[] = [];
-  
+
+  // Try to initialize ApiService from localStorage if not already initialized
+  try {
+    ApiService.getInstance();
+  } catch {
+    // Not initialized yet, try to initialize from localStorage
+    if (typeof window !== 'undefined') {
+      const savedConfig = localStorage.getItem('ai_comparison_api_config');
+      if (savedConfig) {
+        try {
+          const config = JSON.parse(savedConfig);
+          ApiService.getInstance(config);
+        } catch (error) {
+          console.error('Error initializing ApiService from localStorage:', error);
+        }
+      }
+    }
+  }
+
   try {
     // Check for OpenAI models
     try {

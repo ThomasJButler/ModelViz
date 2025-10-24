@@ -17,6 +17,7 @@ import { EnhancedInput } from '@/components/enhanced-input';
 import { ApiConfigModal } from '@/components/settings/api-config-modal';
 import { getAvailableModels, type ModelOption, type ProviderGroupedModels } from '@/lib/playground/models';
 import { generatePlaygroundResponse, type PlaygroundRequest, type PlaygroundResponse } from '@/lib/playground/api-cached';
+import { ApiService } from '@/lib/api';
 
 type InputFormat = 'json' | 'text' | 'code';
 
@@ -190,6 +191,18 @@ export default function PlaygroundPage() {
     const loadModels = async () => {
       try {
         setIsLoadingModels(true);
+
+        // Initialize ApiService with saved config from localStorage
+        const savedConfig = localStorage.getItem('ai_comparison_api_config');
+        if (savedConfig) {
+          try {
+            const config = JSON.parse(savedConfig);
+            ApiService.getInstance(config);
+          } catch (initError) {
+            console.error('Error initializing ApiService:', initError);
+          }
+        }
+
         const models = await getAvailableModels();
         setModelGroups(models);
 
