@@ -19,7 +19,8 @@ import {
   Sparkles,
   Atom,
   EuroIcon as Neurons,
-  Cpu
+  Cpu,
+  Layers
 } from "lucide-react";
 import dynamic from 'next/dynamic';
 import { VisualisationLoader } from '@/components/visualisation-loader';
@@ -76,6 +77,14 @@ const AIConsciousness = dynamic(() => import('@/components/visualisations/ai-con
   loading: () => <VisualisationLoader />,
   ssr: false
 });
+const AIThoughtStream = dynamic(() => import('@/components/visualisations/ai-thought-stream'), {
+  loading: () => <VisualisationLoader />,
+  ssr: false
+});
+const LatentSpaceExplorer = dynamic(() => import('@/components/visualisations/latent-space-explorer'), {
+  loading: () => <VisualisationLoader />,
+  ssr: false
+});
 
 const Visualisations = [
   {
@@ -84,6 +93,20 @@ const Visualisations = [
     description: 'WebGL particle system demonstrating GPU-accelerated rendering with 10,000+ interactive nodes',
     icon: Cpu,
     component: AIConsciousness
+  },
+  {
+    id: 'ai-thought-stream',
+    title: 'AI Thought Stream',
+    description: 'Canvas-based flowing consciousness visualization with branching thoughts across NLP, vision, logic & creativity domains',
+    icon: Brain,
+    component: AIThoughtStream
+  },
+  {
+    id: 'latent-space',
+    title: 'Latent Space Explorer',
+    description: '3D semantic space navigation with concept clusters, mouse-controlled camera, and starfield background effects',
+    icon: Layers,
+    component: LatentSpaceExplorer
   },
   {
     id: 'particle-universe',
