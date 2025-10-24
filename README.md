@@ -4,7 +4,7 @@ Interactive tool for comparing OpenAI, Anthropic, DeepSeek, and Perplexity model
 
 ## What It Does
 
-Portfolio project demonstrating multi-AI model comparison. Test different models with the same prompt, compare response times, token usage, and export results. Includes 3D network visualisations and performance analytics.
+Portfolio project demonstrating multi-AI model comparison. Test different models with the same prompt, compare response times, token usage, and export results. Includes 3D network visualisations and performance analytics (demo data)
 
 <img width="1329" height="743" alt="image" src="https://github.com/user-attachments/assets/f7c38e8f-5a41-40a7-809a-65745dfc6bc0" />
 
@@ -57,8 +57,6 @@ components/       # React components and visualisations
 lib/              # API clients, caching, analytics, performance monitoring
 hooks/            # Custom React hooks for animations and interactions
 ```
-
-See [CLAUDE.md](CLAUDE.md) for architecture details and development guidance.
 
 ## Testing
 

@@ -1,6 +1,6 @@
 {
   "name": "ai-comparison-showcase",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "AI Comparison Showcase - An interactive tool for comparing multiple AI models side by side with real-time performance metrics and visualizations.",
   "private": true,
   "scripts": {

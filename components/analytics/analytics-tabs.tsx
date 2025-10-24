@@ -20,7 +20,6 @@ import { ModelPerformance } from './model-performance';
 import { SecurityInsights } from './security-insights';
 import { APIGateway } from './api-gateway';
 import { SystemHealth } from './system-health';
-import { ModelComparison } from './model-comparison';
 import { AIScorecard } from './ai-scorecard';
 import { NeuralActivityMap } from './neural-activity-map';
 
@@ -31,6 +30,13 @@ const tabs = [
     icon: LineChart,
     component: UsagePatterns,
     description: 'Recharts area charts showing token consumption trends with heatmap visualisation for peak usage periods'
+  },
+  {
+    id: 'neural-map',
+    label: 'Neural Activity Map',
+    icon: Layers,
+    component: NeuralActivityMap,
+    description: 'Canvas-based 3D visualisation with pulse waves, particle effects, lightning bolts, and matrix rain showing real-time neural network activity'
   },
   {
     id: 'resources',
@@ -61,13 +67,6 @@ const tabs = [
     description: 'Recharts radar charts comparing 6 metrics (accuracy, latency, reliability, throughput, cost, scalability) across GPT-4, Claude, and LLaMA'
   },
   {
-    id: 'comparison',
-    label: 'Model Comparison',
-    icon: Target,
-    component: ModelComparison,
-    description: 'Multi-model radar chart overlay for side-by-side performance analysis across 6 key dimensions'
-  },
-  {
     id: 'f1score',
     label: 'AI F1 Score',
     icon: ChartBar,
@@ -94,13 +93,6 @@ const tabs = [
     icon: Activity,
     component: SystemHealth,
     description: 'Real-time Recharts line graphs with 2-second updates displaying CPU, memory, disk, and network utilisation'
-  },
-  {
-    id: 'neural-map',
-    label: 'Neural Activity Map',
-    icon: Layers,
-    component: NeuralActivityMap,
-    description: 'Canvas-based 3D visualisation of neural network layer activations with real-time neuron firing patterns and data flow animation'
   }
 ];
 
