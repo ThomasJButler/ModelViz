@@ -1,1 +1,0 @@
-Task(description="Quality review", prompt="Perform final quality review of the entire project. Check code standards, test coverage, integration, performance, accessibility, and portfolio presentation. Ensure all quality gates are met before deployment.", subagent_type="quality-guardian")

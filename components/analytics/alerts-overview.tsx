@@ -91,7 +91,7 @@ export function AlertsOverview() {
         </div>
         <button
           onClick={() => setAlertsEnabled(!alertsEnabled)}
-          className={`px-4 py-2 rounded-lg border transition-colours ${
+          className={`px-4 py-2 rounded-lg border transition-colors ${
             alertsEnabled
               ? 'border-matrix-primary text-matrix-primary'
               : 'border-foreground/20 text-foreground/50'

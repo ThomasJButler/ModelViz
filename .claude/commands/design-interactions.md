@@ -1,1 +1,0 @@
-Task(description="Design interactions", prompt="Create smooth, intuitive interaction patterns for AI model comparisons. Design engaging user flows, comparison visualizations, and interactive elements. Focus on reducing cognitive load while showcasing capabilities.", subagent_type="interaction-designer")

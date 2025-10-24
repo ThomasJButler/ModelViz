@@ -8,7 +8,7 @@
 import { ModelBuilderLayout } from '@/components/model-builder/layout';
 import { ModelDefinitionPanel } from '@/components/model-builder/definition-panel';
 import { ModelTestingPanel } from '@/components/model-builder/testing-panel';
-import { ModelVisualisationPanel } from '@/components/model-builder/visualisation-panel';
+import { ModelVisualizationPanel } from '@/components/model-builder/visualization-panel';
 
 /**
  * @constructor
@@ -18,7 +18,7 @@ export default function ModelBuilderPage() {
     <ModelBuilderLayout
       leftPanel={<ModelDefinitionPanel />}
       centerPanel={<ModelTestingPanel />}
-      rightPanel={<ModelVisualisationPanel />}
+      rightPanel={<ModelVisualizationPanel />}
     />
   );
 }

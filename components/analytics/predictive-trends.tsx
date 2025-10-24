@@ -61,8 +61,8 @@ export function PredictiveTrends() {
             <LineChart>
               <defs>
                 <linearGradient id="confidenceGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColour="#00ff00" stopOpacity={0.2} />
-                  <stop offset="95%" stopColour="#00ff00" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#00ff00" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#00ff00" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis

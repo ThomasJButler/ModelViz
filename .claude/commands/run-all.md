@@ -1,1 +1,0 @@
-Task(description="Complete AI Showcase", prompt="Orchestrate all agents to complete the AI Comparison Showcase project. Execute all phases in order: analysis, cleanup, development, optimization, documentation, deployment, and quality review. Ensure all quality gates are met and create a portfolio-ready application.", subagent_type="master-coordinator")

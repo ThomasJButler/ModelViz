@@ -1,1 +1,0 @@
-Task(description="Remove AiTomatic branding", prompt="Systematically remove all AiTomatic.co.uk branding, links, and references from the project. Replace with portfolio-appropriate content. Ensure no conflicts with the original AiTomatic project.", subagent_type="branding-remover")

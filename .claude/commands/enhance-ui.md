@@ -1,1 +1,0 @@
-Task(description="Enhance UI", prompt="Transform the UI into a stunning portfolio showcase. Improve typography, colors, spacing, and add subtle animations. Create a cohesive visual language with professional polish. Ensure accessibility and responsive design.", subagent_type="ui-enhancer")

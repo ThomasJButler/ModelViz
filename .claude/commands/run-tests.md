@@ -1,1 +1,0 @@
-Task(description="Create TDD tests", prompt="Design and implement meaningful Test-Driven Development scenarios. Write tests that fail first and expose real issues. Create tests for AI comparison features, user interactions, and edge cases. Never modify tests to pass - fix the code instead.", subagent_type="test-architect")

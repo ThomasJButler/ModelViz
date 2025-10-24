@@ -1,1 +1,0 @@
-Task(description="Optimize performance", prompt="Analyze and optimize application performance. Implement code splitting, lazy loading, memoization, and caching. Optimize bundle size, assets, and runtime performance. Achieve Lighthouse score > 90.", subagent_type="performance-optimizer")

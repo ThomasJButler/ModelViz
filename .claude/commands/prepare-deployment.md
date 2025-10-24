@@ -1,1 +1,0 @@
-Task(description="Prepare deployment", prompt="Prepare the project for portfolio deployment. Configure production builds, set up deployment platforms, optimize meta tags and SEO, integrate analytics, and ensure security best practices.", subagent_type="deployment-preparer")
