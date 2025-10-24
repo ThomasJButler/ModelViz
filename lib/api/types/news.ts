@@ -1,8 +1,7 @@
 /**
- * News API Types
- * 
- * Type definitions for News API requests and responses.
- * Based on the News API documentation: https://newsapi.org/docs/endpoints
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description TypeScript type definitions for News API requests and responses
  */
 
 // Source information

@@ -1,15 +1,13 @@
 /**
- * Anthropic API Client
- * 
- * Client for interacting with Anthropic's Claude models.
- * Handles authentication, request formation, and response parsing.
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Anthropic API client for Claude models with support for advanced reasoning and tool use
  */
 
 import { ApiClient } from '../apiClient';
 import * as AnthropicTypes from '../types/anthropic';
 
 export class AnthropicClient extends ApiClient {
-  // Claude API versions
   private apiVersion = '2023-06-01';
   private anthropicVersion = 'claude-3';
   
@@ -22,10 +20,11 @@ export class AnthropicClient extends ApiClient {
   }
   
   /**
-   * List available models
+   * Lists available Claude models
+   * Returns a static list as Anthropic doesn't provide a models endpoint
+   * @return Array of available Claude models with capabilities
    */
   async listModels(): Promise<AnthropicTypes.ModelObject[]> {
-    // Anthropic doesn't have a list models endpoint, so we return hardcoded models
     return [
       {
         name: 'claude-3-opus-20240229',
@@ -55,16 +54,23 @@ export class AnthropicClient extends ApiClient {
   }
   
   /**
-   * Create a message
+   * Creates a message completion with Claude
+   * @param request - Message request with prompt and parameters
+   * @return Claude's response with content blocks
    */
   async createMessage(
     request: AnthropicTypes.MessageRequest
   ): Promise<AnthropicTypes.MessageResponse> {
     return this.post<AnthropicTypes.MessageResponse>('messages', request);
   }
-  
+
   /**
-   * Utility method for simple text completion
+   * Simplified method for generating text from a single prompt
+   * @param prompt - User prompt text
+   * @param systemPrompt - System instructions for Claude
+   * @param model - Claude model ID to use
+   * @param options - Additional message options
+   * @return Generated text response
    */
   async generateText(
     prompt: string,
@@ -80,8 +86,7 @@ export class AnthropicClient extends ApiClient {
       temperature: 0.7,
       ...options
     });
-    
-    // Extract text content from all blocks
+
     const textContent = response.content
       .filter(block => block.type === 'text' && block.text)
       .map(block => block.text)
@@ -91,7 +96,8 @@ export class AnthropicClient extends ApiClient {
   }
   
   /**
-   * Test connection to the API
+   * Tests the API connection by making a minimal request
+   * @return True if connection is successful
    */
   async testConnection(): Promise<boolean> {
     try {
@@ -109,7 +115,12 @@ export class AnthropicClient extends ApiClient {
   }
 
   /**
-   * Generate completion - wrapper method for compatibility
+   * Generates a completion with usage statistics for cross-provider compatibility
+   * @param prompt - Text prompt to complete
+   * @param model - Claude model ID to use
+   * @param maxTokens - Maximum tokens to generate
+   * @param temperature - Sampling temperature (0-1)
+   * @return Generated content and usage metrics
    */
   async generateCompletion(
     prompt: string,
@@ -124,7 +135,6 @@ export class AnthropicClient extends ApiClient {
       temperature: temperature !== undefined ? temperature : 0.7
     });
 
-    // Extract text content
     const textContent = response.content
       .filter(block => block.type === 'text' && block.text)
       .map(block => block.text)

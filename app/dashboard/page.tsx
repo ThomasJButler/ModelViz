@@ -1,178 +1,205 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Dashboard page displaying interactive data visualisations with dynamic loading and error handling
+ */
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Brain, 
-  LineChart, 
-  Network, 
-  Activity, 
-  Zap, 
-  Shield, 
-  Boxes, 
-  Trees as TreeStructure, 
-  Sparkles, 
-  Atom, 
-  EuroIcon as Neurons, 
+import {
+  Brain,
+  LineChart,
+  Network,
+  Activity,
+  Zap,
+  Shield,
+  Boxes,
+  Trees as TreeStructure,
+  Sparkles,
+  Atom,
+  EuroIcon as Neurons,
   Cpu,
-  Settings as SettingsIcon
+  Layers
 } from "lucide-react";
 import dynamic from 'next/dynamic';
 import { VisualisationLoader } from '@/components/visualisation-loader';
 import Loading from '../loading';
 import { analytics } from '@/lib/analytics';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { ApiConfigModal } from '@/components/settings/api-config-modal';
 
 // Dynamically import Visualisation components with loading states
-const AdvancedChart = dynamic(() => import('@/components/visualisations/advanced-chart'), { 
+const AdvancedChart = dynamic(() => import('@/components/visualisations/advanced-chart'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const DataFlowDiagram = dynamic(() => import('@/components/visualisations/data-flow'), { 
+const DataFlowDiagram = dynamic(() => import('@/components/visualisations/data-flow'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const NetworkGraph = dynamic(() => import('@/components/visualisations/network-graph'), { 
+const NetworkGraph = dynamic(() => import('@/components/visualisations/network-graph'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const EnhancedNetworkGraph = dynamic(() => import('@/components/visualisations/enhanced-network-graph'), { 
+const EnhancedNetworkGraph = dynamic(() => import('@/components/visualisations/enhanced-network-graph'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const RealTimeMetrics = dynamic(() => import('@/components/visualisations/real-time-metrics'), { 
+const RealTimeMetrics = dynamic(() => import('@/components/visualisations/real-time-metrics'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const DataCleaner = dynamic(() => import('@/components/visualisations/scientific/data-cleaner'), { 
+const DataCleaner = dynamic(() => import('@/components/visualisations/scientific/data-cleaner'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const ModelEvolution = dynamic(() => import('@/components/visualisations/scientific/model-evolution'), { 
+const ModelEvolution = dynamic(() => import('@/components/visualisations/scientific/model-evolution'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const ResourceTree = dynamic(() => import('@/components/visualisations/resource-tree'), { 
+const ResourceTree = dynamic(() => import('@/components/visualisations/resource-tree'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const ParticleUniverse = dynamic(() => import('@/components/visualisations/particle-universe'), { 
+const ParticleUniverse = dynamic(() => import('@/components/visualisations/particle-universe'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const QuantumField = dynamic(() => import('@/components/visualisations/quantum-field'), { 
+const QuantumField = dynamic(() => import('@/components/visualisations/quantum-field'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const NeuralFlow = dynamic(() => import('@/components/visualisations/neural-flow'), { 
+const NeuralFlow = dynamic(() => import('@/components/visualisations/neural-flow'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
 });
-const AIConsciousness = dynamic(() => import('@/components/visualisations/ai-consciousness'), { 
+const AIConsciousness = dynamic(() => import('@/components/visualisations/ai-consciousness'), {
   loading: () => <VisualisationLoader />,
-  ssr: false 
+  ssr: false
+});
+const AIThoughtStream = dynamic(() => import('@/components/visualisations/ai-thought-stream'), {
+  loading: () => <VisualisationLoader />,
+  ssr: false
+});
+const LatentSpaceExplorer = dynamic(() => import('@/components/visualisations/latent-space-explorer'), {
+  loading: () => <VisualisationLoader />,
+  ssr: false
 });
 
 const Visualisations = [
   {
     id: 'ai-consciousness',
     title: 'AI Consciousness',
-    description: 'Immersive simulation of artificial consciousness and thought processes',
+    description: 'WebGL particle system demonstrating GPU-accelerated rendering with 10,000+ interactive nodes',
     icon: Cpu,
     component: AIConsciousness
   },
   {
+    id: 'ai-thought-stream',
+    title: 'AI Thought Stream',
+    description: 'Canvas-based flowing consciousness visualization with branching thoughts across NLP, vision, logic & creativity domains',
+    icon: Brain,
+    component: AIThoughtStream
+  },
+  {
+    id: 'latent-space',
+    title: 'Latent Space Explorer',
+    description: '3D semantic space navigation with concept clusters, mouse-controlled camera, and starfield background effects',
+    icon: Layers,
+    component: LatentSpaceExplorer
+  },
+  {
     id: 'particle-universe',
     title: 'Particle Universe',
-    description: 'Immersive 3D particle system with dynamic interactions',
+    description: 'Three.js 3D scene with physics-based particle interactions and mouse-responsive gravity fields',
     icon: Sparkles,
     component: ParticleUniverse
   },
   {
     id: 'api-network',
-    title: 'API Network',
-    description: 'Real-time visualization of API connections and data flow',
+    title: 'API Provider Network',
+    description: 'D3.js force-directed graph showing API provider relationships with 24 nodes and dynamic connections',
     icon: Network,
     component: EnhancedNetworkGraph
   },
   {
     id: 'quantum-field',
     title: 'Quantum Field',
-    description: 'Interactive quantum particle simulation with field effects',
+    description: 'Canvas-based wave interference simulation with real-time magnetic field interaction physics',
     icon: Atom,
     component: QuantumField
   },
   {
     id: 'neural-flow',
     title: 'Neural Flow',
-    description: 'Dynamic Visualisation of neural network signal propagation',
+    description: 'Animated neural network (4-6-6-3 architecture) showing forward propagation with weighted connections',
     icon: Neurons,
     component: NeuralFlow
   },
   {
     id: 'advanced-chart',
-    title: 'Time Series Analysis',
-    description: 'Advanced time series Visualisation with real-time data updates',
+    title: 'Model Response Times',
+    description: 'Recharts area chart tracking 24-hour response time trends for GPT-4, Claude, DeepSeek & Perplexity',
     icon: LineChart,
     component: AdvancedChart
   },
   {
     id: 'data-flow',
     title: 'Data Flow',
-    description: 'Interactive Visualisation of data flow patterns and connections',
+    description: 'SVG-based animated pipeline showing data transformation stages with throughput and latency metrics',
     icon: Activity,
     component: DataFlowDiagram
   },
   {
     id: 'network-graph',
     title: 'Network Analysis',
-    description: 'Dynamic network graph Visualisation with force-directed layout',
+    description: 'D3.js simulation with Barnes-Hut approximation for efficient multi-body collision detection',
     icon: Network,
     component: NetworkGraph
   },
   {
     id: 'real-time',
-    title: 'Real-time Metrics',
-    description: 'Live system metrics and performance monitoring',
+    title: 'AI Performance Metrics',
+    description: 'Recharts line graph with 1-second updates showing token consumption, API throughput, and success rates',
     icon: Zap,
     component: RealTimeMetrics
   },
   {
     id: 'data-cleaner',
     title: 'Data Privacy Scanner',
-    description: 'Advanced data privacy and cleaning Visualisation',
+    description: 'Pattern recognition demo detecting PII (SSN, credit cards, API keys) with Framer Motion animations',
     icon: Shield,
     component: DataCleaner
   },
   {
     id: 'model-evolution',
     title: 'Neural Network',
-    description: 'Visual representation of neural network evolution',
+    description: 'Animated network topology evolution showing layer formation and connection pruning over time',
     icon: Brain,
     component: ModelEvolution
   },
   {
     id: 'resource-tree',
     title: 'Resource Tree',
-    description: 'Hierarchical Visualisation of AI system resources',
+    description: 'D3.js collapsible tree diagram visualising hierarchical resource allocation and dependencies',
     icon: TreeStructure,
     component: ResourceTree
   }
 ];
 
+/**
+ * @constructor
+ */
 export default function DashboardPage() {
   const [selectedTab, setSelectedTab] = useState(Visualisations[0].id);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [isApiConfigOpen, setIsApiConfigOpen] = useState(false);
 
-  // Set random Visualisation on initial load
+  /** @constructs */
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * Visualisations.length);
     setSelectedTab(Visualisations[randomIndex].id);
-    
-    // Track page view
+
     analytics.trackPageView('/dashboard');
   }, []);
 
@@ -224,14 +251,6 @@ export default function DashboardPage() {
               Explore advanced data visualisations and insights
             </p>
           </div>
-          
-          <button
-            onClick={() => setIsApiConfigOpen(true)}
-            className="self-start md:self-auto flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-background hover:bg-card hover:border-matrix-primary/50 transition-all"
-          >
-            <SettingsIcon className="w-4 h-4 text-matrix-primary" />
-            <span>API Configuration</span>
-          </button>
         </motion.div>
 
         {/* Visualisation Tabs */}
@@ -320,12 +339,6 @@ export default function DashboardPage() {
           </motion.div>
         </ErrorBoundary>
       </div>
-      
-      {/* API Configuration Modal */}
-      <ApiConfigModal 
-        isOpen={isApiConfigOpen} 
-        onClose={() => setIsApiConfigOpen(false)} 
-      />
     </div>
   );
 }

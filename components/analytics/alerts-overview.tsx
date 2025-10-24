@@ -1,9 +1,19 @@
+/**
+ * @file alerts-overview.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description System alerts and notifications overview dashboard displaying active and historical alerts.
+ */
+
 "use client";
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, CheckCircle, Clock, AlertCircle, Bell, BellOff } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function AlertsOverview() {
   const [alertsEnabled, setAlertsEnabled] = useState(true);
 
@@ -12,7 +22,7 @@ export function AlertsOverview() {
       id: 1,
       type: 'critical',
       title: 'High Memory Usage',
-      description: 'Memory utilization exceeded 90%',
+      description: 'Memory utilisation exceeded 90%',
       time: '2 minutes ago',
       status: 'active'
     },
@@ -65,7 +75,6 @@ export function AlertsOverview() {
 
   return (
     <div className="space-y-6">
-      {/* Alert Settings */}
       <div className="flex items-center justify-between p-4 rounded-lg border border-matrix-primary/20 bg-background/50">
         <div className="flex items-center gap-4">
           {alertsEnabled ? (
@@ -92,14 +101,13 @@ export function AlertsOverview() {
         </button>
       </div>
 
-      {/* Active Alerts */}
       <div className="space-y-4">
         <h4 className="text-sm font-medium text-matrix-primary">Active Alerts</h4>
         <div className="space-y-3">
           {alerts.filter(alert => alert.status === 'active').map((alert) => {
             const AlertIcon = alertTypes[alert.type as keyof typeof alertTypes].icon;
             const styles = alertTypes[alert.type as keyof typeof alertTypes];
-            
+
             return (
               <motion.div
                 key={alert.id}
@@ -126,14 +134,12 @@ export function AlertsOverview() {
         </div>
       </div>
 
-      {/* Alert History */}
       <div className="space-y-4">
         <h4 className="text-sm font-medium text-matrix-primary">Alert History</h4>
         <div className="space-y-3">
           {alerts.filter(alert => alert.status === 'resolved').map((alert) => {
             const AlertIcon = alertTypes[alert.type as keyof typeof alertTypes].icon;
-            const styles = alertTypes[alert.type as keyof typeof alertTypes];
-            
+
             return (
               <motion.div
                 key={alert.id}

@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Hierarchical resource tree visualisation using D3 treemap with real-time usage indicators
+ */
+
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
@@ -121,6 +127,9 @@ const getStatusColor = (status: string, opacity: number = 1) => {
   }
 };
 
+/**
+ * @constructor
+ */
 export default function ResourceTree() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null);
@@ -130,6 +139,7 @@ export default function ResourceTree() {
     node: TreeNode;
   } | null>(null);
 
+  /** @constructs */
   useEffect(() => {
     if (!svgRef.current) return;
 
@@ -142,11 +152,7 @@ export default function ResourceTree() {
 
     const g = svg.append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    // Add gradient definitions
     const defs = svg.append("defs");
-
-    // Create gradients for each status
     ['healthy', 'warning', 'critical'].forEach(status => {
       const gradient = defs.append("linearGradient")
         .attr("id", `gradient-${status}`)
@@ -163,8 +169,6 @@ export default function ResourceTree() {
         .attr("offset", "100%")
         .attr("stop-color", getStatusColor(status, 0.3));
     });
-
-    // Add glow effect
     const filter = defs.append("filter")
       .attr("id", "glow")
       .attr("x", "-50%")
@@ -193,8 +197,6 @@ export default function ResourceTree() {
       .data(root.leaves())
       .join("g")
       .attr("transform", d => `translate(${(d as d3.HierarchyRectangularNode<TreeNode>).x0},${(d as d3.HierarchyRectangularNode<TreeNode>).y0})`);
-
-    // Add rectangles with gradients and animations
     cell.append("rect")
       .attr("width", d => (d as d3.HierarchyRectangularNode<TreeNode>).x1 - (d as d3.HierarchyRectangularNode<TreeNode>).x0)
       .attr("height", d => (d as d3.HierarchyRectangularNode<TreeNode>).y1 - (d as d3.HierarchyRectangularNode<TreeNode>).y0)
@@ -208,8 +210,6 @@ export default function ResourceTree() {
       .duration(1000)
       .delay((_, i) => i * 50)
       .attr("opacity", 1);
-
-    // Add usage indicator bars
     cell.append("rect")
       .attr("x", 4)
       .attr("y", d => ((d as d3.HierarchyRectangularNode<TreeNode>).y1 - (d as d3.HierarchyRectangularNode<TreeNode>).y0) - 8)
@@ -228,8 +228,6 @@ export default function ResourceTree() {
       .attr("rx", 2)
       .attr("ry", 2)
       .style("filter", "url(#glow)");
-
-    // Add text labels with better positioning and styling
     const addText = (selection: d3.Selection<any, any, any, any>) => {
       selection
         .append("text")
@@ -250,8 +248,6 @@ export default function ResourceTree() {
     };
 
     addText(cell);
-
-    // Add hover effects and interactivity
     cell
       .on("mouseover", function(event, d) {
         d3.select(this).select("rect")
@@ -278,28 +274,20 @@ export default function ResourceTree() {
       .on("click", (_, d) => {
         setSelectedNode(d.data);
       });
-
-    // Update data periodically
     const interval = setInterval(() => {
       cell.each(function(d) {
         const usage = d.data.usage || 0;
         const newUsage = Math.max(0, Math.min(100, usage + (Math.random() - 0.5) * 10));
         d.data.usage = newUsage;
-
-        // Update status based on usage
         if (newUsage > 90) d.data.status = 'critical';
         else if (newUsage > 70) d.data.status = 'warning';
         else d.data.status = 'healthy';
-
-        // Update usage bar
         d3.select(this)
           .select("rect:nth-child(3)")
           .transition()
           .duration(1000)
           .attr("width", (((d as d3.HierarchyRectangularNode<TreeNode>).x1 - (d as d3.HierarchyRectangularNode<TreeNode>).x0) - 8) * newUsage / 100)
           .attr("fill", getStatusColor(d.data.status));
-
-        // Update usage text
         d3.select(this)
           .select("text:nth-child(5)")
           .text(`${Math.round(newUsage)}% used`);

@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Accordion primitive wrapper
+ */
+
 'use client';
 
 import * as React from 'react';
@@ -20,6 +26,9 @@ const AccordionItem = React.forwardRef<
 ));
 AccordionItem.displayName = 'AccordionItem';
 
+/**
+ * @constructor
+ */
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>

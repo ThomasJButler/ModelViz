@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Usage and billing page displaying token consumption, costs, and usage statistics across AI providers
+ */
 "use client";
 
 import { useState } from "react";
@@ -59,11 +64,13 @@ interface DailyUsage {
   }>;
 }
 
+/**
+ * @constructor
+ */
 export default function UsagePage() {
   const [timeframe, setTimeframe] = useState<"7d" | "30d" | "90d" | "all">("30d");
   const [expandedProviders, setExpandedProviders] = useState<Record<string, boolean>>({});
-  
-  // Sample data
+
   const usageData: UsageData[] = [
     {
       provider: "OpenAI",
@@ -105,8 +112,7 @@ export default function UsagePage() {
       ]
     }
   ];
-  
-  // Daily usage for chart
+
   const dailyUsage: DailyUsage[] = [
     { 
       date: "Mar 23", 
@@ -186,26 +192,22 @@ export default function UsagePage() {
       }
     }
   ];
-  
-  // Calculate totals
+
   const totalTokens = usageData.reduce((sum, provider) => sum + provider.tokens, 0);
   const totalCost = usageData.reduce((sum, provider) => sum + provider.cost, 0);
   const totalRequests = usageData.reduce((sum, provider) => sum + provider.requests, 0);
-  
-  // Toggle provider expansion
+
   const toggleProvider = (provider: string) => {
     setExpandedProviders(prev => ({
       ...prev,
       [provider]: !prev[provider]
     }));
   };
-  
-  // Format number with commas
+
   const formatNumber = (num: number): string => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
-  
-  // Format currency
+
   const formatCurrency = (amount: number): string => {
     return `$${amount.toFixed(2)}`;
   };
@@ -281,7 +283,6 @@ export default function UsagePage() {
                 {dailyUsage.map((day, index) => (
                   <div key={day.date} className="flex-1 flex flex-col items-center">
                     <div className="relative w-16 max-w-[80%]" style={{ height: `${Math.min(day.totalTokens / 3000, 100)}%` }}>
-                      {/* Stacked bars for each provider */}
                       {Object.entries(day.byProvider).map(([provider, data], idx) => {
                         const height = (data.tokens / day.totalTokens) * 100;
                         return (

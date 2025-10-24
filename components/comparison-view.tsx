@@ -1,3 +1,10 @@
+/**
+ * @file comparison-view.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description AI model comparison view for side-by-side analysis of capabilities and performance.
+ */
+
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -18,6 +25,9 @@ interface ComparisonViewProps {
   onClose?: () => void;
 }
 
+/**
+ * @constructor
+ */
 export function ComparisonView({ leftContent, rightContent, onClose }: ComparisonViewProps) {
   const [viewMode, setViewMode] = useState<'side-by-side' | 'overlay' | 'diff'>('side-by-side');
   const [showDifferences, setShowDifferences] = useState(true);
@@ -34,6 +44,7 @@ export function ComparisonView({ leftContent, rightContent, onClose }: Compariso
     return Math.max(20, Math.min(80, 50 + (value / width) * 100));
   });
 
+  /** @constructs */
   useEffect(() => {
     const unsubscribe = splitPercentage.onChange((value) => {
       if (isDragging.current) {
@@ -60,6 +71,7 @@ export function ComparisonView({ leftContent, rightContent, onClose }: Compariso
     x.set(newX);
   };
 
+  /** @constructs */
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);

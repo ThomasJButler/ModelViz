@@ -1,3 +1,10 @@
+/**
+ * @file loading-states.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Loading state components for different loading scenarios and patterns.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -9,6 +16,9 @@ interface LoadingStateProps {
   text?: string;
 }
 
+/**
+ * @constructor
+ */
 export function LoadingState({ 
   variant = 'spinner', 
   size = 'md',
@@ -165,6 +175,9 @@ export function LoadingState({
 }
 
 // Loading overlay component
+/**
+ * @constructor
+ */
 export function LoadingOverlay({ 
   isLoading, 
   variant = 'spinner',

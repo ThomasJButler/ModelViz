@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Sonner toast notification component wrapper
+ * @author Tom Butler
+ * @date 2025-10-23
+ */
+
 'use client';
 
 import { useTheme } from 'next-themes';
@@ -5,6 +11,9 @@ import { Toaster as Sonner } from 'sonner';
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
+/**
+ * @constructor
+ */
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = 'system' } = useTheme();
 

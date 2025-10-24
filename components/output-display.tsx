@@ -1,3 +1,10 @@
+/**
+ * @file output-display.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Output display component showing AI model generation results.
+ */
+
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +27,9 @@ interface OutputDisplayProps {
   VisualisationType: 'json' | 'chart' | 'text';
 }
 
+/**
+ * @constructor
+ */
 export function OutputDisplay({
   output,
   isProcessing,
@@ -29,6 +39,7 @@ export function OutputDisplay({
   const [isExpanded, setIsExpanded] = useState(false);
   const [showLineNumbers, setShowLineNumbers] = useState(true);
   const [currentView, setCurrentView] = useState(VisualisationType);
+  /** @constructs */
   useEffect(() => {
     setCurrentView(VisualisationType);
   }, [VisualisationType]);
@@ -186,7 +197,7 @@ export function OutputDisplay({
   ];
 
   return (
-    <motion.div 
+    <motion.div
       className="space-y-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -194,9 +205,8 @@ export function OutputDisplay({
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h3 className="text-lg font-semibold">Output</h3>
           {output && !isProcessing && (
-            <motion.div 
+            <motion.div
               className="flex gap-1"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}

@@ -1,3 +1,10 @@
+/**
+ * @file docs-content.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Documentation content renderer with markdown support and syntax highlighting.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -231,6 +238,9 @@ interface DocsContentProps {
   selectedSection: string;
 }
 
+/**
+ * @constructor
+ */
 export function DocsContent({ selectedSection }: DocsContentProps) {
   const section = content[selectedSection as keyof typeof content];
 

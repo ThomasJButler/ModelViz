@@ -1,8 +1,7 @@
 /**
- * DeepSeek API Client
- * 
- * Client for interacting with DeepSeek's AI models.
- * Handles authentication, request formation, and response parsing.
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description DeepSeek API client with specialised models for chat and code generation
  */
 
 import { ApiClient } from '../apiClient';
@@ -17,15 +16,15 @@ export class DeepSeekClient extends ApiClient {
   }
   
   /**
-   * List available models
+   * Lists available DeepSeek models
+   * Attempts API call first, falls back to static list if unavailable
+   * @return Array of available models
    */
   async listModels(): Promise<DeepSeekTypes.ModelObject[]> {
     try {
       const response = await this.get<DeepSeekTypes.ListModelsResponse>('models');
       return response.data;
     } catch (error) {
-      // DeepSeek might not have a models endpoint similar to OpenAI's
-      // Provide hardcoded models as fallback
       console.warn('Could not fetch DeepSeek models, returning hardcoded list');
       return [
         {
@@ -51,16 +50,23 @@ export class DeepSeekClient extends ApiClient {
   }
   
   /**
-   * Create a chat completion
+   * Creates a chat completion using DeepSeek models
+   * @param request - Chat completion request parameters
+   * @return Generated completion response
    */
   async createChatCompletion(
     request: DeepSeekTypes.ChatCompletionRequest
   ): Promise<DeepSeekTypes.ChatCompletionResponse> {
     return this.post<DeepSeekTypes.ChatCompletionResponse>('chat/completions', request);
   }
-  
+
   /**
-   * Utility method for simple text completion
+   * Simplified method for generating text from a single prompt
+   * @param prompt - User prompt text
+   * @param systemPrompt - System instructions for the model
+   * @param model - Model ID to use
+   * @param options - Additional completion options
+   * @return Generated text response
    */
   async generateText(
     prompt: string,
@@ -99,7 +105,8 @@ export class DeepSeekClient extends ApiClient {
   }
   
   /**
-   * Test connection to the API
+   * Tests the API connection by making a minimal request
+   * @return True if connection is successful
    */
   async testConnection(): Promise<boolean> {
     try {

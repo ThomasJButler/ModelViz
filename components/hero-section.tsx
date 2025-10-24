@@ -1,9 +1,19 @@
+/**
+ * @file hero-section.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Hero section component for landing page with call-to-action elements.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 
+/**
+ * @constructor
+ */
 export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20">

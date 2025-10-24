@@ -1,1 +1,0 @@
-Task(description="Write documentation", prompt="Create comprehensive documentation including architecture overview, learning materials, API references, and guides. Write a compelling README for portfolio presentation. Explain design decisions and help users learn from the code.", subagent_type="documentation-writer")

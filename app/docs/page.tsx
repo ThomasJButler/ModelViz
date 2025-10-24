@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Documentation page with searchable sidebar navigation
+ */
 "use client";
 
 import { useState } from 'react';
@@ -7,6 +12,10 @@ import { DocsSidebar } from '@/components/docs-sidebar';
 import { DocsContent } from '@/components/docs-content';
 import { DocSearch } from '@/components/doc-search';
 
+/**
+ * Documentation page component
+ * @constructor
+ */
 export default function DocsPage() {
   const [selectedSection, setSelectedSection] = useState('getting-started');
 

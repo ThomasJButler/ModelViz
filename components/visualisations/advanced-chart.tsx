@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Advanced area chart visualisation displaying AI model response times across GPT-4, Claude, DeepSeek, and Perplexity
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -11,14 +17,18 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { generateTimeSeriesData } from '@/lib/data';
+import { generateAIModelTimeSeries } from '@/lib/data';
 
+/**
+ * @constructor
+ */
 export default function AdvancedChart() {
-  const [data, setData] = useState(generateTimeSeriesData());
+  const [data, setData] = useState(generateAIModelTimeSeries());
 
+  /** @constructs */
   useEffect(() => {
     const interval = setInterval(() => {
-      setData(generateTimeSeriesData());
+      setData(generateAIModelTimeSeries());
     }, 5000);
 
     return () => clearInterval(interval);
@@ -63,24 +73,24 @@ export default function AdvancedChart() {
           />
           <Area
             type="monotone"
-            dataKey="value1"
-            name="Base Load"
+            dataKey="deepseek"
+            name="DeepSeek"
             stroke="#00ff00"
             fillOpacity={1}
             fill="url(#gradient1)"
           />
           <Area
             type="monotone"
-            dataKey="value2"
-            name="API Calls"
+            dataKey="claude"
+            name="Claude"
             stroke="#00ffff"
             fillOpacity={1}
             fill="url(#gradient2)"
           />
           <Area
             type="monotone"
-            dataKey="value3"
-            name="Active Users"
+            dataKey="gpt4"
+            name="GPT-4"
             stroke="#ff00ff"
             fillOpacity={1}
             fill="url(#gradient3)"

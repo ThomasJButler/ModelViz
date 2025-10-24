@@ -1,3 +1,10 @@
+/**
+ * @file resource-utilization.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description System resource utilisation dashboard monitoring CPU, memory, network, and storage usage.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -5,6 +12,9 @@ import { motion } from 'framer-motion';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { Cpu, MemoryStick as Memory, Network, Database } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function ResourceUtilization() {
   const [selectedResource, setSelectedResource] = useState('cpu');
   

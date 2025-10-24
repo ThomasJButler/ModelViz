@@ -75,20 +75,23 @@ export class ApiService {
   }
   
   /**
-   * Get or create the singleton instance of ApiService
+   * Gets or creates the singleton instance of ApiService
+   * @param config - Optional API configuration for first initialisation
+   * @return ApiService singleton instance
    */
   public static getInstance(config?: ApiConfig): ApiService {
     if (!ApiService.instance && config) {
       ApiService.instance = new ApiService(config);
     } else if (!ApiService.instance) {
-      throw new Error('ApiService must be initialized with a config first');
+      throw new Error('ApiService must be initialised with a config first');
     }
     
     return ApiService.instance;
   }
   
   /**
-   * Update the API configuration
+   * Updates the API configuration and resets affected clients
+   * @param config - Partial configuration to merge with existing config
    */
   public updateConfig(config: Partial<ApiConfig>): void {
     this.config = { ...this.config, ...config };
@@ -112,7 +115,8 @@ export class ApiService {
   }
   
   /**
-   * Get the OpenAI client
+   * Gets the OpenAI client instance, creating it if needed
+   * @return Configured OpenAI client
    */
   public getOpenAI(): OpenAIClient {
     if (!this.openaiClient) {
@@ -127,7 +131,8 @@ export class ApiService {
   }
   
   /**
-   * Get the Weather client
+   * Gets the Weather client instance, creating it if needed
+   * @return Configured Weather client
    */
   public getWeather(): WeatherClient {
     if (!this.weatherClient) {
@@ -138,7 +143,8 @@ export class ApiService {
   }
   
   /**
-   * Get the News client
+   * Gets the News client instance, creating it if needed
+   * @return Configured News client
    */
   public getNews(): NewsClient {
     if (!this.newsClient) {
@@ -153,7 +159,8 @@ export class ApiService {
   }
   
   /**
-   * Get the Anthropic client
+   * Gets the Anthropic client instance, creating it if needed
+   * @return Configured Anthropic client
    */
   public getAnthropic(): AnthropicClient {
     if (!this.anthropicClient) {
@@ -168,7 +175,8 @@ export class ApiService {
   }
   
   /**
-   * Get the DeepSeek client
+   * Gets the DeepSeek client instance, creating it if needed
+   * @return Configured DeepSeek client
    */
   public getDeepSeek(): DeepSeekClient {
     if (!this.deepseekClient) {
@@ -183,7 +191,8 @@ export class ApiService {
   }
   
   /**
-   * Get the Perplexity client
+   * Gets the Perplexity client instance, creating it if needed
+   * @return Configured Perplexity client
    */
   public getPerplexity(): PerplexityClient {
     if (!this.perplexityClient) {

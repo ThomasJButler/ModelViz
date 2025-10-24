@@ -1,3 +1,10 @@
+/**
+ * @file token-usage-heatmap.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Token usage heatmap visualisation showing 24-hour activity patterns across the week.
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -11,10 +18,14 @@ interface HeatmapCell {
   tokens: number;
 }
 
+/**
+ * @constructor
+ */
 export function TokenUsageHeatmap() {
   const [data, setData] = useState<HeatmapCell[]>([]);
   const [selectedCell, setSelectedCell] = useState<HeatmapCell | null>(null);
 
+  /** @constructs */
   useEffect(() => {
     // Generate realistic token usage data
     const newData: HeatmapCell[] = [];

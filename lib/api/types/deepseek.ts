@@ -1,8 +1,7 @@
 /**
- * DeepSeek API Types
- * 
- * Type definitions for DeepSeek AI API requests and responses.
- * Based on DeepSeek API reference
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description TypeScript type definitions for DeepSeek AI API requests and responses
  */
 
 // Basic types

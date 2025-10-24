@@ -1,11 +1,21 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Canvas-based data flow visualisation with animated particles and connection lines
+ */
+
 "use client";
 
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
+/**
+ * @constructor
+ */
 export default function DataFlowDiagram() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  /** @constructs */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

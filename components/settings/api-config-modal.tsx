@@ -163,7 +163,7 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
       setStatus({ message: 'Configuration saved successfully!', type: 'success' });
       setTimeout(() => {
         setIsLoading(false);
-        onClose();
+        window.location.reload(); // Refresh page to load models with new API keys
       }, 1500);
     } catch (error) {
       console.error('Error saving configuration', error);

@@ -1,9 +1,19 @@
+/**
+ * @file doc-search.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Documentation search component with fuzzy matching and keyboard navigation.
+ */
+
 "use client";
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Command } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function DocSearch() {
   const [isFocused, setIsFocused] = useState(false);
 

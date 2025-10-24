@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Radio group primitive wrapper
+ */
+
 'use client';
 
 import * as React from 'react';
@@ -6,6 +12,9 @@ import { Circle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * @constructor
+ */
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>

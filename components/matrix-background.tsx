@@ -1,10 +1,21 @@
+/**
+ * @file matrix-background.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Matrix-style animated background effect for visual enhancement.
+ */
+
 "use client";
 
 import { useEffect, useRef } from 'react';
 
+/**
+ * @constructor
+ */
 export function MatrixBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  /** @constructs */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

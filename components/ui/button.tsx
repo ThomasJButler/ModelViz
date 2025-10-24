@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Button component with variants
+ */
+
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
@@ -39,6 +45,9 @@ export interface ButtonProps
   asChild?: boolean;
 }
 
+/**
+ * @constructor
+ */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';

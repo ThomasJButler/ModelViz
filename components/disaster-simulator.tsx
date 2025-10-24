@@ -1,3 +1,10 @@
+/**
+ * @file disaster-simulator.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Disaster scenario simulator for testing system resilience and failover.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -7,6 +14,9 @@ interface DisasterSimulatorProps {
   onTrigger: (type: string) => void;
 }
 
+/**
+ * @constructor
+ */
 export function DisasterSimulator({ onTrigger }: DisasterSimulatorProps) {
   const disasters = [
     {

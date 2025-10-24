@@ -1,7 +1,17 @@
+/**
+ * @file model-card-skeleton.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Skeleton loading state for model cards during data fetching.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
 
+/**
+ * @constructor
+ */
 export function ModelCardSkeleton() {
   return (
     <motion.div

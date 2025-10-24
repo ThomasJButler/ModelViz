@@ -1,3 +1,10 @@
+/**
+ * @file main-content.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Main content wrapper component managing layout and content display.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -51,6 +58,9 @@ const capabilities = [
   }
 ];
 
+/**
+ * @constructor
+ */
 export function MainContent() {
   return (
     <div className="min-h-screen">

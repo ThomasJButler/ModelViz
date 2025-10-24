@@ -1,8 +1,7 @@
 /**
- * Weather API Types
- * 
- * Type definitions for Open-Meteo Weather API requests and responses.
- * Based on the Open-Meteo API reference: https://open-meteo.com/en/docs
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description TypeScript type definitions for Open-Meteo Weather API requests and responses
  */
 
 // Current Weather Data

@@ -1,9 +1,18 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Breadcrumb navigation component
+ */
+
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { ChevronRight, MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * @constructor
+ */
 const Breadcrumb = React.forwardRef<
   HTMLElement,
   React.ComponentPropsWithoutRef<'nav'> & {

@@ -1,7 +1,17 @@
+/**
+ * @file loading-screen.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Full-screen loading component with branding and progress indicators.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
 
+/**
+ * @constructor
+ */
 export function LoadingScreen() {
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">

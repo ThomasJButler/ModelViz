@@ -1,3 +1,10 @@
+/**
+ * @file file-upload.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description File upload component with drag-and-drop support and progress tracking.
+ */
+
 "use client";
 
 import { useState, useRef } from 'react';
@@ -10,6 +17,9 @@ interface FileUploadProps {
   onUpload: (file: File) => Promise<void>;
 }
 
+/**
+ * @constructor
+ */
 export function FileUpload({ accept = '*', maxSize = 5242880, onUpload }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);

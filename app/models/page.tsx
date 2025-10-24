@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description AI models directory page displaying available models with filtering, comparison, and custom model building capabilities
+ */
 "use client";
 
 import { useState } from 'react';
@@ -227,6 +232,9 @@ const baseModels: ModelCardProps[] = [
 
 type View = 'grid' | 'comparison' | 'recommender' | 'custom';
 
+/**
+ * @constructor
+ */
 export default function ModelsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");

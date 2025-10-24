@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Sheet (slide-in panel) components for modals
+ * @author Tom Butler
+ * @date 2025-10-23
+ */
+
 'use client';
 
 import * as React from 'react';
@@ -15,6 +21,9 @@ const SheetClose = SheetPrimitive.Close;
 
 const SheetPortal = SheetPrimitive.Portal;
 
+/**
+ * @constructor
+ */
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>
@@ -53,6 +62,9 @@ interface SheetContentProps
   extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {}
 
+/**
+ * @constructor
+ */
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
@@ -74,13 +86,16 @@ const SheetContent = React.forwardRef<
 ));
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
+/**
+ * @constructor
+ */
 const SheetHeader = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex flex-col space-y-2 text-center sm:text-left',
+      'flex flex-col space-y-2 text-centre sm:text-left',
       className
     )}
     {...props}
@@ -88,6 +103,9 @@ const SheetHeader = ({
 );
 SheetHeader.displayName = 'SheetHeader';
 
+/**
+ * @constructor
+ */
 const SheetFooter = ({
   className,
   ...props
@@ -102,6 +120,9 @@ const SheetFooter = ({
 );
 SheetFooter.displayName = 'SheetFooter';
 
+/**
+ * @constructor
+ */
 const SheetTitle = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
@@ -114,6 +135,9 @@ const SheetTitle = React.forwardRef<
 ));
 SheetTitle.displayName = SheetPrimitive.Title.displayName;
 
+/**
+ * @constructor
+ */
 const SheetDescription = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>

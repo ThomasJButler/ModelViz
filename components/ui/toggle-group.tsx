@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Toggle group component for grouped toggle buttons
+ * @author Tom Butler
+ * @date 2025-10-23
+ */
+
 'use client';
 
 import * as React from 'react';
@@ -14,6 +20,9 @@ const ToggleGroupContext = React.createContext<
   variant: 'default',
 });
 
+/**
+ * @constructor
+ */
 const ToggleGroup = React.forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> &
@@ -32,6 +41,9 @@ const ToggleGroup = React.forwardRef<
 
 ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName;
 
+/**
+ * @constructor
+ */
 const ToggleGroupItem = React.forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> &

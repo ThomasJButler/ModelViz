@@ -1,3 +1,10 @@
+/**
+ * @file playground-guide.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Interactive playground guide with tutorials and feature demonstrations.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -7,6 +14,9 @@ interface PlaygroundGuideProps {
   onClose: () => void;
 }
 
+/**
+ * @constructor
+ */
 export function PlaygroundGuide({ onClose }: PlaygroundGuideProps) {
   const sections = [
     {

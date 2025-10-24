@@ -1,3 +1,10 @@
+/**
+ * @file loading-animation.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Animated loading indicator component with customisable styles and variants.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -8,6 +15,9 @@ interface LoadingAnimationProps {
   onLoadingComplete?: () => void;
 }
 
+/**
+ * @constructor
+ */
 export function LoadingAnimation({ isLoading, onLoadingComplete }: LoadingAnimationProps) {
   if (!isLoading) return null;
 

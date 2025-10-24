@@ -1,3 +1,10 @@
+/**
+ * @file game-scenario.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Interactive game scenario component for demonstrating AI model capabilities.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -21,6 +28,9 @@ interface GameScenarioProps {
   onSelectScenario: (scenario: Scenario) => void;
 }
 
+/**
+ * @constructor
+ */
 export function GameScenario({ scenarios, activeScenario, onSelectScenario }: GameScenarioProps) {
   return (
     <motion.div

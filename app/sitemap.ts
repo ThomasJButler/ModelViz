@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Generates sitemap for search engine optimisation
+ */
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {

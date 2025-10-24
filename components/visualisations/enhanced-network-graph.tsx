@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Enhanced network graph visualisation showing API connections with interactive nodes and real-time data flow
+ */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -25,13 +31,14 @@ interface NodeTypeConfig {
   baseSize: number;
 }
 
+/**
+ * @constructor
+ */
 export default function EnhancedNetworkGraph() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedNode, setSelectedNode] = useState<NodeWithPosition | null>(null);
   const [hoveredNode, setHoveredNode] = useState<NodeWithPosition | null>(null);
   let animationId: number;
-
-  // Define node type styling
   const nodeTypeConfig: Record<string, NodeTypeConfig> = {
     api: { color: "#00FF00", baseSize: 8 },
     model: { color: "#00FFFF", baseSize: 7 },
@@ -48,6 +55,7 @@ export default function EnhancedNetworkGraph() {
     error: "#FF0000"
   };
 
+  /** @constructs */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -346,7 +354,7 @@ export default function EnhancedNetworkGraph() {
             API Network Analysis
           </h2>
           <p className="text-sm text-foreground/70">
-            Interactive visualization of AI service connections
+            Interactive visualisation of AI service connections
           </p>
         </div>
         

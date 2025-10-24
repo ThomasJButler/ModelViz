@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Privacy settings page for controlling data processing, retention, sharing, and security preferences
+ */
 "use client";
 
 import { useState } from "react";
@@ -19,6 +24,9 @@ import {
   LineChart as Chart
 } from "lucide-react";
 
+/**
+ * @constructor
+ */
 export default function PrivacyPage() {
   const [localProcessing, setLocalProcessing] = useState<boolean>(true);
   const [dataRetention, setDataRetention] = useState<"7" | "30" | "90" | "365" | "forever">("30");

@@ -1,3 +1,9 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Real-time AI performance metrics visualisation displaying token usage, request rates, costs, and success rates
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -14,19 +20,20 @@ import {
 } from 'recharts';
 import { generateSystemMetrics } from '@/lib/data';
 
+/**
+ * @constructor
+ */
 export default function RealTimeMetrics() {
   const [data, setData] = useState<Array<any>>([]);
 
+  /** @constructs */
   useEffect(() => {
-    // Initialize with some data
     const initialData = Array.from({ length: 20 }, (_, i) => ({
       time: new Date(Date.now() - (19 - i) * 1000).toISOString(),
       ...generateSystemMetrics()
     }));
 
     setData(initialData);
-
-    // Update data every second
     const interval = setInterval(() => {
       setData(prevData => {
         const newData = [...prevData.slice(1), {
@@ -56,8 +63,7 @@ export default function RealTimeMetrics() {
           />
           <YAxis
             stroke="#666"
-            domain={[0, 100]}
-            tickFormatter={(value) => `${value}%`}
+            domain={[0, 'auto']}
           />
           <Tooltip
             contentStyle={{
@@ -70,27 +76,30 @@ export default function RealTimeMetrics() {
           <Legend />
           <Line
             type="monotone"
-            dataKey="cpu"
-            name="CPU Usage"
+            dataKey="tokenUsageRate"
+            name="Tokens/min"
             stroke="#00ff00"
             dot={false}
             strokeWidth={2}
+            yAxisId={0}
           />
           <Line
             type="monotone"
-            dataKey="memory"
-            name="Memory Usage"
+            dataKey="requestsPerMin"
+            name="Requests/min"
             stroke="#00ffff"
             dot={false}
             strokeWidth={2}
+            yAxisId={0}
           />
           <Line
             type="monotone"
-            dataKey="network"
-            name="Network Usage"
+            dataKey="successRate"
+            name="Success Rate (%)"
             stroke="#ff00ff"
             dot={false}
             strokeWidth={2}
+            yAxisId={0}
           />
         </LineChart>
       </ResponsiveContainer>

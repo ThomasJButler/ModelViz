@@ -1,3 +1,10 @@
+/**
+ * @file playground-monitoring.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Playground monitoring dashboard tracking usage and performance metrics.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -32,6 +39,9 @@ const tabs = [
   { id: 'performance', label: 'Performance', icon: Zap }
 ];
 
+/**
+ * @constructor
+ */
 export function PlaygroundMonitoring({
   systemMetrics,
   activeScenario,

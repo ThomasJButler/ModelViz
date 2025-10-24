@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Toggle button component for on/off states
+ * @author Tom Butler
+ * @date 2025-10-23
+ */
+
 'use client';
 
 import * as React from 'react';
@@ -28,6 +34,9 @@ const toggleVariants = cva(
   }
 );
 
+/**
+ * @constructor
+ */
 const Toggle = React.forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> &

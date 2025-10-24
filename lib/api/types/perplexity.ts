@@ -1,8 +1,7 @@
 /**
- * Perplexity API Types
- * 
- * Type definitions for Perplexity AI API requests and responses.
- * Based on Perplexity API reference
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description TypeScript type definitions for Perplexity AI API requests and responses
  */
 
 // Basic types

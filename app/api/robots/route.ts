@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Generates robots.txt for search engine crawlers
+ */
 import { NextResponse } from 'next/server';
 
 export async function GET() {

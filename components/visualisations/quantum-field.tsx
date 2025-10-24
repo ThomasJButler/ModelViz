@@ -1,11 +1,21 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Quantum field visualisation with charged particles and dynamic force interactions
+ */
+
 "use client";
 
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
+/**
+ * @constructor
+ */
 export default function QuantumField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  /** @constructs */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -19,8 +29,6 @@ export default function QuantumField() {
     const particles: any[] = [];
     const particleCount = 100;
     const maxDistance = 150;
-
-    // Initialize particles
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -38,10 +46,7 @@ export default function QuantumField() {
       frame = requestAnimationFrame(animate);
       ctx!.fillStyle = 'rgba(13, 13, 13, 0.1)';
       ctx!.fillRect(0, 0, canvas!.width, canvas!.height);
-
-      // Update and draw particles
       particles.forEach(particle => {
-        // Apply quantum field effect
         particles.forEach(other => {
           if (particle === other) return;
 
@@ -55,8 +60,6 @@ export default function QuantumField() {
 
             particle.vx += Math.cos(angle) * force * 0.1;
             particle.vy += Math.sin(angle) * force * 0.1;
-
-            // Draw quantum connections
             const gradient = ctx!!.createLinearGradient(
               particle.x, particle.y, other.x, other.y
             );
@@ -71,26 +74,16 @@ export default function QuantumField() {
             ctx!.stroke();
           }
         });
-
-        // Update position
         particle.x += particle.vx;
         particle.y += particle.vy;
-
-        // Boundary check with bounce
         if (particle.x < 0 || particle.x > canvas!.width) particle.vx *= -1;
         if (particle.y < 0 || particle.y > canvas!.height) particle.vy *= -1;
-
-        // Apply drag
         particle.vx *= 0.99;
         particle.vy *= 0.99;
-
-        // Draw particle
         ctx!.beginPath();
         ctx!.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
         ctx!.fillStyle = particle.color;
         ctx!.fill();
-
-        // Add glow effect
         const gradient = ctx!.createRadialGradient(
           particle.x, particle.y, 0,
           particle.x, particle.y, particle.radius * 4

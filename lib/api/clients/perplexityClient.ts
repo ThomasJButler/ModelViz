@@ -1,8 +1,7 @@
 /**
- * Perplexity API Client
- * 
- * Client for interacting with Perplexity's AI models.
- * Handles authentication, request formation, and response parsing.
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Perplexity API client with support for online search-enabled Sonar models
  */
 
 import { ApiClient } from '../apiClient';
@@ -17,10 +16,11 @@ export class PerplexityClient extends ApiClient {
   }
   
   /**
-   * List available models
+   * Lists available Perplexity models
+   * Returns a static list as Perplexity doesn't provide a models endpoint
+   * @return Array of available models with their capabilities
    */
   async listModels(): Promise<PerplexityTypes.ModelObject[]> {
-    // Perplexity doesn't have a list models endpoint, so we return hardcoded models
     return [
       {
         id: 'sonar-small-online',
@@ -68,16 +68,23 @@ export class PerplexityClient extends ApiClient {
   }
   
   /**
-   * Create a chat completion
+   * Creates a chat completion using Perplexity models
+   * @param request - Chat completion request parameters
+   * @return Generated completion response
    */
   async createChatCompletion(
     request: PerplexityTypes.ChatCompletionRequest
   ): Promise<PerplexityTypes.ChatCompletionResponse> {
     return this.post<PerplexityTypes.ChatCompletionResponse>('/chat/completions', request);
   }
-  
+
   /**
-   * Utility method for simple text completion
+   * Simplified method for generating text from a single prompt
+   * @param prompt - User prompt text
+   * @param systemPrompt - System instructions for the model
+   * @param model - Model ID to use
+   * @param options - Additional completion options
+   * @return Generated text response
    */
   async generateText(
     prompt: string,
@@ -116,8 +123,13 @@ export class PerplexityClient extends ApiClient {
   }
   
   /**
-   * Generate text with online search capabilities
-   * Specifically for Sonar models which have web search
+   * Generates text using Sonar models with real-time web search
+   * Only works with Sonar models that have internet access
+   * @param query - Search query or prompt
+   * @param systemPrompt - System instructions for the model
+   * @param model - Sonar model ID to use
+   * @param options - Additional completion options
+   * @return Generated text with current information from the web
    */
   async searchAndGenerateText(
     query: string,
@@ -125,21 +137,20 @@ export class PerplexityClient extends ApiClient {
     model: string = "sonar-medium-online",
     options: Partial<PerplexityTypes.ChatCompletionRequest> = {}
   ): Promise<string> {
-    // Validate model is a Sonar model
     if (!model.includes('sonar')) {
       console.warn('Search capability is only available with Sonar models');
-      model = 'sonar-medium-online'; // Default to Sonar if wrong model type passed
+      model = 'sonar-medium-online';
     }
     
     return this.generateText(query, systemPrompt, model, options);
   }
   
   /**
-   * Test connection to the API
+   * Tests the API connection by making a minimal request
+   * @return True if connection is successful
    */
   async testConnection(): Promise<boolean> {
     try {
-      // Try a minimal API call to validate the key
       const response = await this.createChatCompletion({
         model: 'mistral-7b-instruct', // Use a lightweight model for testing
         messages: [{ role: 'user', content: 'Hello!' }],

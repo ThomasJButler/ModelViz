@@ -1,3 +1,10 @@
+/**
+ * @file performance-metrics.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Performance metrics display showing system and application performance indicators.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -23,9 +30,13 @@ interface PerformanceMetricsProps {
   };
 }
 
+/**
+ * @constructor
+ */
 export function PerformanceMetrics({ model, scenario, metrics }: PerformanceMetricsProps) {
   const [data, setData] = useState<any[]>([]);
 
+  /** @constructs */
   useEffect(() => {
     const interval = setInterval(() => {
       setData(prev => {

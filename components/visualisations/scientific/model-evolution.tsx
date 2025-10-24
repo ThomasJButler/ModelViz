@@ -1,16 +1,24 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description 3D neural network evolution visualisation showing layered architecture with animated signal propagation
+ */
+
 "use client";
 
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
+/**
+ * @constructor
+ */
 export default function ModelEvolution() {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  /** @constructs */
   useEffect(() => {
     if (!containerRef.current) return;
-
-    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -23,15 +31,11 @@ export default function ModelEvolution() {
     const neurons: THREE.Mesh[] = [];
     const connections: THREE.Line[] = [];
     const signals: { line: THREE.Line; progress: number; speed: number; }[] = [];
-
-    // Create neurons
     layers.forEach((count, layerIndex) => {
       const layerX = (layerIndex - (layers.length - 1) / 2) * 20;
       
       for (let i = 0; i < count; i++) {
         const y = (i - (count - 1) / 2) * 10;
-        
-        // Neuron geometry with glow effect
         const neuronGeometry = new THREE.SphereGeometry(1, 32, 32);
         const neuronMaterial = new THREE.ShaderMaterial({
           uniforms: {
@@ -67,8 +71,6 @@ export default function ModelEvolution() {
         neuron.position.set(layerX, y, 0);
         scene.add(neuron);
         neurons.push(neuron);
-
-        // Connect to previous layer
         if (layerIndex > 0) {
           const prevLayer = neurons.slice(-count - layers[layerIndex - 1]);
           prevLayer.forEach(prevNeuron => {
@@ -84,8 +86,6 @@ export default function ModelEvolution() {
             const connection = new THREE.Line(connectionGeometry, connectionMaterial);
             scene.add(connection);
             connections.push(connection);
-
-            // Create signal
             if (Math.random() < 0.3) {
               const signalGeometry = new THREE.BufferGeometry().setFromPoints([
                 prevNeuron.position,
@@ -110,24 +110,17 @@ export default function ModelEvolution() {
     });
 
     camera.position.z = 100;
-
-    // Animation
     let frame = 0;
     const animate = () => {
       frame = requestAnimationFrame(animate);
       const time = performance.now() * 0.001;
-
-      // Update neuron shaders
       neurons.forEach(neuron => {
         (neuron.material as THREE.ShaderMaterial).uniforms.time.value = time;
       });
-
-      // Update signals
       signals.forEach(signal => {
         signal.progress += signal.speed;
         if (signal.progress > 1) {
           signal.progress = 0;
-          // Randomly select new start and end points
           const startNeuron = neurons[Math.floor(Math.random() * neurons.length)];
           const endNeuron = neurons[Math.floor(Math.random() * neurons.length)];
           signal.line.geometry.setFromPoints([
@@ -150,8 +143,6 @@ export default function ModelEvolution() {
         const current = new THREE.Vector3().lerpVectors(start, end, signal.progress);
         signal.line.geometry.setFromPoints([start, current]);
       });
-
-      // Rotate network
       scene.rotation.y = Math.sin(time * 0.2) * 0.3;
       scene.rotation.x = Math.cos(time * 0.2) * 0.2;
 
@@ -159,8 +150,6 @@ export default function ModelEvolution() {
     };
 
     animate();
-
-    // Handle resize
     const handleResize = () => {
       if (!containerRef.current) return;
       

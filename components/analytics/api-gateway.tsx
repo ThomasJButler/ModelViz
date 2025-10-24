@@ -1,3 +1,10 @@
+/**
+ * @file api-gateway.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description API gateway monitoring dashboard tracking requests, latency, error rates, and endpoint performance.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -5,6 +12,9 @@ import { motion } from 'framer-motion';
 import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 import { Network, Globe, Zap, Clock, ArrowUpDown, Database } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function APIGateway() {
   const [timeRange, setTimeRange] = useState('7d');
 

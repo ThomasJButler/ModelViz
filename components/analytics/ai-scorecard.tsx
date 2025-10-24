@@ -1,3 +1,10 @@
+/**
+ * @file ai-scorecard.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description AI model performance scorecard with F1 metrics, precision, recall, and confusion matrix visualisation.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -5,6 +12,9 @@ import { motion } from 'framer-motion';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, BarChart, Bar } from 'recharts';
 import { Brain, Target, Award, TrendingUp } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function AIScorecard() {
   const [selectedModel, setSelectedModel] = useState('gpt-4');
   const [timeRange, setTimeRange] = useState('7d');
@@ -89,12 +99,11 @@ export function AIScorecard() {
 
   return (
     <div className="space-y-6">
-      {/* Model Selection */}
       <div className="flex gap-4">
         {models.map(model => {
           const Icon = model.icon;
           const isSelected = model.id === selectedModel;
-          
+
           return (
             <motion.button
               key={model.id}
@@ -114,7 +123,6 @@ export function AIScorecard() {
         })}
       </div>
 
-      {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
           { label: 'F1 Score', value: selectedMetrics.f1Score, icon: Target },
@@ -142,7 +150,6 @@ export function AIScorecard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* F1 Score Trends */}
         <div className="p-4 rounded-lg border border-matrix-primary/20 bg-background/50">
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-sm font-medium text-matrix-primary">F1 Score Trends</h4>
@@ -205,7 +212,6 @@ export function AIScorecard() {
           </div>
         </div>
 
-        {/* Confusion Matrix */}
         <div className="p-4 rounded-lg border border-matrix-primary/20 bg-background/50">
           <h4 className="text-sm font-medium text-matrix-primary mb-4">Confusion Matrix</h4>
           <div className="grid grid-cols-2 gap-4">

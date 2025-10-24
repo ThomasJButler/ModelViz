@@ -1,3 +1,10 @@
+/**
+ * @file metric-card.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Metric card component displaying key performance indicators and statistics.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -11,6 +18,9 @@ interface MetricCardProps {
   icon: LucideIcon;
 }
 
+/**
+ * @constructor
+ */
 export function MetricCard({ title, value, change, trend, icon: Icon }: MetricCardProps) {
   return (
     <motion.div

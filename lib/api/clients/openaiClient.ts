@@ -1,8 +1,7 @@
 /**
- * OpenAI API Client
- * 
- * Client for interacting with the OpenAI API.
- * Handles authentication, request formation, and response parsing.
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description OpenAI API client that handles authentication, request formation, and response parsing for GPT models
  */
 
 import { ApiClient } from '../apiClient';
@@ -17,21 +16,26 @@ export class OpenAIClient extends ApiClient {
   }
 
   /**
-   * List available models
+   * Lists all available OpenAI models
+   * @return List of available models with metadata
    */
   async listModels(): Promise<OpenAITypes.ListModelsResponse> {
     return this.get<OpenAITypes.ListModelsResponse>('models');
   }
 
   /**
-   * Get a specific model
+   * Retrieves details for a specific model
+   * @param modelId - ID of the model to retrieve
+   * @return Model details
    */
   async getModel(modelId: string): Promise<OpenAITypes.Model> {
     return this.get<OpenAITypes.Model>(`models/${modelId}`);
   }
 
   /**
-   * Create a chat completion
+   * Creates a chat completion using GPT models
+   * @param request - Chat completion request parameters
+   * @return Generated completion response
    */
   async createChatCompletion(
     request: OpenAITypes.ChatCompletionRequest
@@ -40,7 +44,9 @@ export class OpenAIClient extends ApiClient {
   }
 
   /**
-   * Create embeddings for input text
+   * Generates embeddings for semantic similarity and search
+   * @param request - Embedding request parameters
+   * @return Vector embeddings for the input text
    */
   async createEmbeddings(
     request: OpenAITypes.EmbeddingRequest
@@ -49,7 +55,9 @@ export class OpenAIClient extends ApiClient {
   }
 
   /**
-   * Check content for policy violations
+   * Analyses content for policy violations using the moderation API
+   * @param request - Moderation request with content to check
+   * @return Moderation results with flagged categories
    */
   async createModeration(
     request: OpenAITypes.ModerationRequest
@@ -58,7 +66,12 @@ export class OpenAIClient extends ApiClient {
   }
 
   /**
-   * Utility method for simple chat completions
+   * Simplified method for generating text from a single prompt
+   * @param prompt - User prompt text
+   * @param systemPrompt - System instructions for the model
+   * @param model - Model ID to use
+   * @param options - Additional completion options
+   * @return Generated text response
    */
   async generateText(
     prompt: string,
@@ -83,7 +96,10 @@ export class OpenAIClient extends ApiClient {
   }
 
   /**
-   * Utility method to generate embeddings for a single string
+   * Generates an embedding vector for a single text string
+   * @param text - Text to generate embedding for
+   * @param model - Embedding model to use
+   * @return Embedding vector as array of numbers
    */
   async generateEmbedding(
     text: string,
@@ -98,7 +114,12 @@ export class OpenAIClient extends ApiClient {
   }
 
   /**
-   * Generate completion - wrapper method for compatibility
+   * Generates a completion with usage statistics for cross-provider compatibility
+   * @param prompt - Text prompt to complete
+   * @param model - Model ID to use
+   * @param maxTokens - Maximum tokens to generate
+   * @param temperature - Sampling temperature (0-2)
+   * @return Generated content and usage metrics
    */
   async generateCompletion(
     prompt: string,

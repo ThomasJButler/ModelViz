@@ -1,3 +1,10 @@
+/**
+ * @file rate-limit-indicator.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Rate limit indicator showing API quota usage and remaining capacity.
+ */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -10,6 +17,9 @@ interface RateLimitInfo {
   reset: Date;
 }
 
+/**
+ * @constructor
+ */
 export function RateLimitIndicator() {
   const [rateLimitInfo, setRateLimitInfo] = useState<RateLimitInfo>({
     remaining: 100,

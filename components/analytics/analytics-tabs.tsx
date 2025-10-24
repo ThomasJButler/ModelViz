@@ -1,8 +1,15 @@
+/**
+ * @file analytics-tabs.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Analytics dashboard tab navigation component for switching between different analytics views.
+ */
+
 "use client";
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Shield, Network, Activity, LineChart, BarChart, Clock, AlertTriangle, Target, BarChart as ChartBar } from 'lucide-react';
+import { Brain, Shield, Network, Activity, LineChart, BarChart, Clock, AlertTriangle, Target, BarChart as ChartBar, Layers } from 'lucide-react';
 import { UsagePatterns } from './usage-patterns';
 import { ResourceUtilization } from './resource-utilization';
 import { CostAnalysis } from './cost-analysis';
@@ -13,8 +20,8 @@ import { ModelPerformance } from './model-performance';
 import { SecurityInsights } from './security-insights';
 import { APIGateway } from './api-gateway';
 import { SystemHealth } from './system-health';
-import { ModelComparison } from './model-comparison';
 import { AIScorecard } from './ai-scorecard';
+import { NeuralActivityMap } from './neural-activity-map';
 
 const tabs = [
   {
@@ -22,79 +29,81 @@ const tabs = [
     label: 'Usage Patterns',
     icon: LineChart,
     component: UsagePatterns,
-    description: 'Analyze usage patterns and trends'
+    description: 'Recharts area charts showing token consumption trends with heatmap visualisation for peak usage periods'
+  },
+  {
+    id: 'neural-map',
+    label: 'Neural Activity Map',
+    icon: Layers,
+    component: NeuralActivityMap,
+    description: 'Canvas-based 3D visualisation with pulse waves, particle effects, lightning bolts, and matrix rain showing real-time neural network activity'
   },
   {
     id: 'resources',
-    label: 'Resource Utilization',
+    label: 'Resource Utilisation',
     icon: BarChart,
     component: ResourceUtilization,
-    description: 'Monitor system resource usage'
+    description: 'Recharts pie charts displaying CPU, memory, network, and storage allocation with detailed breakdowns'
   },
   {
     id: 'costs',
     label: 'Cost Analysis',
     icon: Clock,
     component: CostAnalysis,
-    description: 'Track and optimise costs'
+    description: 'Recharts stacked bar charts tracking inference, training, and storage costs with optimisation recommendations'
   },
   {
     id: 'predictions',
     label: 'Predictive Trends',
     icon: AlertTriangle,
     component: PredictiveTrends,
-    description: 'AI-powered usage predictions'
+    description: 'Recharts dual-line forecast combining 24h historical data with 12h predictions and confidence intervals'
   },
   {
     id: 'performance',
     label: 'Model Performance',
     icon: Brain,
     component: ModelPerformance,
-    description: 'Monitor and analyze model performance metrics'
-  },
-  {
-    id: 'comparison',
-    label: 'Model Comparison',
-    icon: Target,
-    component: ModelComparison,
-    description: 'Compare different model capabilities'
+    description: 'Recharts radar charts comparing 6 metrics (accuracy, latency, reliability, throughput, cost, scalability) across GPT-4, Claude, and LLaMA'
   },
   {
     id: 'f1score',
     label: 'AI F1 Score',
     icon: ChartBar,
     component: AIScorecard,
-    description: 'Detailed AI model evaluation metrics'
+    description: 'Recharts time series tracking precision, recall, F1 score, and accuracy trends with confusion matrix data'
   },
   {
     id: 'security',
     label: 'Security Insights',
     icon: Shield,
     component: SecurityInsights,
-    description: 'Track security events and system vulnerabilities'
+    description: 'Recharts area chart monitoring security events with threat categorisation and severity tracking'
   },
   {
     id: 'api',
     label: 'API Gateway',
     icon: Network,
     component: APIGateway,
-    description: 'Monitor API traffic and endpoint performance'
+    description: 'Dual charts showing request volume, endpoint latency (ms), and error rate distribution across 4 API routes'
   },
   {
     id: 'health',
     label: 'System Health',
     icon: Activity,
     component: SystemHealth,
-    description: 'Track overall system health and performance'
+    description: 'Real-time Recharts line graphs with 2-second updates displaying CPU, memory, disk, and network utilisation'
   }
 ];
 
+/**
+ * @constructor
+ */
 export function AnalyticsTabs() {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
 
   return (
     <div className="space-y-6">
-      {/* Tab Navigation */}
       <div className="flex flex-wrap gap-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -119,7 +128,6 @@ export function AnalyticsTabs() {
         })}
       </div>
 
-      {/* Tab Content */}
       <AnimatePresence mode="wait">
         {tabs.map((tab) => {
           if (tab.id === activeTab) {
@@ -132,6 +140,9 @@ export function AnalyticsTabs() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2 }}
               >
+                <div className="mb-4 p-3 rounded-lg bg-matrix-primary/5 border border-matrix-primary/20">
+                  <p className="text-sm text-foreground/70">{tab.description}</p>
+                </div>
                 <Component />
               </motion.div>
             );

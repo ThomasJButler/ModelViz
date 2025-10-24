@@ -1,3 +1,10 @@
+/**
+ * @file retention-metrics.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description User retention analytics with cohort analysis and engagement metrics visualisation.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -5,6 +12,9 @@ import { motion } from 'framer-motion';
 import { ResponsiveContainer, LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 import { Users, UserCheck, UserMinus, Activity } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function RetentionMetrics() {
   const [timeRange, setTimeRange] = useState('7d');
 

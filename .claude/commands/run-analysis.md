@@ -1,1 +1,0 @@
-Task(description="Analyze codebase", prompt="Perform a comprehensive analysis of the AI Comparison Showcase codebase. Identify completed features, missing functionality, architecture patterns, dependencies, and areas needing work. Create a detailed report for other agents to use.", subagent_type="codebase-analyzer")

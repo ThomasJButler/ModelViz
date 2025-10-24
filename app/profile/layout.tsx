@@ -1,3 +1,8 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Profile section layout component with sidebar navigation for user settings and preferences
+ */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -44,18 +49,20 @@ const profileLinks = [
   },
 ];
 
+/**
+ * @constructor
+ */
 export default function ProfileLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  
-  // Setting mounted to true by default to ensure content renders immediately
+
   const [isMounted, setIsMounted] = useState(true);
-  
+
+  /** @constructs */
   useEffect(() => {
-    // This will ensure any client-side functionality works after hydration
     setIsMounted(true);
   }, []);
 
@@ -71,7 +78,7 @@ export default function ProfileLayout({
             User Profile
           </h1>
           <p className="text-foreground/70">
-            Customize your AI Comparison experience and manage your settings
+            Customise your AI Comparison experience and manage your settings
           </p>
         </motion.div>
 

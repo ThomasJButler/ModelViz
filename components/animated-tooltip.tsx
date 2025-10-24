@@ -1,3 +1,10 @@
+/**
+ * @file animated-tooltip.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Animated tooltip component providing contextual information on hover.
+ */
+
 "use client";
 
 import * as React from "react";
@@ -12,6 +19,9 @@ interface AnimatedTooltipProps {
   delayDuration?: number;
 }
 
+/**
+ * @constructor
+ */
 export function AnimatedTooltip({
   children,
   content,

@@ -1,3 +1,10 @@
+/**
+ * @file model-builder-modal.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Modal dialog for building and configuring custom AI model setups.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -23,6 +30,9 @@ interface Capability {
   icon: any;
 }
 
+/**
+ * @constructor
+ */
 export function ModelBuilderModal({ isOpen, onClose, baseModels, onModelCreate }: ModelBuilderModalProps) {
   const router = useRouter();
   const [selectedCapabilities, setSelectedCapabilities] = useState<string[]>([]);

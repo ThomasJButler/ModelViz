@@ -1,8 +1,16 @@
+/**
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Analytics dashboard page providing advanced insights and predictive analytics for AI models
+ */
 "use client";
 
 import { motion } from 'framer-motion';
 import { AnalyticsTabs } from '@/components/analytics/analytics-tabs';
 
+/**
+ * @constructor
+ */
 export default function AnalyticsPage() {
   return (
     <div className="min-h-screen pt-24 px-4 sm:px-6 lg:px-8">

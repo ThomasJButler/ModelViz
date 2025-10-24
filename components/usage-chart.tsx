@@ -1,3 +1,10 @@
+/**
+ * @file usage-chart.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Usage chart visualisation component displaying metrics over time.
+ */
+
 "use client";
 
 import { Line, LineChart as RechartsLineChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
@@ -25,6 +32,9 @@ interface UsageChartProps {
   onTimeRangeChange: (range: string) => void;
 }
 
+/**
+ * @constructor
+ */
 export function UsageChart({ timeRange, onTimeRangeChange }: UsageChartProps) {
   return (
     <motion.div

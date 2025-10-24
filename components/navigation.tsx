@@ -1,3 +1,10 @@
+/**
+ * @file navigation.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Primary navigation component with routing and menu management.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -5,6 +12,9 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Terminal, LineChart, Code, Brain, Play as Playground, BookOpen, Layout } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 

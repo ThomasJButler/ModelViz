@@ -1,8 +1,18 @@
+/**
+ * @file model-status-badge.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Status badge component indicating model availability and health.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
 import { useModelStatus } from '@/hooks/use-model-status';
 
+/**
+ * @constructor
+ */
 export function ModelStatusBadge({ modelId }: { modelId: string }) {
   const { health } = useModelStatus(modelId);
 

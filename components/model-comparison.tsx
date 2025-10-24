@@ -1,3 +1,10 @@
+/**
+ * @file model-comparison.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Model comparison component for detailed side-by-side analysis.
+ */
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -9,6 +16,9 @@ interface ModelComparisonProps {
   onClose: () => void;
 }
 
+/**
+ * @constructor
+ */
 export function ModelComparison({ models, onClose }: ModelComparisonProps) {
   const metrics = [
     { key: 'accuracy', label: 'Accuracy', format: (v: string | number) => `${v}%`, color: 'text-matrix-primary' },

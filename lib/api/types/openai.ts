@@ -1,8 +1,7 @@
 /**
- * OpenAI API Types
- * 
- * Type definitions for OpenAI API requests and responses.
- * Based on the OpenAI API reference: https://platform.openai.com/docs/api-reference
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description TypeScript type definitions for OpenAI GPT API requests and responses
  */
 
 // Basic types used throughout the API

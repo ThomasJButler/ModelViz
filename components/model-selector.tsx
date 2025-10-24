@@ -1,3 +1,10 @@
+/**
+ * @file model-selector.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Model selection component with search, filtering, and comparison features.
+ */
+
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,6 +24,9 @@ interface ModelSelectorProps {
   models: Model[];
 }
 
+/**
+ * @constructor
+ */
 export function ModelSelector({ selectedModel, onSelectModel, models }: ModelSelectorProps) {
   const [hoveredModel, setHoveredModel] = useState<string | null>(null);
 

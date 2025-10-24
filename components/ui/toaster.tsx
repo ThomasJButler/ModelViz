@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Toaster container for displaying toast notifications
+ * @author Tom Butler
+ * @date 2025-10-23
+ */
+
 'use client';
 
 import { useToast } from '@/hooks/use-toast';
@@ -10,6 +16,9 @@ import {
   ToastViewport,
 } from '@/components/ui/toast';
 
+/**
+ * @constructor
+ */
 export function Toaster() {
   const { toasts } = useToast();
 

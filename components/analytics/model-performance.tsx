@@ -1,3 +1,10 @@
+/**
+ * @file model-performance.tsx
+ * @author Tom Butler
+ * @date 2025-10-23
+ * @description Model performance monitoring with radar charts showing accuracy, latency, reliability, and throughput metrics.
+ */
+
 "use client";
 
 import { useState } from 'react';
@@ -5,6 +12,9 @@ import { motion } from 'framer-motion';
 import { ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Tooltip } from 'recharts';
 import { Brain, Zap, Shield, Target } from 'lucide-react';
 
+/**
+ * @constructor
+ */
 export function ModelPerformance() {
   const [selectedModel, setSelectedModel] = useState('gpt-4');
 
@@ -50,12 +60,11 @@ export function ModelPerformance() {
 
   return (
     <div className="space-y-6">
-      {/* Model Selection */}
       <div className="flex gap-4">
         {models.map(model => {
           const Icon = model.icon;
           const isSelected = model.id === selectedModel;
-          
+
           return (
             <motion.button
               key={model.id}
@@ -76,7 +85,6 @@ export function ModelPerformance() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Performance Radar */}
         <div className="p-4 rounded-lg border border-matrix-primary/20 bg-background/50">
           <h4 className="text-sm font-medium text-matrix-primary mb-4">Performance Metrics</h4>
           <div className="h-80">
@@ -104,14 +112,13 @@ export function ModelPerformance() {
           </div>
         </div>
 
-        {/* Performance Benchmarks */}
         <div className="p-4 rounded-lg border border-matrix-primary/20 bg-background/50">
           <h4 className="text-sm font-medium text-matrix-primary mb-4">Performance Benchmarks</h4>
           <div className="space-y-6">
             {benchmarks.map(benchmark => {
               const progress = (benchmark.current / benchmark.target) * 100;
               const isGood = benchmark.current >= benchmark.target;
-              
+
               return (
                 <div key={benchmark.metric} className="space-y-2">
                   <div className="flex justify-between text-sm">
@@ -136,7 +143,6 @@ export function ModelPerformance() {
         </div>
       </div>
 
-      {/* Performance Insights */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
           {
@@ -144,21 +150,21 @@ export function ModelPerformance() {
             value: '+15%',
             description: 'Performance headroom available',
             icon: Target,
-            color: 'text-matrix-primary'
+            colour: 'text-matrix-primary'
           },
           {
             title: 'Peak Performance',
             value: '98.5%',
             description: 'Maximum efficiency achieved',
             icon: Zap,
-            color: 'text-matrix-secondary'
+            colour: 'text-matrix-secondary'
           },
           {
             title: 'Reliability Score',
             value: 'A+',
             description: 'System stability rating',
             icon: Shield,
-            color: 'text-matrix-tertiary'
+            colour: 'text-matrix-tertiary'
           }
         ].map((insight) => {
           const Icon = insight.icon;
@@ -169,10 +175,10 @@ export function ModelPerformance() {
               className="p-4 rounded-lg border border-matrix-primary/20 bg-background/50"
             >
               <div className="flex items-start gap-3">
-                <Icon className={`w-5 h-5 ${insight.color}`} />
+                <Icon className={`w-5 h-5 ${insight.colour}`} />
                 <div>
                   <h4 className="font-medium text-foreground/70">{insight.title}</h4>
-                  <p className={`text-2xl font-bold ${insight.color}`}>{insight.value}</p>
+                  <p className={`text-2xl font-bold ${insight.colour}`}>{insight.value}</p>
                   <p className="text-sm text-foreground/50 mt-1">{insight.description}</p>
                 </div>
               </div>

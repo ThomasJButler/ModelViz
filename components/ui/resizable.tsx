@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Resizable panel components with drag handles
+ * @author Tom Butler
+ * @date 2025-10-23
+ */
+
 'use client';
 
 import { GripVertical } from 'lucide-react';
@@ -5,6 +11,9 @@ import * as ResizablePrimitive from 'react-resizable-panels';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * @constructor
+ */
 const ResizablePanelGroup = ({
   className,
   ...props
@@ -20,6 +29,9 @@ const ResizablePanelGroup = ({
 
 const ResizablePanel = ResizablePrimitive.Panel;
 
+/**
+ * @constructor
+ */
 const ResizableHandle = ({
   withHandle,
   className,
