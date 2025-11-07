@@ -52,7 +52,7 @@ const content = {
     content: `
 # Quick Start Guide
 
-AI Comparison Showcase provides state-of-the-art AI models through a simple, developer-friendly API. Get started in minutes with our comprehensive SDK.
+ModelViz provides state-of-the-art AI models through a simple, developer-friendly API. Get started in minutes with our comprehensive SDK.
 
 ## Installation
 
@@ -165,7 +165,7 @@ const client = new AIComparison({
   },
   'models': {
     title: 'Models',
-    description: 'Explore the various AI models available in AI Comparison Showcase.',
+    description: 'Explore the various AI models available in ModelViz.',
     content: `
 # Models Overview
 

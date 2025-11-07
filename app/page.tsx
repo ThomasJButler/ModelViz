@@ -81,7 +81,7 @@ export default function LandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                AI Comparison Showcase
+                ModelViz
               </motion.h1>
 
               <motion.p

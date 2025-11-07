@@ -1,7 +1,7 @@
 /**
  * Base API Client
- * 
- * This is the foundation for all API interactions in AI Comparison Showcase.
+ *
+ * This is the foundation for all API interactions in ModelViz.
  * It provides common functionality for making requests, handling errors,
  * managing authentication, and implementing caching.
  */

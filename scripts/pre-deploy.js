@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Pre-deployment script for AI Comparison Showcase
+ * Pre-deployment script for ModelViz
  * Runs checks and preparations before deployment
  */
 

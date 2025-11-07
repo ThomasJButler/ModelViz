@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Post-deployment script for AI Comparison Showcase
+ * Post-deployment script for ModelViz
  * Runs after successful deployment to verify everything is working
  */
 
@@ -63,7 +63,7 @@ Promise.all(
     process.exit(1);
   } else {
     console.log('\n✨ All checks passed!');
-    console.log(`🎉 AI Comparison Showcase is live at: https://${deploymentUrl}`);
+    console.log(`🎉 ModelViz is live at: https://${deploymentUrl}`);
     
     // Log performance metrics if available
     if (process.env.VERCEL_ANALYTICS_ID) {

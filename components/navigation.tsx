@@ -37,13 +37,11 @@ export function Navigation() {
           <div className="flex">
             <Link
               href="/"
-              className="flex items-center px-2 text-matrix-primary hover:text-matrix-secondary transition-colors"
-              aria-label="AI Comparison Home"
+              className="flex items-center space-x-2 px-2 text-matrix-primary hover:text-matrix-secondary transition-colors"
+              aria-label="ModelViz Home"
             >
-              <span className="text-xl font-bold tracking-tight">AI Comparison</span>
-              <span className="ml-2 px-2 py-1 text-xs rounded-full border border-matrix-primary/20 bg-matrix-primary/10 text-matrix-primary">
-                Showcase
-              </span>
+              <Brain className="w-8 h-8" aria-hidden="true" />
+              <span className="text-xl font-bold tracking-tight">ModelViz</span>
             </Link>
           </div>
 

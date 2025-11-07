@@ -6,7 +6,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ai-comparison-showcase.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://modelviz.vercel.app';
 
   const pages = [
     { loc: '/', changefreq: 'weekly', priority: 1.0 },

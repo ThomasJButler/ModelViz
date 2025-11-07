@@ -26,11 +26,11 @@ export function DemoBanner() {
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-matrix-primary" />
             <span className="text-sm text-matrix-primary">
-              Portfolio Project - AI Model Comparison Showcase
+              Portfolio Project - ModelViz
             </span>
           </div>
           <Link
-            href="https://github.com/thomasjbutler/ai-comparison-showcase"
+            href="https://github.com/thomasjbutler/modelviz"
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-matrix-primary hover:text-matrix-secondary transition-colors flex items-center gap-1"

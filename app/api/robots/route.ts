@@ -6,10 +6,10 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ai-comparison-showcase.vercel.app';
-  
-  const robotsTxt = `# AI Comparison Showcase
-# https://github.com/yourusername/ai-comparison-showcase
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://modelviz.vercel.app';
+
+  const robotsTxt = `# ModelViz
+# https://github.com/ThomasJButler/modelviz
 
 User-agent: *
 Allow: /

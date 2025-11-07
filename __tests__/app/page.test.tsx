@@ -21,7 +21,7 @@ describe('LandingPage', () => {
     render(<LandingPage />)
     
     // Check for main elements
-    expect(screen.getByText('AI Comparison Showcase')).toBeInTheDocument()
+    expect(screen.getByText('ModelViz')).toBeInTheDocument()
     expect(screen.getByText('Compare Leading AI Models Side by Side')).toBeInTheDocument()
     expect(screen.getByText('Enter Showcase')).toBeInTheDocument()
     
@@ -48,7 +48,7 @@ describe('LandingPage', () => {
     }, { timeout: 200 })
     
     // Landing page elements should be gone
-    expect(screen.queryByText('AI Comparison Showcase')).not.toBeInTheDocument()
+    expect(screen.queryByText('ModelViz')).not.toBeInTheDocument()
   })
 
   it('applies hover effect on enter button', async () => {
@@ -73,14 +73,14 @@ describe('LandingPage', () => {
     expect(brainIcon).toBeInTheDocument()
     
     // Check for animation containers
-    const portalContainer = screen.getByText('AI Comparison Showcase').closest('div')
+    const portalContainer = screen.getByText('ModelViz').closest('div')
     expect(portalContainer).toBeInTheDocument()
   })
 
   it('applies correct styling classes', () => {
     render(<LandingPage />)
     
-    const heading = screen.getByText('AI Comparison Showcase')
+    const heading = screen.getByText('ModelViz')
     expect(heading).toHaveClass('text-4xl', 'sm:text-6xl', 'font-bold')
     
     const subtitle = screen.getByText('Compare Leading AI Models Side by Side')
@@ -99,6 +99,6 @@ describe('LandingPage', () => {
     
     // Check heading hierarchy
     const heading = screen.getByRole('heading', { level: 1 })
-    expect(heading).toHaveTextContent('AI Comparison Showcase')
+    expect(heading).toHaveTextContent('ModelViz')
   })
 })

@@ -23,21 +23,21 @@ const jetBrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: {
-    default: 'AI Comparison Showcase',
-    template: '%s | AI Comparison Showcase',
+    default: 'ModelViz',
+    template: '%s | ModelViz',
   },
   description: 'Compare leading AI models side by side with real-time performance metrics and interactive visualisations',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_APP_URL,
-    title: 'AI Comparison Showcase',
+    title: 'ModelViz',
     description: 'Interactive AI Model Comparison Tool',
-    siteName: 'AI Comparison Showcase'
+    siteName: 'ModelViz'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Comparison Showcase',
+    title: 'ModelViz',
     description: 'Interactive AI Model Comparison Tool',
     creator: 'Thomas J Butler'
   },

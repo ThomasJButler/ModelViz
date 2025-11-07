@@ -6,7 +6,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ai-comparison-showcase.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://modelviz.vercel.app';
 
   return [
     {

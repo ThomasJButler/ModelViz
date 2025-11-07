@@ -1,4 +1,4 @@
-# AI Comparison Showcase
+# ModelViz
 
 Interactive tool for comparing OpenAI, Anthropic, DeepSeek, and Perplexity models side by side with real-time performance metrics and visualisations.
 
@@ -11,8 +11,8 @@ Portfolio project demonstrating multi-AI model comparison. Test different models
 ## Installation
 
 ```bash
-git clone https://github.com/ThomasJButler/ai-comparison-showcase.git
-cd ai-comparison-showcase
+git clone https://github.com/ThomasJButler/modelviz.git
+cd modelviz
 npm install
 cp .env.example .env.local
 npm run dev

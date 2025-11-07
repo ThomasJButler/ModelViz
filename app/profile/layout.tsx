@@ -78,7 +78,7 @@ export default function ProfileLayout({
             User Profile
           </h1>
           <p className="text-foreground/70">
-            Customise your AI Comparison experience and manage your settings
+            Customise your ModelViz experience and manage your settings
           </p>
         </motion.div>
 
