@@ -83,7 +83,7 @@ export function EnhancedNavigation() {
                 />
               </motion.div>
               <span className="text-xl font-bold bg-gradient-to-r from-matrix-primary to-matrix-secondary text-transparent bg-clip-text">
-                AI Comparison
+                ModelViz
               </span>
             </Link>
 
@@ -211,7 +211,7 @@ export function EnhancedNavigation() {
             <Link href="/" className="flex items-center space-x-2">
               <Zap className="w-6 h-6 text-matrix-primary" />
               <span className="text-lg font-bold text-matrix-primary">
-                AI Comparison
+                ModelViz
               </span>
             </Link>
 
