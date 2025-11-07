@@ -6,7 +6,7 @@ Interactive tool for comparing OpenAI, Anthropic, DeepSeek, and Perplexity model
 
 Portfolio project demonstrating multi-AI model comparison. Test different models with the same prompt, compare response times, token usage, and export results. Includes 3D network visualisations and performance analytics (demo data)
 
-<img width="1329" height="743" alt="image" src="https://github.com/user-attachments/assets/f7c38e8f-5a41-40a7-809a-65745dfc6bc0" />
+<img width="1311" height="871" alt="image" src="https://github.com/user-attachments/assets/1a5e773d-93a3-4fe1-8941-1d524230f5f5" />
 
 ## Installation
 
@@ -49,42 +49,9 @@ See [.env.example](.env.example) for feature flags and rate limiting configurati
 - 12+ visualisation types (3D graphs, heatmaps, network analysis)
 - Performance monitoring and analytics
 
-## Project Structure
-
-```
-app/              # Next.js pages (playground, models, analytics, dashboard)
-components/       # React components and visualisations
-lib/              # API clients, caching, analytics, performance monitoring
-hooks/            # Custom React hooks for animations and interactions
-```
-
-## Testing
-
-```bash
-npm test                # Run test suite
-npm run test:coverage   # Coverage report
-npm run test:watch      # Watch mode
-```
-
-Coverage thresholds: 80% for branches, functions, lines, statements.
-
-## Building
-
-```bash
-npm run build           # Production build
-npm start               # Start production server
-npm run analyze         # Analyse bundle size
-```
-
 ## Deployment
 
 Optimised for Vercel. Bundle splitting configured for framework, UI, visualisations, and editor chunks. See [next.config.js](next.config.js) for webpack configuration.
-
-## Common Issues
-
-- **Bundle size**: Visualisation components are dynamically imported - use `npm run analyze` to check
-- **API rate limits**: Demo mode activates when API keys missing
-- **TypeScript errors**: Run `npm run build` to check types
 
 ## Licence
 
