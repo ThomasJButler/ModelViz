@@ -31,7 +31,7 @@ export default function DocsPage() {
             Documentation
           </h1>
           <p className="text-foreground/70">
-            Learn how to use the AI Comparison Showcase
+            Learn how to use ModelViz
           </p>
         </motion.div>
 

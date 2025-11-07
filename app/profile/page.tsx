@@ -80,7 +80,7 @@ export default function ProfilePage() {
         
         <div className="space-y-4">
           <p className="text-foreground/80">
-            Welcome to AI Comparison Showcase! Configure your environment and explore powerful AI comparison tools:
+            Welcome to ModelViz! Configure your environment and explore powerful AI comparison tools:
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">

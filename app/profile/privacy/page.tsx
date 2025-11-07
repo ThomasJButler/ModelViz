@@ -56,7 +56,7 @@ export default function PrivacyPage() {
         </div>
         
         <p className="text-foreground/70 mb-6">
-          Control how your data is processed, stored, and shared within AI Comparison Showcase.
+          Control how your data is processed, stored, and shared within ModelViz.
           These settings help you balance functionality with privacy according to your preferences.
         </p>
         
@@ -243,7 +243,7 @@ export default function PrivacyPage() {
             <div>
               <h4 className="text-sm font-medium text-blue-500 mb-1">About API Key Storage</h4>
               <p className="text-xs text-blue-500/80">
-                AI Comparison Showcase stores your API keys locally in your browser&apos;s secure storage.
+                ModelViz stores your API keys locally in your browser&apos;s secure storage.
                 They are never sent to our servers and are only used to make requests directly
                 from your browser to the respective AI service providers.
               </p>
@@ -282,7 +282,7 @@ export default function PrivacyPage() {
           <div className="p-4 rounded-lg border border-red-500/30 bg-red-500/5">
             <h4 className="font-medium mb-2 text-red-400">Delete Account Data</h4>
             <p className="text-sm text-foreground/70 mb-3">
-              Permanently delete all your personal data from AI Comparison Showcase. This action cannot be undone.
+              Permanently delete all your personal data from ModelViz. This action cannot be undone.
             </p>
             <button className="px-4 py-2 rounded-md bg-red-500/10 text-red-500 border border-red-500/30 hover:bg-red-500/20 transition-colors flex items-center gap-2">
               <UserX className="w-4 h-4" />
