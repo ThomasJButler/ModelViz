@@ -42,10 +42,10 @@ export function createApiNetworkData(options: {
   const connections: NetworkConnection[] = [];
   const timestamp = Date.now();
   
-  // Always include the central AI Comparison node
+  // Always include the central ModelViz node
   nodes.push({
-    id: 'ai-comparison',
-    name: 'AI Comparison',
+    id: 'modelviz',
+    name: 'ModelViz',
     type: 'service',
     status: 'active',
     size: 100,

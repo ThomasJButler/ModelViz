@@ -1,5 +1,5 @@
 /**
- * Performance monitoring utilities for the AI Comparison Showcase
+ * Performance monitoring utilities for ModelViz
  */
 
 // Web Vitals types
