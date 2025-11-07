@@ -35,11 +35,10 @@ describe('Navigation', () => {
     })
   })
 
-  it('renders the brand name and badge', () => {
+  it('renders the brand name', () => {
     render(<Navigation />)
-    
-    expect(screen.getByText('AI Comparison')).toBeInTheDocument()
-    expect(screen.getByText('Showcase')).toBeInTheDocument()
+
+    expect(screen.getByText('ModelViz')).toBeInTheDocument()
   })
 
   it('applies correct styling to navigation', () => {
@@ -52,7 +51,7 @@ describe('Navigation', () => {
   it('renders home link with correct attributes', () => {
     render(<Navigation />)
     
-    const homeLink = screen.getByLabelText('AI Comparison Home')
+    const homeLink = screen.getByLabelText('ModelViz Home')
     expect(homeLink).toBeInTheDocument()
     expect(homeLink).toHaveAttribute('href', '/')
   })
