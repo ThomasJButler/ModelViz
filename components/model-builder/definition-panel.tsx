@@ -96,7 +96,7 @@ export function ModelDefinitionPanel() {
       
       try {
         // Load API config from localStorage
-        const savedConfig = localStorage.getItem('ai_comparison_api_config');
+        const savedConfig = localStorage.getItem('modelviz_api_config');
         if (savedConfig) {
           const parsedConfig = JSON.parse(savedConfig) as ApiConfig;
           

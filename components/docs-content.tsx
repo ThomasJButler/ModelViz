@@ -57,17 +57,17 @@ ModelViz provides state-of-the-art AI models through a simple, developer-friendl
 ## Installation
 
 \`\`\`bash
-npm install @ai-comparison/sdk
+npm install @modelviz/sdk
 \`\`\`
 
 ## Basic Usage
 
 \`\`\`typescript
-import { AIComparison } from '@ai-comparison/sdk';
+import { ModelViz } from '@modelviz/sdk';
 
 // Initialize the client
-const client = new AIComparison({
-  apiKey: process.env.AI_COMPARISON_API_KEY
+const client = new ModelViz({
+  apiKey: process.env.MODELVIZ_API_KEY
 });
 
 // Use GPT-4 for text generation
@@ -112,7 +112,7 @@ const transcription = await client.transcribe({
 All API requests require authentication using your API key. Include it in the Authorization header:
 
 \`\`\`typescript
-const client = new AIComparison({
+const client = new ModelViz({
   apiKey: 'your-api-key'
 });
 \`\`\`

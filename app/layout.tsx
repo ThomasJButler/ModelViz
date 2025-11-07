@@ -58,6 +58,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Run migration on client side only
+  if (typeof window !== 'undefined') {
+    import('@/lib/utils/migrate-storage').then(({ migrateLocalStorage }) => {
+      migrateLocalStorage();
+    });
+  }
+
   return (
     <html
       lang="en"
@@ -65,10 +72,10 @@ export default function RootLayout({
       className="scroll-smooth"
     >
       <head>
-        <meta name="application-name" content="AI Comparison" />
+        <meta name="application-name" content="ModelViz" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-        <meta name="apple-mobile-web-app-title" content="AI Comparison" />
+        <meta name="apple-mobile-web-app-title" content="ModelViz" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#0d0d0d" />

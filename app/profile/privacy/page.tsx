@@ -137,7 +137,7 @@ export default function PrivacyPage() {
                   <h4 className="font-medium">Anonymous Analytics</h4>
                 </div>
                 <p className="text-sm text-foreground/50 mt-1 ml-6">
-                  Share anonymous usage data to help improve the AI Comparison tool.
+                  Share anonymous usage data to help improve the ModelViz tool.
                 </p>
               </div>
               <button

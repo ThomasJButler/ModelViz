@@ -54,7 +54,7 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
   useEffect(() => {
     const loadSavedConfig = () => {
       try {
-        const savedConfig = localStorage.getItem('ai_comparison_api_config');
+        const savedConfig = localStorage.getItem('modelviz_api_config');
         if (savedConfig) {
           const parsedConfig = JSON.parse(savedConfig) as ApiConfig;
           // Mask API keys in the UI
@@ -119,7 +119,7 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
 
     try {
       // Use the real API keys, not the masked ones displayed in the UI
-      const savedConfig = localStorage.getItem('ai_comparison_api_config');
+      const savedConfig = localStorage.getItem('modelviz_api_config');
       let updatedConfig: ApiConfig = { openai: { apiKey: '' }, news: { apiKey: '' } };
       
       if (savedConfig) {
@@ -149,7 +149,7 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
       }
 
       // Save to localStorage
-      localStorage.setItem('ai_comparison_api_config', JSON.stringify(updatedConfig));
+      localStorage.setItem('modelviz_api_config', JSON.stringify(updatedConfig));
       
       // Update ApiService
       if (ApiService.getInstance) {
@@ -190,7 +190,7 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
     
     try {
       // Get the actual API key
-      const savedConfig = localStorage.getItem('ai_comparison_api_config');
+      const savedConfig = localStorage.getItem('modelviz_api_config');
       let apiKey = config[service]?.apiKey || '';
       
       // If the key is masked, use the saved one

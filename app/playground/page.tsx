@@ -193,7 +193,7 @@ export default function PlaygroundPage() {
         setIsLoadingModels(true);
 
         // Initialize ApiService with saved config from localStorage
-        const savedConfig = localStorage.getItem('ai_comparison_api_config');
+        const savedConfig = localStorage.getItem('modelviz_api_config');
         if (savedConfig) {
           try {
             const config = JSON.parse(savedConfig);

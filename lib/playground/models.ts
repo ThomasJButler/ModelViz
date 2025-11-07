@@ -40,7 +40,7 @@ export async function getAvailableModels(): Promise<ProviderGroupedModels[]> {
   } catch {
     // Not initialized yet, try to initialize from localStorage
     if (typeof window !== 'undefined') {
-      const savedConfig = localStorage.getItem('ai_comparison_api_config');
+      const savedConfig = localStorage.getItem('modelviz_api_config');
       if (savedConfig) {
         try {
           const config = JSON.parse(savedConfig);
