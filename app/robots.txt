@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ai-comparison-showcase.vercel.app/sitemap.xml
+Sitemap: https://modelviz.vercel.app/sitemap.xml
