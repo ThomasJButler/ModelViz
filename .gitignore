@@ -85,3 +85,13 @@ pids
 
 # Deployment info
 deployment-info.json
+
+# giCC context files
+.claude/
+claude.md
+CLAUDE.md
+gicc/
+dev/
+/__tests__
+/lib
+/components/settings

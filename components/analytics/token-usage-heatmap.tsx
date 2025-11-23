@@ -10,6 +10,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, Calendar, Zap } from 'lucide-react';
+import { MetricsService } from '@/lib/services/MetricsService';
 
 interface HeatmapCell {
   hour: number;
@@ -27,22 +28,86 @@ export function TokenUsageHeatmap() {
 
   /** @constructs */
   useEffect(() => {
-    // Generate realistic token usage data
-    const newData: HeatmapCell[] = [];
-    for (let day = 0; day < 7; day++) {
-      for (let hour = 0; hour < 24; hour++) {
-        // Create realistic patterns
-        let baseValue = Math.sin(hour / 24 * Math.PI) * 0.5 + 0.5; // Daily pattern
-        baseValue *= 1 - Math.cos(day / 7 * Math.PI) * 0.3; // Weekly pattern
-        
-        // Add some randomness
-        const value = Math.min(1, Math.max(0, baseValue + (Math.random() - 0.5) * 0.3));
-        const tokens = Math.floor(value * 10000); // Scale to realistic token counts
+    const loadData = async () => {
+      const service = MetricsService.getInstance();
+      const aggregated = await service.getAggregatedMetrics('week');
 
-        newData.push({ hour, day, value, tokens });
+      // Check if we have real data
+      if (aggregated.hourlyStats && aggregated.hourlyStats.length > 0) {
+        // Find max tokens for normalization
+        const maxTokens = Math.max(...aggregated.hourlyStats.map(stat => stat.tokens), 1);
+
+        // Create a map of existing hourly data
+        const hourlyMap: Record<string, { tokens: number; value: number }> = {};
+        aggregated.hourlyStats.forEach(stat => {
+          const date = new Date(stat.timestamp);
+          const day = date.getDay();
+          const hour = date.getHours();
+          const key = `${day}-${hour}`;
+
+          // Aggregate if multiple entries for same hour/day
+          if (hourlyMap[key]) {
+            hourlyMap[key].tokens += stat.tokens;
+            hourlyMap[key].value = hourlyMap[key].tokens / maxTokens;
+          } else {
+            hourlyMap[key] = {
+              tokens: stat.tokens,
+              value: stat.tokens / maxTokens
+            };
+          }
+        });
+
+        // Fill in all cells (7 days x 24 hours)
+        const filledData: HeatmapCell[] = [];
+        for (let day = 0; day < 7; day++) {
+          for (let hour = 0; hour < 24; hour++) {
+            const key = `${day}-${hour}`;
+            const existing = hourlyMap[key];
+
+            if (existing) {
+              filledData.push({
+                day,
+                hour,
+                value: existing.value,
+                tokens: existing.tokens
+              });
+            } else {
+              filledData.push({ hour, day, value: 0, tokens: 0 });
+            }
+          }
+        }
+
+        setData(filledData);
+      } else {
+        // Fallback to demo data if no real data exists
+        const newData: HeatmapCell[] = [];
+        for (let day = 0; day < 7; day++) {
+          for (let hour = 0; hour < 24; hour++) {
+            // Create realistic patterns
+            let baseValue = Math.sin(hour / 24 * Math.PI) * 0.5 + 0.5; // Daily pattern
+            baseValue *= 1 - Math.cos(day / 7 * Math.PI) * 0.3; // Weekly pattern
+
+            // Add some randomness
+            const value = Math.min(1, Math.max(0, baseValue + (Math.random() - 0.5) * 0.3));
+            const tokens = Math.floor(value * 10000); // Scale to realistic token counts
+
+            newData.push({ hour, day, value, tokens });
+          }
+        }
+        setData(newData);
       }
+    };
+
+    loadData();
+
+    // Listen for metrics updates
+    const handleUpdate = () => loadData();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('metrics-updated', handleUpdate);
+      return () => {
+        window.removeEventListener('metrics-updated', handleUpdate);
+      };
     }
-    setData(newData);
   }, []);
 
   const getDayLabel = (day: number) => {

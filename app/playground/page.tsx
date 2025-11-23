@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import { Brain, Code, Activity, Shield, Sparkles, Zap, Network, AlertTriangle, CheckCircle2, Timer, Braces, Terminal, Maximize2, Minimize2, Download, Share2, Loader2, Settings } from 'lucide-react';
 import { ModelSelector } from '@/components/model-selector';
 import { CodeEditor } from '@/components/code-editor';
@@ -15,11 +16,62 @@ import { PlaygroundGuide } from '@/components/playground-guide';
 import { ProviderSelector } from '@/components/provider-selector';
 import { EnhancedInput } from '@/components/enhanced-input';
 import { ApiConfigModal } from '@/components/settings/api-config-modal';
-import { getAvailableModels, type ModelOption, type ProviderGroupedModels } from '@/lib/playground/models';
+import { getAvailableModelsSimple, type SimpleModel } from '@/lib/utils/modelLoader';
+import { type ModelOption, type ProviderGroupedModels } from '@/lib/playground/models';
 import { generatePlaygroundResponse, type PlaygroundRequest, type PlaygroundResponse } from '@/lib/playground/api-cached';
 import { ApiService } from '@/lib/api';
+import { MetricsService } from '@/lib/services/MetricsService';
+import { formatCost } from '@/lib/utils/costCalculator';
 
 type InputFormat = 'json' | 'text' | 'code';
+
+// Helper function to transform SimpleModel[] to ProviderGroupedModels[]
+function groupModelsByProvider(simpleModels: SimpleModel[]): ProviderGroupedModels[] {
+  const grouped: { [provider: string]: ModelOption[] } = {};
+
+  // Map to proper provider names (matching API expectations)
+  const providerNameMap: { [key: string]: string } = {
+    'openai': 'OpenAI',
+    'anthropic': 'Anthropic',
+    'deepseek': 'DeepSeek',
+    'google': 'Google',
+    'demo': 'Demo'
+  };
+
+  simpleModels.forEach(model => {
+    const providerKey = model.provider.toLowerCase();
+    const provider = providerNameMap[providerKey] || model.provider;
+
+    if (!grouped[provider]) {
+      grouped[provider] = [];
+    }
+
+    // Map icon based on provider
+    let icon = Brain;
+    if (provider === 'Anthropic') icon = Sparkles;
+    else if (provider === 'DeepSeek') icon = Code;
+    else if (provider === 'Google') icon = Zap;
+
+    grouped[provider].push({
+      id: model.id,
+      name: model.name,
+      description: `${provider} model`,
+      icon,
+      provider,
+      capabilities: ['Text Generation', 'Reasoning'],
+      metrics: {
+        latency: '~200ms',
+        accuracy: '90-95%',
+        tokens: '4K+'
+      }
+    });
+  });
+
+  return Object.entries(grouped).map(([provider, models]) => ({
+    provider,
+    models
+  }));
+}
 
 const inputFormats = [
   { id: 'json', label: 'JSON', icon: Braces },
@@ -185,6 +237,13 @@ export default function PlaygroundPage() {
     successRate: 100,
     processingTime: 0
   });
+  const [metricsView, setMetricsView] = useState<'session' | 'alltime'>('session');
+  const [alltimeMetrics, setAlltimeMetrics] = useState({
+    requestCount: 0,
+    avgLatency: 0,
+    successRate: 100,
+    totalCost: 0
+  });
 
   /** @constructs */
   useEffect(() => {
@@ -203,8 +262,15 @@ export default function PlaygroundPage() {
           }
         }
 
-        const models = await getAvailableModels();
+        // Use unified model loader
+        const simpleModels = await getAvailableModelsSimple();
+        const models = groupModelsByProvider(simpleModels);
         setModelGroups(models);
+
+        console.log('[Playground] Loaded models:', {
+          totalModels: simpleModels.length,
+          providers: models.map(g => g.provider)
+        });
 
         if (models.length > 0 && models[0].models.length > 0) {
           const defaultModel = models[0].models[0];
@@ -227,6 +293,18 @@ export default function PlaygroundPage() {
     };
 
     loadModels();
+
+    // Listen for API key changes to reload models in real-time
+    const handleApiKeyChange = () => {
+      console.log('[Playground] API key changed, reloading models...');
+      loadModels();
+    };
+
+    window.addEventListener('api-keys-updated', handleApiKeyChange);
+
+    return () => {
+      window.removeEventListener('api-keys-updated', handleApiKeyChange);
+    };
   }, []);
 
   /** @listens selectedModel, selectedProvider, inputFormat */
@@ -239,6 +317,67 @@ export default function PlaygroundPage() {
       setInput(defaultPlaceholders[inputFormat][placeholderKey as keyof typeof defaultPlaceholders.json]);
     }
   }, [selectedModel, selectedProvider, inputFormat]);
+
+  /** Load persistent metrics from MetricsService */
+  useEffect(() => {
+    const initializeAndLoadMetrics = async () => {
+      try {
+        const service = MetricsService.getInstance();
+
+        // Explicitly initialize the service
+        console.log('[Playground] Initializing MetricsService...');
+        await service.init();
+        console.log('[Playground] MetricsService initialized');
+
+        // Load initial metrics
+        await loadPersistentMetrics();
+      } catch (error) {
+        console.error('[Playground] Failed to initialize metrics:', error);
+      }
+    };
+
+    const loadPersistentMetrics = async () => {
+      try {
+        const service = MetricsService.getInstance();
+        const aggregated = await service.getAggregatedMetrics('today');
+
+        console.log('[Playground] Loaded persistent metrics:', {
+          totalCalls: aggregated.totalCalls,
+          totalCost: aggregated.totalCost
+        });
+
+        setAlltimeMetrics({
+          requestCount: aggregated.totalCalls,
+          avgLatency: Math.round(aggregated.avgLatency),
+          successRate: aggregated.successRate * 100,
+          totalCost: aggregated.totalCost
+        });
+      } catch (error) {
+        console.error('[Playground] Failed to load persistent metrics:', error);
+      }
+    };
+
+    // Initialize on mount
+    initializeAndLoadMetrics();
+
+    // Listen for metrics updates
+    const handleMetricsUpdate = () => {
+      console.log('[Playground] Metrics update event received');
+      loadPersistentMetrics();
+    };
+
+    const handleMetricsUpdateFailed = (event: CustomEvent) => {
+      console.error('[Playground] Metrics update failed:', event.detail?.error);
+    };
+
+    window.addEventListener('metrics-updated', handleMetricsUpdate);
+    window.addEventListener('metrics-update-failed', handleMetricsUpdateFailed);
+
+    return () => {
+      window.removeEventListener('metrics-updated', handleMetricsUpdate);
+      window.removeEventListener('metrics-update-failed', handleMetricsUpdateFailed);
+    };
+  }, []);
 
   const handleProcess = async () => {
     setIsProcessing(true);
@@ -339,15 +478,16 @@ export default function PlaygroundPage() {
                   <Maximize2 className="w-5 h-5" />
                 )}
               </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsApiConfigOpen(true)}
-                className="px-4 py-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary hover:bg-matrix-primary/20 transition-colors flex items-center gap-2"
-              >
-                <Settings className="w-4 h-4" />
-                API Config
-              </motion.button>
+              <Link href="/settings">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary hover:bg-matrix-primary/20 transition-colors flex items-center gap-2"
+                >
+                  <Settings className="w-4 h-4" />
+                  Settings
+                </motion.button>
+              </Link>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -525,18 +665,39 @@ export default function PlaygroundPage() {
                   animate={{ opacity: 1 }}
                   className="flex items-center gap-4 text-sm"
                 >
+                  <button
+                    onClick={() => setMetricsView(v => v === 'session' ? 'alltime' : 'session')}
+                    className="px-2 py-1 text-xs rounded bg-matrix-primary/10 border border-matrix-primary/30
+                             text-matrix-primary hover:bg-matrix-primary/20 transition-colors"
+                  >
+                    {metricsView === 'session' ? 'Session' : 'All Time'}
+                  </button>
+                  <div className="flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-matrix-tertiary" />
+                    <span className="text-matrix-tertiary">
+                      {(metricsView === 'session' ? metrics.requestCount : alltimeMetrics.requestCount)} calls
+                    </span>
+                  </div>
                   <div className="flex items-center gap-2">
                     <Timer className="w-4 h-4 text-matrix-secondary" />
                     <span className="text-matrix-secondary">
-                      {metrics.avgLatency.toFixed(0)}ms
+                      {(metricsView === 'session' ? metrics.avgLatency : alltimeMetrics.avgLatency).toFixed(0)}ms
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-matrix-primary" />
                     <span className="text-matrix-primary">
-                      {metrics.successRate.toFixed(1)}%
+                      {(metricsView === 'session' ? metrics.successRate : alltimeMetrics.successRate).toFixed(1)}%
                     </span>
                   </div>
+                  {metricsView === 'alltime' && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-matrix-tertiary">Cost:</span>
+                      <span className="text-matrix-secondary font-mono">
+                        {formatCost(alltimeMetrics.totalCost)}
+                      </span>
+                    </div>
+                  )}
                 </motion.div>
                 {output && !output.error && (
                   <div className="flex gap-2">

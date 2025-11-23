@@ -7,33 +7,119 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 import { Network, Globe, Zap, Clock, ArrowUpDown, Database } from 'lucide-react';
+import { MetricsService } from '@/lib/services/MetricsService';
+import { format, subDays } from 'date-fns';
+
+interface TrafficData {
+  timestamp: string;
+  requests: number;
+  latency: number;
+  errors: number;
+}
+
+interface EndpointMetric {
+  endpoint: string;
+  calls: number;
+  latency: number;
+  errors: number;
+}
 
 /**
  * @constructor
  */
 export function APIGateway() {
   const [timeRange, setTimeRange] = useState('7d');
+  const [trafficData, setTrafficData] = useState<TrafficData[]>([]);
+  const [endpointMetrics, setEndpointMetrics] = useState<EndpointMetric[]>([]);
+  const [totalRequests, setTotalRequests] = useState(0);
+  const [avgLatency, setAvgLatency] = useState(0);
+  const [errorRate, setErrorRate] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const trafficData = [
-    { timestamp: '2024-01-01', requests: 15000, latency: 120, errors: 150 },
-    { timestamp: '2024-01-02', requests: 18000, latency: 115, errors: 180 },
-    { timestamp: '2024-01-03', requests: 16000, latency: 125, errors: 160 },
-    { timestamp: '2024-01-04', requests: 20000, latency: 110, errors: 200 },
-    { timestamp: '2024-01-05', requests: 19000, latency: 118, errors: 190 },
-    { timestamp: '2024-01-06', requests: 22000, latency: 105, errors: 220 },
-    { timestamp: '2024-01-07', requests: 21000, latency: 112, errors: 210 }
-  ];
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      const service = MetricsService.getInstance();
 
-  const endpointMetrics = [
-    { endpoint: '/api/v1/generate', calls: 12500, latency: 145, errors: 25 },
-    { endpoint: '/api/v1/analyze', calls: 8900, latency: 165, errors: 18 },
-    { endpoint: '/api/v1/transform', calls: 6700, latency: 185, errors: 15 },
-    { endpoint: '/api/v1/optimise', calls: 4500, latency: 125, errors: 9 }
-  ];
+      // Map timeRange to MetricsService range
+      const rangeMap: Record<string, 'today' | 'week' | 'month'> = {
+        '24h': 'today',
+        '7d': 'week',
+        '30d': 'month'
+      };
+      const range = rangeMap[timeRange] || 'week';
+
+      const aggregated = await service.getAggregatedMetrics(range);
+
+      // Check if we have real data
+      if (aggregated.dailyStats && aggregated.dailyStats.length > 0) {
+        // Transform daily stats to traffic data
+        const traffic: TrafficData[] = aggregated.dailyStats.map(stat => ({
+          timestamp: format(new Date(stat.timestamp), 'MMM dd'),
+          requests: stat.calls,
+          latency: Math.round(stat.avgLatency),
+          errors: stat.calls - Math.round(stat.calls * stat.successRate)
+        }));
+
+        setTrafficData(traffic);
+
+        // Transform provider stats to endpoint metrics (treating providers as endpoints)
+        const endpoints: EndpointMetric[] = Object.entries(aggregated.byProvider).map(([provider, stats]) => ({
+          endpoint: `/api/v1/${provider.toLowerCase()}`,
+          calls: stats.totalCalls,
+          latency: Math.round(stats.avgLatency),
+          errors: stats.failedCalls
+        }));
+
+        setEndpointMetrics(endpoints);
+
+        // Calculate summary metrics
+        setTotalRequests(aggregated.totalCalls);
+        setAvgLatency(Math.round(aggregated.avgLatency));
+        setErrorRate(aggregated.totalCalls > 0
+          ? ((aggregated.failedCalls / aggregated.totalCalls) * 100)
+          : 0);
+      } else {
+        // Fallback to demo data
+        const demoTraffic: TrafficData[] = Array.from({ length: 7 }, (_, i) => ({
+          timestamp: format(subDays(new Date(), 6 - i), 'MMM dd'),
+          requests: 15000 + Math.random() * 7000,
+          latency: 105 + Math.random() * 20,
+          errors: 150 + Math.random() * 70
+        }));
+
+        setTrafficData(demoTraffic);
+
+        const demoEndpoints: EndpointMetric[] = [
+          { endpoint: '/api/v1/generate', calls: 12500, latency: 145, errors: 25 },
+          { endpoint: '/api/v1/analyze', calls: 8900, latency: 165, errors: 18 },
+          { endpoint: '/api/v1/transform', calls: 6700, latency: 185, errors: 15 },
+          { endpoint: '/api/v1/optimise', calls: 4500, latency: 125, errors: 9 }
+        ];
+
+        setEndpointMetrics(demoEndpoints);
+        setTotalRequests(2400000);
+        setAvgLatency(125);
+        setErrorRate(0.8);
+      }
+
+      setLoading(false);
+    };
+
+    loadData();
+
+    // Listen for metrics updates
+    const handleUpdate = () => loadData();
+    window.addEventListener('metrics-updated', handleUpdate);
+
+    return () => {
+      window.removeEventListener('metrics-updated', handleUpdate);
+    };
+  }, [timeRange]);
 
   return (
     <div className="space-y-6">
@@ -42,22 +128,26 @@ export function APIGateway() {
         {[
           {
             title: 'Total Requests',
-            value: '2.4M',
-            change: '+12%',
+            value: totalRequests >= 1000000
+              ? `${(totalRequests / 1000000).toFixed(1)}M`
+              : totalRequests >= 1000
+              ? `${(totalRequests / 1000).toFixed(1)}K`
+              : totalRequests.toString(),
+            change: totalRequests > 0 ? '+12%' : '0%',
             icon: Globe,
             color: 'text-matrix-primary'
           },
           {
             title: 'Avg. Latency',
-            value: '125ms',
+            value: `${avgLatency}ms`,
             change: '-5%',
             icon: Clock,
             color: 'text-matrix-secondary'
           },
           {
             title: 'Error Rate',
-            value: '0.8%',
-            change: '-2%',
+            value: `${errorRate.toFixed(1)}%`,
+            change: errorRate < 1 ? '-2%' : '+2%',
             icon: Zap,
             color: 'text-matrix-tertiary'
           }
@@ -105,37 +195,44 @@ export function APIGateway() {
           </div>
         </div>
         <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={trafficData}>
-              <XAxis
-                dataKey="timestamp"
-                stroke="#666"
-                tickFormatter={(value) => new Date(value).toLocaleDateString()}
-              />
-              <YAxis stroke="#666" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#1a1a1a',
-                  border: '1px solid #333',
-                  borderRadius: '8px',
-                }}
-              />
-              <Line
-                type="monotone"
-                dataKey="requests"
-                name="Requests"
-                stroke="#00ff00"
-                strokeWidth={2}
-              />
-              <Line
-                type="monotone"
-                dataKey="latency"
-                name="Latency (ms)"
-                stroke="#00ffff"
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-matrix-primary/50">Loading traffic data...</p>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={trafficData}>
+                <XAxis
+                  dataKey="timestamp"
+                  stroke="#666"
+                />
+                <YAxis stroke="#666" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1a1a1a',
+                    border: '1px solid #333',
+                    borderRadius: '8px',
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="requests"
+                  name="Requests"
+                  stroke="#00ff00"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="latency"
+                  name="Latency (ms)"
+                  stroke="#00ffff"
+                  strokeWidth={2}
+                  dot={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
 
@@ -176,35 +273,43 @@ export function APIGateway() {
         </div>
       </div>
 
-      {/* Response Time Distribution */}
+      {/* Provider Cost Breakdown */}
       <div className="p-4 rounded-lg border border-matrix-primary/20 bg-background/50">
-        <h4 className="text-sm font-medium text-matrix-primary mb-4">Response Time Distribution</h4>
+        <h4 className="text-sm font-medium text-matrix-primary mb-4">Cost Distribution by Provider</h4>
         <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={[
-              { range: '0-50ms', count: 4500 },
-              { range: '50-100ms', count: 8900 },
-              { range: '100-150ms', count: 6700 },
-              { range: '150-200ms', count: 2500 },
-              { range: '200ms+', count: 1200 }
-            ]}>
-              <XAxis dataKey="range" stroke="#666" />
-              <YAxis stroke="#666" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#1a1a1a',
-                  border: '1px solid #333',
-                  borderRadius: '8px',
-                }}
-              />
-              <Bar
-                dataKey="count"
-                name="Requests"
-                fill="#00ff00"
-                radius={[4, 4, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-matrix-primary/50">Loading cost data...</p>
+            </div>
+          ) : endpointMetrics.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={endpointMetrics.map(endpoint => ({
+                provider: endpoint.endpoint.replace('/api/v1/', ''),
+                calls: endpoint.calls,
+                avgLatency: endpoint.latency
+              }))}>
+                <XAxis dataKey="provider" stroke="#666" />
+                <YAxis stroke="#666" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1a1a1a',
+                    border: '1px solid #333',
+                    borderRadius: '8px',
+                  }}
+                />
+                <Bar
+                  dataKey="calls"
+                  name="API Calls"
+                  fill="#00ff00"
+                  radius={[4, 4, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-matrix-primary/50">No provider data available</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

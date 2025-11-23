@@ -7,56 +7,191 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Tooltip } from 'recharts';
 import { Brain, Zap, Shield, Target } from 'lucide-react';
+import { MetricsService } from '@/lib/services/MetricsService';
+
+interface PerformanceMetric {
+  metric: string;
+  value: number;
+}
+
+interface ModelInfo {
+  id: string;
+  name: string;
+  icon: typeof Brain;
+}
 
 /**
  * @constructor
  */
 export function ModelPerformance() {
-  const [selectedModel, setSelectedModel] = useState('gpt-4');
+  const [selectedModel, setSelectedModel] = useState<string>('');
+  const [models, setModels] = useState<ModelInfo[]>([]);
+  const [performanceData, setPerformanceData] = useState<Record<string, PerformanceMetric[]>>({});
+  const [loading, setLoading] = useState(true);
 
-  const models = [
-    { id: 'gpt-4', name: 'GPT-4 Turbo', icon: Brain },
-    { id: 'claude-3', name: 'Claude 3', icon: Zap },
-    { id: 'llama-3', name: 'LLaMA 3', icon: Shield }
-  ];
-
-  const performanceData = {
-    'gpt-4': [
-      { metric: 'Accuracy', value: 98 },
-      { metric: 'Latency', value: 95 },
-      { metric: 'Reliability', value: 99 },
-      { metric: 'Throughput', value: 92 },
-      { metric: 'Cost Efficiency', value: 85 },
-      { metric: 'Scalability', value: 90 }
-    ],
-    'claude-3': [
-      { metric: 'Accuracy', value: 97 },
-      { metric: 'Latency', value: 97 },
-      { metric: 'Reliability', value: 98 },
-      { metric: 'Throughput', value: 94 },
-      { metric: 'Cost Efficiency', value: 88 },
-      { metric: 'Scalability', value: 92 }
-    ],
-    'llama-3': [
-      { metric: 'Accuracy', value: 96 },
-      { metric: 'Latency', value: 98 },
-      { metric: 'Reliability', value: 97 },
-      { metric: 'Throughput', value: 96 },
-      { metric: 'Cost Efficiency', value: 94 },
-      { metric: 'Scalability', value: 95 }
-    ]
+  // Normalize a value to 0-100 scale
+  const normalizeValue = (value: number, min: number, max: number, invert: boolean = false): number => {
+    const normalized = ((value - min) / (max - min)) * 100;
+    return invert ? 100 - normalized : normalized;
   };
 
-  const benchmarks = [
-    { metric: 'Token Processing', current: 15000, target: 20000, unit: 'tokens/sec' },
-    { metric: 'Response Time', current: 120, target: 100, unit: 'ms' },
-    { metric: 'Error Rate', current: 0.2, target: 0.1, unit: '%' },
-    { metric: 'Memory Usage', current: 85, target: 70, unit: '%' }
-  ];
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      const service = MetricsService.getInstance();
+      const aggregated = await service.getAggregatedMetrics('month');
+
+      // Check if we have real model data
+      if (Object.keys(aggregated.byModel).length > 0) {
+        // Extract models from real data
+        const modelList: ModelInfo[] = Object.keys(aggregated.byModel).map((key, index) => {
+          const [provider, modelName] = key.split(':');
+          const icons = [Brain, Zap, Shield, Target];
+          return {
+            id: key,
+            name: modelName || provider,
+            icon: icons[index % icons.length]
+          };
+        });
+
+        setModels(modelList);
+
+        // Find min/max values for normalization across all models
+        const modelStats = Object.values(aggregated.byModel);
+        const allLatencies = modelStats.map(m => m.p95Latency || m.avgLatency);
+        const allCosts = modelStats.map(m => m.avgCostPerCall);
+        const allTokens = modelStats.map(m => m.avgTokensPerCall);
+
+        const minLatency = Math.min(...allLatencies);
+        const maxLatency = Math.max(...allLatencies);
+        const minCost = Math.min(...allCosts);
+        const maxCost = Math.max(...allCosts);
+        const minTokens = Math.min(...allTokens);
+        const maxTokens = Math.max(...allTokens);
+
+        // Transform to radar chart format with real metrics
+        const perfData: Record<string, PerformanceMetric[]> = {};
+        Object.entries(aggregated.byModel).forEach(([modelKey, stats]) => {
+          const latency = stats.p95Latency || stats.avgLatency;
+
+          perfData[modelKey] = [
+            {
+              metric: 'Success Rate',
+              value: stats.successRate * 100
+            },
+            {
+              metric: 'Speed (p95)',
+              value: normalizeValue(latency, minLatency, maxLatency, true) // Invert: lower latency is better
+            },
+            {
+              metric: 'Token Efficiency',
+              value: normalizeValue(stats.avgTokensPerCall, minTokens, maxTokens, false)
+            },
+            {
+              metric: 'Cost Efficiency',
+              value: normalizeValue(stats.avgCostPerCall, minCost, maxCost, true) // Invert: lower cost is better
+            },
+            {
+              metric: 'Reliability',
+              value: (stats.successfulCalls / stats.totalCalls) * 100
+            },
+            {
+              metric: 'Volume',
+              value: stats.totalCalls > 0 ? Math.min(100, (stats.totalCalls / Math.max(...modelStats.map(m => m.totalCalls))) * 100) : 0
+            }
+          ];
+        });
+
+        setPerformanceData(perfData);
+
+        // Set first model as selected if none selected
+        if (!selectedModel && modelList.length > 0) {
+          setSelectedModel(modelList[0].id);
+        }
+      } else {
+        // Fallback to demo data
+        const demoModels: ModelInfo[] = [
+          { id: 'gpt-4', name: 'GPT-4 Turbo', icon: Brain },
+          { id: 'claude-3', name: 'Claude 3', icon: Zap },
+          { id: 'llama-3', name: 'LLaMA 3', icon: Shield }
+        ];
+
+        setModels(demoModels);
+
+        const demoData = {
+          'gpt-4': [
+            { metric: 'Accuracy', value: 98 },
+            { metric: 'Latency', value: 95 },
+            { metric: 'Reliability', value: 99 },
+            { metric: 'Throughput', value: 92 },
+            { metric: 'Cost Efficiency', value: 85 },
+            { metric: 'Scalability', value: 90 }
+          ],
+          'claude-3': [
+            { metric: 'Accuracy', value: 97 },
+            { metric: 'Latency', value: 97 },
+            { metric: 'Reliability', value: 98 },
+            { metric: 'Throughput', value: 94 },
+            { metric: 'Cost Efficiency', value: 88 },
+            { metric: 'Scalability', value: 92 }
+          ],
+          'llama-3': [
+            { metric: 'Accuracy', value: 96 },
+            { metric: 'Latency', value: 98 },
+            { metric: 'Reliability', value: 97 },
+            { metric: 'Throughput', value: 96 },
+            { metric: 'Cost Efficiency', value: 94 },
+            { metric: 'Scalability', value: 95 }
+          ]
+        };
+
+        setPerformanceData(demoData);
+        setSelectedModel('gpt-4');
+      }
+
+      setLoading(false);
+    };
+
+    loadData();
+
+    // Listen for metrics updates
+    const handleUpdate = () => loadData();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('metrics-updated', handleUpdate);
+      return () => {
+        window.removeEventListener('metrics-updated', handleUpdate);
+      };
+    }
+  }, [selectedModel]);
+
+  // Calculate benchmarks from selected model's real data
+  const getBenchmarks = () => {
+    if (!selectedModel || !performanceData[selectedModel]) {
+      return [
+        { metric: 'Token Processing', current: 15000, target: 20000, unit: 'tokens/sec' },
+        { metric: 'Response Time', current: 120, target: 100, unit: 'ms' },
+        { metric: 'Error Rate', current: 0.2, target: 0.1, unit: '%' },
+        { metric: 'Memory Usage', current: 85, target: 70, unit: '%' }
+      ];
+    }
+
+    const metrics = performanceData[selectedModel];
+    const successRate = metrics.find(m => m.metric === 'Success Rate')?.value || 0;
+    const reliability = metrics.find(m => m.metric === 'Reliability')?.value || 0;
+
+    return [
+      { metric: 'Success Rate', current: successRate, target: 100, unit: '%' },
+      { metric: 'Speed Score', current: metrics.find(m => m.metric === 'Speed (p95)')?.value || 0, target: 100, unit: 'score' },
+      { metric: 'Error Rate', current: 100 - reliability, target: 0, unit: '%', invert: true },
+      { metric: 'Efficiency', current: metrics.find(m => m.metric === 'Cost Efficiency')?.value || 0, target: 100, unit: 'score' }
+    ];
+  };
+
+  const benchmarks = getBenchmarks();
 
   return (
     <div className="space-y-6">
@@ -117,20 +252,22 @@ export function ModelPerformance() {
           <div className="space-y-6">
             {benchmarks.map(benchmark => {
               const progress = (benchmark.current / benchmark.target) * 100;
-              const isGood = benchmark.current >= benchmark.target;
+              const isGood = 'invert' in benchmark && benchmark.invert
+                ? benchmark.current <= benchmark.target
+                : benchmark.current >= benchmark.target * 0.8; // 80% of target is good
 
               return (
                 <div key={benchmark.metric} className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-foreground/70">{benchmark.metric}</span>
                     <span className="text-matrix-primary">
-                      {benchmark.current} / {benchmark.target} {benchmark.unit}
+                      {benchmark.current.toFixed(1)} / {benchmark.target} {benchmark.unit}
                     </span>
                   </div>
                   <div className="h-2 bg-background rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
-                      animate={{ width: `${progress}%` }}
+                      animate={{ width: `${Math.min(100, progress)}%` }}
                       className={`h-full ${
                         isGood ? 'bg-matrix-primary' : 'bg-matrix-tertiary'
                       }`}
