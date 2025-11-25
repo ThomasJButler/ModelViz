@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Navigation } from '@/components/navigation';
+import { MobileBottomNav } from '@/components/mobile-bottom-nav';
 import { Footer } from '@/components/footer';
 import { DemoBanner } from '@/components/demo-banner';
 import { MatrixBackground } from '@/components/matrix-background';
@@ -100,8 +101,9 @@ export default function RootLayout({
             <div className="content-wrapper min-h-screen flex flex-col">
               <DemoBanner />
               <Navigation />
-              <main className="flex-1">{children}</main>
-              <Footer />
+              <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+              <Footer className="hidden lg:block" />
+              <MobileBottomNav />
             </div>
           </PageTransition>
           <Toaster />

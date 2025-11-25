@@ -65,7 +65,11 @@ export function ModelVizLogo({
             {/* Main logo */}
             <div className="relative bg-black border-2 border-matrix-primary rounded-lg p-2">
               <div className={`font-mono font-bold ${sizeClass} text-matrix-primary flex items-center justify-center`}>
-                <span className="tracking-widest">MV</span>
+                <svg viewBox="0 0 24 24" fill="none" className="w-full h-full" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
               </div>
             </div>
 
@@ -113,7 +117,11 @@ export function ModelVizLogo({
           {/* Main logo */}
           <div className="relative bg-black border-2 border-matrix-primary rounded-lg p-2 shadow-[0_0_15px_rgba(0,255,0,0.3)]">
             <div className={`font-mono font-bold ${sizeClass} text-matrix-primary flex items-center justify-center`}>
-              <span className="tracking-widest">MV</span>
+              <svg viewBox="0 0 24 24" fill="none" className="w-full h-full" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
             </div>
           </div>
         </motion.div>
@@ -121,7 +129,11 @@ export function ModelVizLogo({
         <div className="relative">
           <div className="bg-black border-2 border-matrix-primary rounded-lg p-2">
             <div className={`font-mono font-bold ${sizeClass} text-matrix-primary flex items-center justify-center`}>
-              <span className="tracking-widest">MV</span>
+              <svg viewBox="0 0 24 24" fill="none" className="w-full h-full" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
             </div>
           </div>
         </div>
