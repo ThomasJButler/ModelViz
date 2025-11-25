@@ -24,7 +24,8 @@ import {
   BookOpen,
   Layers,
   Timer,
-  DollarSign
+  DollarSign,
+  X
 } from 'lucide-react';
 import { ModelVizLogo } from '@/components/ui/modelviz-logo';
 
@@ -51,16 +52,28 @@ interface PlaygroundSidebarProps {
     savedTemplates: number;
     activeExperiments: number;
   };
+  isOpen?: boolean;
+  onClose?: () => void;
+  onCollapseChange?: (collapsed: boolean) => void;
 }
 
 export function PlaygroundSidebar({
   onNavigate,
   currentSection = 'playground',
-  metrics = { totalTests: 0, savedTemplates: 0, activeExperiments: 0 }
+  metrics = { totalTests: 0, savedTemplates: 0, activeExperiments: 0 },
+  isOpen = true,
+  onClose,
+  onCollapseChange
 }: PlaygroundSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const router = useRouter();
+
+  const handleCollapse = () => {
+    const newCollapsed = !isCollapsed;
+    setIsCollapsed(newCollapsed);
+    onCollapseChange?.(newCollapsed);
+  };
 
   const navSections: NavSection[] = [
     {
@@ -72,70 +85,41 @@ export function PlaygroundSidebar({
           label: 'Test Models',
           icon: <Brain className="w-5 h-5" />,
           description: 'Interactive AI testing'
+        }
+      ]
+    },
+    {
+      id: 'navigate',
+      title: 'Navigate',
+      items: [
+        {
+          id: 'dashboard',
+          label: 'Dashboard',
+          icon: <Layers className="w-5 h-5" />,
+          description: 'Overview & metrics',
+          onClick: () => router.push('/dashboard')
         },
         {
-          id: 'comparison',
-          label: 'Compare',
+          id: 'compare',
+          label: 'Compare Models',
           icon: <GitCompare className="w-5 h-5" />,
-          description: 'Compare multiple models',
+          description: 'Side-by-side comparison',
+          onClick: () => router.push('/compare'),
           badge: 'NEW'
         },
         {
-          id: 'conversation',
-          label: 'Conversation',
-          icon: <MessageSquare className="w-5 h-5" />,
-          description: 'Multi-turn chat mode'
-        }
-      ]
-    },
-    {
-      id: 'resources',
-      title: 'Resources',
-      items: [
-        {
-          id: 'templates',
-          label: 'Templates',
-          icon: <FileCode2 className="w-5 h-5" />,
-          description: 'Prompt templates library',
-          badge: String(metrics.savedTemplates)
-        },
-        {
-          id: 'history',
-          label: 'History',
-          icon: <History className="w-5 h-5" />,
-          description: 'Previous experiments',
-          badge: String(metrics.totalTests)
-        },
-        {
-          id: 'experiments',
-          label: 'Experiments',
-          icon: <FlaskConical className="w-5 h-5" />,
-          description: 'A/B testing & workflows',
-          badge: String(metrics.activeExperiments)
-        }
-      ]
-    },
-    {
-      id: 'analytics',
-      title: 'Analytics',
-      items: [
-        {
-          id: 'performance',
-          label: 'Performance',
-          icon: <Zap className="w-5 h-5" />,
-          description: 'Model performance metrics'
-        },
-        {
-          id: 'costs',
-          label: 'Cost Analysis',
-          icon: <DollarSign className="w-5 h-5" />,
-          description: 'API usage costs'
-        },
-        {
-          id: 'insights',
-          label: 'Insights',
+          id: 'analytics',
+          label: 'Analytics',
           icon: <BarChart3 className="w-5 h-5" />,
-          description: 'Usage patterns & trends'
+          description: 'Usage & performance',
+          onClick: () => router.push('/dashboard')
+        },
+        {
+          id: 'settings',
+          label: 'API Settings',
+          icon: <Settings className="w-5 h-5" />,
+          description: 'Configure providers',
+          onClick: () => router.push('/settings')
         }
       ]
     }
@@ -150,17 +134,43 @@ export function PlaygroundSidebar({
   };
 
   return (
-    <motion.aside
-      initial={{ x: -300 }}
-      animate={{
-        x: 0,
-        width: isCollapsed ? 80 : 280
-      }}
-      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="h-full bg-black/90 border-r border-matrix-primary/20 backdrop-blur-xl relative overflow-hidden"
-    >
-      {/* Logo Section */}
-      <div className="p-4 border-b border-matrix-primary/20">
+    <>
+      {/* Mobile overlay backdrop */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      <motion.aside
+        initial={{ x: -300 }}
+        animate={{
+          x: isOpen ? 0 : -300,
+          width: isCollapsed ? 80 : 280
+        }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        className={`h-full bg-black/90 border-r border-matrix-primary/20 backdrop-blur-xl relative overflow-hidden z-50
+                   ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
+      >
+        {/* Mobile close button */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary/20
+                     text-matrix-primary hover:bg-matrix-primary/20 transition-colors lg:hidden z-50"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
+
+        {/* Logo Section */}
+        <div className="p-4 border-b border-matrix-primary/20">
         <div className="flex items-center gap-2">
           <motion.div
             animate={{ scale: isCollapsed ? 0.9 : 1 }}
@@ -189,9 +199,9 @@ export function PlaygroundSidebar({
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="flex-shrink-0 p-2 rounded-lg border border-matrix-primary/20 bg-matrix-primary/5
-                     hover:bg-matrix-primary/10 transition-colors"
+            onClick={handleCollapse}
+            className="flex-shrink-0 p-2 rounded-lg border border-matrix-primary/20 bg-black/80
+                     hover:bg-matrix-primary/10 transition-colors relative z-10 hidden lg:flex"
           >
             {isCollapsed ? (
               <ChevronRight className="w-4 h-4 text-matrix-primary" />
@@ -350,7 +360,7 @@ export function PlaygroundSidebar({
       )}
 
       {/* Matrix Rain Effect Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10 -z-10">
         {[...Array(5)].map((_, i) => (
           <motion.div
             key={i}
@@ -391,5 +401,6 @@ export function PlaygroundSidebar({
         </div>
       )}
     </motion.aside>
+    </>
   );
 }

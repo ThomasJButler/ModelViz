@@ -19,7 +19,8 @@ import {
   Zap,
   Network,
   Brain,
-  Sparkles
+  Sparkles,
+  X
 } from 'lucide-react';
 import { ModelVizLogo } from '@/components/ui/modelviz-logo';
 
@@ -85,13 +86,22 @@ const navItems: NavItem[] = [
 
 interface SidebarNavigationProps {
   onNavigate?: (path: string) => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  onCollapseChange?: (collapsed: boolean) => void;
 }
 
-export function SidebarNavigation({ onNavigate }: SidebarNavigationProps) {
+export function SidebarNavigation({ onNavigate, isOpen = true, onClose, onCollapseChange }: SidebarNavigationProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
+
+  const handleCollapse = () => {
+    const newCollapsed = !isCollapsed;
+    setIsCollapsed(newCollapsed);
+    onCollapseChange?.(newCollapsed);
+  };
 
   const handleNavigation = (path: string) => {
     if (onNavigate) {
@@ -102,15 +112,41 @@ export function SidebarNavigation({ onNavigate }: SidebarNavigationProps) {
   };
 
   return (
-    <motion.aside
-      initial={{ x: -300 }}
-      animate={{
-        x: 0,
-        width: isCollapsed ? 80 : 280
-      }}
-      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="h-full bg-black/90 border-r border-matrix-primary/20 backdrop-blur-xl relative"
-    >
+    <>
+      {/* Mobile overlay backdrop */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      <motion.aside
+        initial={{ x: -300 }}
+        animate={{
+          x: isOpen ? 0 : -300,
+          width: isCollapsed ? 80 : 280
+        }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        className={`h-full bg-black/90 border-r border-matrix-primary/20 backdrop-blur-xl relative z-50
+                   ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
+      >
+      {/* Mobile close button */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary/20
+                   text-matrix-primary hover:bg-matrix-primary/20 transition-colors lg:hidden z-50"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      )}
+
       {/* Logo Section */}
       <div className="p-4 border-b border-matrix-primary/20">
         <div className="flex items-center gap-2">
@@ -139,9 +175,9 @@ export function SidebarNavigation({ onNavigate }: SidebarNavigationProps) {
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="flex-shrink-0 p-2 rounded-lg border border-matrix-primary/20 bg-matrix-primary/5
-                     hover:bg-matrix-primary/10 transition-colors"
+            onClick={handleCollapse}
+            className="flex-shrink-0 p-2 rounded-lg border border-matrix-primary/20 bg-black/80
+                     hover:bg-matrix-primary/10 transition-colors relative z-10 hidden lg:flex"
           >
             {isCollapsed ? (
               <ChevronRight className="w-4 h-4 text-matrix-primary" />
@@ -282,7 +318,7 @@ export function SidebarNavigation({ onNavigate }: SidebarNavigationProps) {
       )}
 
       {/* Matrix Rain Effect Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10 -z-10">
         {[...Array(5)].map((_, i) => (
           <motion.div
             key={i}
@@ -304,5 +340,6 @@ export function SidebarNavigation({ onNavigate }: SidebarNavigationProps) {
         ))}
       </div>
     </motion.aside>
+    </>
   );
 }
