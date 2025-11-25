@@ -8,7 +8,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { Brain, Code, Activity, Shield, Sparkles, Zap, Network, AlertTriangle, CheckCircle2, Timer, Braces, Terminal, Maximize2, Minimize2, Download, Share2, Loader2, Settings, DollarSign } from 'lucide-react';
+import { Brain, Code, Activity, Shield, Sparkles, Zap, Network, AlertTriangle, CheckCircle2, Timer, Braces, Terminal, Maximize2, Minimize2, Download, Share2, Loader2, Settings, DollarSign, Menu } from 'lucide-react';
+import { PlaygroundSidebar } from '@/components/playground/playground-sidebar';
 import { ModelSelector } from '@/components/model-selector';
 import { CodeEditor } from '@/components/code-editor';
 import { OutputDisplay } from '@/components/output-display';
@@ -224,6 +225,7 @@ export default function PlaygroundPage() {
     successRate: 100,
     totalCost: 0
   });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   /** @constructs */
   const loadModels = useCallback(async () => {
@@ -425,57 +427,76 @@ export default function PlaygroundPage() {
   };
 
   return (
-    <div className="px-8 pt-12 pb-8">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-matrix-primary via-matrix-secondary to-matrix-tertiary text-transparent bg-clip-text">
-                AI Playground
-              </h1>
-              <p className="text-foreground/70">
-                Experience the future of artificial intelligence
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={toggleFullscreen}
-                className="p-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary hover:bg-matrix-primary/20 transition-colors"
-              >
-                {isFullscreen ? (
-                  <Minimize2 className="w-5 h-5" />
-                ) : (
-                  <Maximize2 className="w-5 h-5" />
-                )}
-              </motion.button>
-              <Link href="/settings">
+    <div className="min-h-screen">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setSidebarOpen(true)}
+        className="fixed top-16 left-2 z-30 p-2 bg-black/90 border border-matrix-primary/30 rounded-lg
+                 text-matrix-primary hover:bg-matrix-primary/10 transition-colors lg:hidden
+                 shadow-lg shadow-matrix-primary/20"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+
+      {/* Mobile Sidebar */}
+      <div className="lg:hidden">
+        <PlaygroundSidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
+      </div>
+
+      <div className="px-4 md:px-8 py-12">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-matrix-primary via-matrix-secondary to-matrix-tertiary text-transparent bg-clip-text">
+                  AI Playground
+                </h1>
+                <p className="text-sm sm:text-base text-foreground/70">
+                  Experience the future of artificial intelligence
+                </p>
+              </div>
+              <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary hover:bg-matrix-primary/20 transition-colors flex items-center gap-2"
+                  onClick={toggleFullscreen}
+                  className="p-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary hover:bg-matrix-primary/20 transition-colors hidden sm:flex"
                 >
-                  <Settings className="w-4 h-4" />
-                  Settings
+                  {isFullscreen ? (
+                    <Minimize2 className="w-5 h-5" />
+                  ) : (
+                    <Maximize2 className="w-5 h-5" />
+                  )}
                 </motion.button>
-              </Link>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowGuide(true)}
-                className="px-4 py-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary hover:bg-matrix-primary/20 transition-colors flex items-center gap-2"
-              >
-                <Terminal className="w-4 h-4" />
-                Guide
-              </motion.button>
+                <Link href="/settings">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-3 py-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary hover:bg-matrix-primary/20 transition-colors flex items-center gap-2 text-sm"
+                  >
+                    <Settings className="w-4 h-4" />
+                    <span className="hidden sm:inline">Settings</span>
+                  </motion.button>
+                </Link>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowGuide(true)}
+                  className="px-3 py-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary hover:bg-matrix-primary/20 transition-colors flex items-center gap-2 text-sm"
+                >
+                  <Terminal className="w-4 h-4" />
+                  <span className="hidden sm:inline">Guide</span>
+                </motion.button>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -762,12 +783,13 @@ export default function PlaygroundPage() {
           )}
         </AnimatePresence>
       </div>
-
-      {/* API Configuration Modal */}
-      <ApiConfigModal
-        isOpen={isApiConfigOpen}
-        onClose={() => setIsApiConfigOpen(false)}
-      />
     </div>
+
+    {/* API Configuration Modal */}
+    <ApiConfigModal
+      isOpen={isApiConfigOpen}
+      onClose={() => setIsApiConfigOpen(false)}
+    />
+  </div>
   );
 }
