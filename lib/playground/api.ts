@@ -187,8 +187,12 @@ export async function generatePlaygroundResponse(request: PlaygroundRequest): Pr
           // Google returns accurate token counts in usage_metadata
           tokensUsed = completion.usage?.total_tokens || 0;
         } catch (error: any) {
-          console.error('Google API error:', error);
-          throw new Error(`Google API error: ${error.message || 'Unknown error'}`);
+          // Extract error message properly (Error objects have non-enumerable message)
+          const errorMsg = error instanceof Error
+            ? error.message
+            : (error.message || JSON.stringify(error) || 'Unknown error');
+          console.error('Google API error:', errorMsg);
+          throw new Error(`Google API error: ${errorMsg}`);
         }
         break;
 

@@ -42,6 +42,12 @@ export class AnthropicClient extends ApiClient {
   async listModels(): Promise<AnthropicTypes.ModelObject[]> {
     return [
       {
+        name: 'claude-opus-4-5-20250514',
+        description: 'Claude Opus 4.5 - Anthropic\'s most powerful model with breakthrough capabilities',
+        context_window: 200000,
+        max_tokens: 32000
+      },
+      {
         name: 'claude-sonnet-4-5-20250929',
         description: 'Claude Sonnet 4.5 - Most advanced model with breakthrough reasoning',
         context_window: 200000,

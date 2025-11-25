@@ -253,6 +253,7 @@ function formatModelName(modelId: string): string {
     // Anthropic models
     return modelId
       // Claude 4 series
+      .replace('claude-opus-4-5', 'Claude Opus 4.5')
       .replace('claude-sonnet-4-5', 'Claude Sonnet 4.5')
       .replace('claude-opus-4-1', 'Claude Opus 4.1')
       .replace('claude-opus-4', 'Claude Opus 4')

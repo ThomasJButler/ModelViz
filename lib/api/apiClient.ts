@@ -115,16 +115,21 @@ export class ApiClient {
       // Return successful response
       return await response.json() as T;
     } catch (error: any) {
-      console.error('API Request Error:', error);
-      
+      // Extract error message properly (Error objects have non-enumerable message)
+      const errorMessage = error instanceof Error
+        ? error.message
+        : (error.message || JSON.stringify(error) || 'An unknown error occurred');
+
+      console.error('API Request Error:', errorMessage);
+
       // Format the error consistently
       const apiError: ApiError = {
         status: error.status,
-        message: error.message || 'An unknown error occurred',
+        message: errorMessage,
         code: error.code,
         details: error.details
       };
-      
+
       throw apiError;
     }
   }
