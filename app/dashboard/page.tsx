@@ -20,7 +20,8 @@ import {
   XCircle,
   Sparkles,
   BarChart3,
-  GitCompare
+  GitCompare,
+  Menu
 } from "lucide-react";
 import dynamic from 'next/dynamic';
 import { analytics } from '@/lib/analytics';
@@ -37,6 +38,9 @@ import { ModelUsageOverview } from '@/components/dashboard/model-usage-overview'
 import { ProviderDistribution } from '@/components/dashboard/provider-distribution';
 import { RealTimeStream } from '@/components/dashboard/real-time-stream';
 import { ProviderComparison } from '@/components/dashboard/provider-comparison';
+import { APIHealthMonitor } from '@/components/dashboard/api-health-monitor';
+import { TokenEfficiency } from '@/components/dashboard/token-efficiency';
+import { RequestTimeline } from '@/components/dashboard/request-timeline';
 
 // Import epic visualization components
 import { MatrixRain } from '@/components/effects/MatrixRain';
@@ -89,6 +93,8 @@ export default function DashboardPage() {
   });
   const [hasApiKeys, setHasApiKeys] = useState(false);
   const [showEffects, setShowEffects] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Check if user has API keys configured
   const checkApiKeys = useCallback(() => {
@@ -139,7 +145,7 @@ export default function DashboardPage() {
         return (
           <div className="space-y-6">
             {/* Hero Stats with Holographic Effects */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
               <HolographicCard intensity={0.7} glowColor="rgba(0, 255, 0, 0.5)">
                 <motion.div
                   whileHover={{ scale: 1.02 }}
@@ -298,6 +304,34 @@ export default function DashboardPage() {
               >
                 <ProviderDistribution />
               </motion.div>
+
+              {/* New Visualization Components */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+              >
+                <APIHealthMonitor />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+              >
+                <TokenEfficiency />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+              >
+                <RequestTimeline />
+              </motion.div>
             </div>
           </div>
         );
@@ -414,14 +448,14 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
-      {/* Epic Background Effects - Very Subtle */}
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black overflow-x-hidden">
+      {/* Epic Background Effects - Very Subtle - Show on all devices */}
       {showEffects && (
-        <>
+        <div className="fixed inset-0 pointer-events-none z-0">
           <MatrixRain intensity={0.05} speed={0.3} fontSize={10} color="#00ff00" />
           <ParticleField particleCount={25} color="#00ff00" connectionDistance={60} />
           <CyberpunkOverlay intensity={0.15} />
-        </>
+        </div>
       )}
 
       {/* Animated Background - Very Subtle */}
@@ -431,27 +465,55 @@ export default function DashboardPage() {
         <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-matrix-tertiary/[0.02] rounded-full blur-3xl animate-pulse delay-2000" />
       </div>
 
-      <div className="relative z-10 flex">
+      <div className="relative z-10 lg:flex">
+        {/* Mobile Menu Button - positioned below navigation */}
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="fixed top-16 left-2 z-30 p-2 bg-black/90 border border-matrix-primary/30 rounded-lg
+                   text-matrix-primary hover:bg-matrix-primary/10 transition-colors lg:hidden
+                   shadow-lg shadow-matrix-primary/20"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
         {/* Sidebar Navigation */}
-        <div className="fixed left-0 top-0 h-screen z-20">
-          <SidebarNavigation onNavigate={handleViewChange} />
+        <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] z-20 hidden lg:block">
+          <SidebarNavigation
+            onNavigate={handleViewChange}
+            isOpen={true}
+            onCollapseChange={setSidebarCollapsed}
+          />
+        </div>
+
+        {/* Mobile Sidebar */}
+        <div className="lg:hidden">
+          <SidebarNavigation
+            onNavigate={(path) => {
+              handleViewChange(path);
+              setSidebarOpen(false);
+            }}
+            isOpen={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
+          />
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 ml-[280px] px-8 pt-24 pb-8">
+        <div className={`flex-1 min-w-0 w-full transition-all duration-300 px-2 sm:px-4 md:px-6 lg:px-8 pt-14 sm:pt-16 lg:pt-20 pb-20 lg:pb-8 ${
+          sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-[280px]'
+        }`}>
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-6 md:mb-8"
           >
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h1 className="text-4xl font-bold text-matrix-primary mb-2 flex items-center gap-3">
-                  <Sparkles className="w-8 h-8" />
-                  ModelViz Analytics
+                <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-matrix-primary mb-2 flex items-center gap-2 sm:gap-3 flex-wrap">
+                  <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 flex-shrink-0" />
+                  <span>ModelViz Analytics</span>
                 </h1>
-                <p className="text-foreground/60">
+                <p className="text-sm md:text-base text-foreground/60">
                   The magnum opus of API visualization and analytics
                 </p>
               </div>
