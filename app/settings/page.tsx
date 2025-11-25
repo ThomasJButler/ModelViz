@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Settings, Key, Shield, Download, Upload, Trash2, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { Settings, Key, Shield, Download, Upload, Trash2, ArrowLeft, AlertTriangle, RefreshCw } from 'lucide-react';
 import ApiKeyForm from '@/components/settings/ApiKeyForm';
 import type { Provider } from '@/lib/storage/apiKeyStorage';
 import {
@@ -15,7 +15,7 @@ import {
 const PROVIDERS: Provider[] = [
   'OpenAI',
   'Anthropic',
-  'DeepSeek',
+  'Perplexity',
   'Google',
 ];
 
@@ -171,6 +171,19 @@ export default function SettingsPage() {
               />
             ))}
           </div>
+        </div>
+
+        {/* Save & Refresh Button */}
+        <div className="mb-8 flex justify-center">
+          <button
+            onClick={() => window.location.reload()}
+            className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-matrix-secondary to-matrix-primary
+                     text-black font-bold rounded-lg hover:shadow-[0_0_30px_rgba(0,255,0,0.3)]
+                     transition-all duration-300 transform hover:scale-105"
+          >
+            <RefreshCw className="w-5 h-5" />
+            <span>Save & Refresh Page to Load Models</span>
+          </button>
         </div>
 
         {/* Data Management */}

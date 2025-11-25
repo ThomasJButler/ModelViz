@@ -39,25 +39,25 @@ const providers = [
     name: "Anthropic",
     description: "Claude models for reasoning and complex tasks",
     icon: Sparkles,
-    placeholder: "sk_ant_...",
+    placeholder: "sk-ant-...",
     helpText: "Get your API key from the Anthropic console",
     helpUrl: "https://console.anthropic.com/keys",
     primary: true
   },
   {
-    id: "deepseek",
-    name: "DeepSeek",
-    description: "Specialized models for code and technical tasks",
-    icon: Code,
-    placeholder: "Your DeepSeek API key",
-    helpText: "Get your API key from the DeepSeek platform",
-    helpUrl: "https://platform.deepseek.com/",
+    id: "google",
+    name: "Google",
+    description: "Gemini models for multimodal AI tasks",
+    icon: Database,
+    placeholder: "AI...",
+    helpText: "Get your API key from Google AI Studio",
+    helpUrl: "https://aistudio.google.com/apikey",
     primary: true
   },
   {
     id: "perplexity",
     name: "Perplexity",
-    description: "Models with internet search capabilities",
+    description: "Models with real-time web search capabilities",
     icon: Zap,
     placeholder: "pplx-...",
     helpText: "Get your API key from the Perplexity API settings",
@@ -199,9 +199,11 @@ export default function ApiSettingsPage() {
         }
       }
 
-      setStatus({ message: 'API configuration saved successfully!', type: 'success' });
+      setStatus({ message: 'API configuration saved successfully! Refreshing...', type: 'success' });
       setTimeout(() => {
         setIsLoading(false);
+        // Refresh page to reload models with new API keys
+        window.location.reload();
       }, 1000);
     } catch (error) {
       console.error('Error saving configuration', error);
@@ -267,8 +269,8 @@ export default function ApiSettingsPage() {
           case 'anthropic':
             api = ApiService.getInstance().getAnthropic();
             break;
-          case 'deepseek':
-            api = ApiService.getInstance().getDeepSeek();
+          case 'google':
+            api = ApiService.getInstance().getGoogle();
             break;
           case 'perplexity':
             api = ApiService.getInstance().getPerplexity();
@@ -281,7 +283,7 @@ export default function ApiSettingsPage() {
         }
       } catch (error) {
         ApiService.getInstance(tempConfig as ApiConfig);
-        
+
         switch(providerId) {
           case 'openai':
             api = ApiService.getInstance().getOpenAI();
@@ -289,8 +291,8 @@ export default function ApiSettingsPage() {
           case 'anthropic':
             api = ApiService.getInstance().getAnthropic();
             break;
-          case 'deepseek':
-            api = ApiService.getInstance().getDeepSeek();
+          case 'google':
+            api = ApiService.getInstance().getGoogle();
             break;
           case 'perplexity':
             api = ApiService.getInstance().getPerplexity();

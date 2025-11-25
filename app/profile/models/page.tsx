@@ -218,7 +218,7 @@ export default function ModelsPage() {
       name: "Code Audit Assistant",
       description: "Failed training run that was attempting to build a code security auditing assistant. Issue with training data quality.",
       type: "fine-tuned",
-      baseModel: "DeepSeek Coder (DeepSeek)",
+      baseModel: "Perplexity Sonar (Perplexity)",
       lastModified: "Mar 5, 2024",
       status: "failed",
       size: "982 MB"

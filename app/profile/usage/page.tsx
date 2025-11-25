@@ -27,7 +27,6 @@ import {
 const providerIcons: Record<string, any> = {
   OpenAI: Brain,
   Anthropic: Sparkles,
-  DeepSeek: Code,
   Perplexity: Zap,
   News: Globe
 };
@@ -36,7 +35,6 @@ const providerIcons: Record<string, any> = {
 const providerColors: Record<string, string> = {
   OpenAI: "#10a37f",
   Anthropic: "#b083f9",
-  DeepSeek: "#4993dd",
   Perplexity: "#5436db",
   News: "#ff6e4f"
 };
@@ -94,101 +92,85 @@ export default function UsagePage() {
       ]
     },
     {
-      provider: "DeepSeek",
+      provider: "Perplexity",
       tokens: 420000,
       cost: 4.20,
       requests: 85,
       models: [
-        { name: "DeepSeek Coder", tokens: 420000, cost: 4.20, requests: 85 }
-      ]
-    },
-    {
-      provider: "Perplexity",
-      tokens: 180000,
-      cost: 1.80,
-      requests: 42,
-      models: [
-        { name: "Perplexity Online", tokens: 180000, cost: 1.80, requests: 42 }
+        { name: "Perplexity Sonar", tokens: 420000, cost: 4.20, requests: 85 }
       ]
     }
   ];
 
   const dailyUsage: DailyUsage[] = [
-    { 
-      date: "Mar 23", 
-      totalTokens: 120000, 
-      totalCost: 1.85, 
+    {
+      date: "Mar 23",
+      totalTokens: 120000,
+      totalCost: 1.85,
       byProvider: {
         "OpenAI": { tokens: 45000, cost: 0.75 },
         "Anthropic": { tokens: 60000, cost: 0.84 },
-        "DeepSeek": { tokens: 15000, cost: 0.15 },
-        "Perplexity": { tokens: 0, cost: 0 }
+        "Perplexity": { tokens: 15000, cost: 0.26 }
       }
     },
-    { 
-      date: "Mar 24", 
-      totalTokens: 180000, 
-      totalCost: 2.52, 
+    {
+      date: "Mar 24",
+      totalTokens: 180000,
+      totalCost: 2.52,
       byProvider: {
         "OpenAI": { tokens: 60000, cost: 1.00 },
         "Anthropic": { tokens: 90000, cost: 1.26 },
-        "DeepSeek": { tokens: 20000, cost: 0.20 },
-        "Perplexity": { tokens: 10000, cost: 0.06 }
+        "Perplexity": { tokens: 30000, cost: 0.26 }
       }
     },
-    { 
-      date: "Mar 25", 
-      totalTokens: 210000, 
-      totalCost: 2.94, 
+    {
+      date: "Mar 25",
+      totalTokens: 210000,
+      totalCost: 2.94,
       byProvider: {
         "OpenAI": { tokens: 70000, cost: 1.17 },
         "Anthropic": { tokens: 100000, cost: 1.40 },
-        "DeepSeek": { tokens: 25000, cost: 0.25 },
-        "Perplexity": { tokens: 15000, cost: 0.12 }
+        "Perplexity": { tokens: 40000, cost: 0.37 }
       }
     },
-    { 
-      date: "Mar 26", 
-      totalTokens: 150000, 
-      totalCost: 2.10, 
+    {
+      date: "Mar 26",
+      totalTokens: 150000,
+      totalCost: 2.10,
       byProvider: {
         "OpenAI": { tokens: 50000, cost: 0.83 },
         "Anthropic": { tokens: 70000, cost: 0.98 },
-        "DeepSeek": { tokens: 15000, cost: 0.15 },
-        "Perplexity": { tokens: 15000, cost: 0.14 }
+        "Perplexity": { tokens: 30000, cost: 0.29 }
       }
     },
-    { 
-      date: "Mar 27", 
-      totalTokens: 240000, 
-      totalCost: 3.36, 
+    {
+      date: "Mar 27",
+      totalTokens: 240000,
+      totalCost: 3.36,
       byProvider: {
         "OpenAI": { tokens: 80000, cost: 1.33 },
         "Anthropic": { tokens: 110000, cost: 1.54 },
-        "DeepSeek": { tokens: 30000, cost: 0.30 },
-        "Perplexity": { tokens: 20000, cost: 0.19 }
+        "Perplexity": { tokens: 50000, cost: 0.49 }
       }
     },
-    { 
-      date: "Mar 28", 
-      totalTokens: 280000, 
-      totalCost: 3.92, 
+    {
+      date: "Mar 28",
+      totalTokens: 280000,
+      totalCost: 3.92,
       byProvider: {
         "OpenAI": { tokens: 95000, cost: 1.58 },
         "Anthropic": { tokens: 135000, cost: 1.89 },
-        "DeepSeek": { tokens: 35000, cost: 0.35 },
-        "Perplexity": { tokens: 15000, cost: 0.10 }
+        "Perplexity": { tokens: 50000, cost: 0.45 }
       }
     },
-    { 
-      date: "Mar 29", 
-      totalTokens: 175000, 
-      totalCost: 2.45, 
+    {
+      date: "Mar 29",
+      totalTokens: 175000,
+      totalCost: 2.45,
       byProvider: {
         "OpenAI": { tokens: 55000, cost: 0.92 },
         "Anthropic": { tokens: 85000, cost: 1.19 },
-        "DeepSeek": { tokens: 20000, cost: 0.20 },
-        "Perplexity": { tokens: 15000, cost: 0.14 }
+        "Perplexity": { tokens: 35000, cost: 0.34 }
       }
     }
   ];

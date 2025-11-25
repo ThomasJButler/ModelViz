@@ -147,8 +147,9 @@ export function ModelDefinitionPanel() {
         setIsLoadingProviders(false);
       }
     };
-    
+
     loadData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   // Handle provider change
