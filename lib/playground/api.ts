@@ -42,8 +42,8 @@ function initializeApiService(): ApiService {
   const providers: Array<{ name: Provider; configKey: keyof ApiConfig }> = [
     { name: 'OpenAI', configKey: 'openai' },
     { name: 'Anthropic', configKey: 'anthropic' },
-    { name: 'DeepSeek', configKey: 'deepseek' },
     { name: 'Perplexity', configKey: 'perplexity' },
+    { name: 'Google', configKey: 'google' },
   ];
 
   providers.forEach(({ name, configKey }) => {
@@ -146,70 +146,52 @@ export async function generatePlaygroundResponse(request: PlaygroundRequest): Pr
           );
 
           response = completion.content;
-          tokensUsed = completion.usage?.total_tokens || Math.ceil(response.length / 4) + Math.ceil(prompt.length / 4);
+          // Anthropic returns accurate token counts in usage
+          tokensUsed = completion.usage?.total_tokens || 0;
         } catch (error: any) {
           console.error('Anthropic API error:', error);
           throw new Error(`Anthropic API error: ${error.message || 'Unknown error'}`);
         }
         break;
-        
-      case 'DeepSeek':
-        try {
-          // DeepSeek API call
-          response = await apiService.getDeepSeek().generateText(
-            prompt,
-            systemPrompt,
-            request.modelId,
-            {
-              temperature,
-              max_tokens: maxTokens
-            }
-          );
 
-          // DeepSeek doesn't directly provide token count in the simple wrapper
-          // We can estimate tokens based on text length (rough estimate)
-          tokensUsed = Math.ceil(response.length / 4) + Math.ceil(prompt.length / 4);
-        } catch (error: any) {
-          console.error('DeepSeek API error:', error);
-          throw new Error(`DeepSeek API error: ${error.message || 'Unknown error'}`);
-        }
-        break;
-        
       case 'Perplexity':
         try {
-          // Handle Perplexity's special case for Sonar models (online search)
-          if (request.modelId.includes('sonar')) {
-            response = await apiService.getPerplexity().searchAndGenerateText(
-              prompt,
-              systemPrompt,
-              request.modelId,
-              {
-                temperature,
-                max_tokens: maxTokens
-              }
-            );
-          } else {
-            // Standard Perplexity API call
-            response = await apiService.getPerplexity().generateText(
-              prompt,
-              systemPrompt,
-              request.modelId,
-              {
-                temperature,
-                max_tokens: maxTokens
-              }
-            );
-          }
+          // Perplexity API call
+          const completion = await apiService.getPerplexity().generateCompletion(
+            prompt,
+            request.modelId,
+            maxTokens,
+            temperature
+          );
 
-          // Perplexity doesn't directly provide token count in the simple wrapper
-          // We can estimate tokens based on text length (rough estimate)
-          tokensUsed = Math.ceil(response.length / 4) + Math.ceil(prompt.length / 4);
+          response = completion.content;
+          // Perplexity returns token counts in usage
+          tokensUsed = completion.usage?.total_tokens || 0;
         } catch (error: any) {
           console.error('Perplexity API error:', error);
           throw new Error(`Perplexity API error: ${error.message || 'Unknown error'}`);
         }
         break;
-        
+
+      case 'Google':
+        try {
+          // Google Gemini API call
+          const completion = await apiService.getGoogle().generateCompletion(
+            prompt,
+            request.modelId,
+            maxTokens,
+            temperature
+          );
+
+          response = completion.content;
+          // Google returns accurate token counts in usage_metadata
+          tokensUsed = completion.usage?.total_tokens || 0;
+        } catch (error: any) {
+          console.error('Google API error:', error);
+          throw new Error(`Google API error: ${error.message || 'Unknown error'}`);
+        }
+        break;
+
       case 'Demo':
         // Simulate API call for demo models
         await new Promise(resolve => setTimeout(resolve, 1000));

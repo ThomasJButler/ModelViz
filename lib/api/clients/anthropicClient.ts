@@ -10,13 +10,28 @@ import * as AnthropicTypes from '../types/anthropic';
 export class AnthropicClient extends ApiClient {
   private apiVersion = '2023-06-01';
   private anthropicVersion = 'claude-3';
-  
+  private apiKey: string;
+
   constructor(apiKey: string) {
-    super('https://api.anthropic.com/v1', {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
+    // Use local API route proxy to avoid CORS issues
+    super('/api/anthropic', {
       'Content-Type': 'application/json'
     });
+    this.apiKey = apiKey;
+  }
+
+  /**
+   * Override request to inject API key into headers for proxy route
+   */
+  async request<T>(endpoint: string, options: any = {}): Promise<T> {
+    const mergedOptions = {
+      ...options,
+      headers: {
+        ...options.headers,
+        'x-api-key': this.apiKey,
+      }
+    };
+    return super.request<T>(endpoint, mergedOptions);
   }
   
   /**
@@ -27,27 +42,33 @@ export class AnthropicClient extends ApiClient {
   async listModels(): Promise<AnthropicTypes.ModelObject[]> {
     return [
       {
+        name: 'claude-sonnet-4-5-20250929',
+        description: 'Claude Sonnet 4.5 - Most advanced model with breakthrough reasoning',
+        context_window: 200000,
+        max_tokens: 8192
+      },
+      {
+        name: 'claude-opus-4-1-20250805',
+        description: 'Claude Opus 4.1 - Flagship model for highly complex tasks',
+        context_window: 200000,
+        max_tokens: 8192
+      },
+      {
+        name: 'claude-3-7-sonnet-20250219',
+        description: 'Claude 3.7 Sonnet - Advanced reasoning and content creation',
+        context_window: 200000,
+        max_tokens: 8192
+      },
+      {
+        name: 'claude-3-5-haiku-20241022',
+        description: 'Claude 3.5 Haiku - Fastest and most efficient model',
+        context_window: 200000,
+        max_tokens: 8192
+      },
+      {
         name: 'claude-3-opus-20240229',
-        description: 'Anthropic\'s most powerful model for highly complex tasks',
+        description: 'Claude 3 Opus - Powerful model for complex tasks',
         context_window: 200000,
-        max_tokens: 4096
-      },
-      {
-        name: 'claude-3-sonnet-20240229',
-        description: 'Balanced model for most tasks with excellent performance',
-        context_window: 200000,
-        max_tokens: 4096
-      },
-      {
-        name: 'claude-3-haiku-20240307',
-        description: 'Fastest and most compact model for simple tasks',
-        context_window: 200000,
-        max_tokens: 4096
-      },
-      {
-        name: 'claude-2.1',
-        description: 'Previous generation model with good performance',
-        context_window: 100000,
         max_tokens: 4096
       }
     ];
