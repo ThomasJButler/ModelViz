@@ -128,7 +128,7 @@ export function ProviderDistribution() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pie Chart */}
-        <div className="h-64">
+        <div className="h-48 md:h-64">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -206,7 +206,7 @@ export function ProviderDistribution() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 pt-4 border-t border-border">
         <div className="text-center">
           <p className="text-xs text-foreground/70 mb-1">Total Calls</p>
           <p className="text-lg font-bold text-matrix-primary">

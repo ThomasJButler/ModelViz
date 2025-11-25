@@ -170,7 +170,7 @@ export function ModelUsageOverview() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
                 <div>
                   <div className="flex items-center gap-1 mb-1">
                     <Activity className="w-3 h-3 text-foreground/50" />
@@ -222,7 +222,7 @@ export function ModelUsageOverview() {
 
       {/* Summary */}
       {models.length > 0 && (
-        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 pt-4 border-t border-border">
           <div className="text-center">
             <p className="text-xs text-foreground/70 mb-1">Total Calls</p>
             <p className="text-lg font-bold text-matrix-primary">

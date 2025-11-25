@@ -48,57 +48,50 @@ marked.setOptions({
 const content = {
   'getting-started': {
     title: 'Getting Started',
-    description: 'Learn how to integrate powerful AI models into your applications.',
+    description: 'Get your AI analytics dashboard up and running in 4 simple steps.',
     content: `
-# Quick Start Guide
+# How to Use ModelViz
 
-ModelViz provides state-of-the-art AI models through a simple, developer-friendly API. Get started in minutes with our comprehensive SDK.
+ModelViz visualizes your AI API usage in real-time. Follow these simple steps to get started:
 
-## Installation
+## Step 1: Add Your API Keys
 
-\`\`\`bash
-npm install @modelviz/sdk
-\`\`\`
+Go to **Settings** and add your API keys for the providers you use:
+- **OpenAI** - GPT-4, GPT-3.5, DALL-E
+- **Anthropic** - Claude 3.5 Sonnet, Claude 3 Haiku
+- **Google** - Gemini 2.0 Flash, Gemini 1.5 Pro
+- **Perplexity** - Sonar models
 
-## Basic Usage
+Your keys are stored securely in your browser's local storage and never sent to any external server.
 
-\`\`\`typescript
-import { ModelViz } from '@modelviz/sdk';
+## Step 2: Refresh the Page
 
-// Initialize the client
-const client = new ModelViz({
-  apiKey: process.env.MODELVIZ_API_KEY
-});
+After adding your API keys, refresh the page to ensure everything is loaded correctly.
 
-// Use GPT-4 for text generation
-const completion = await client.complete({
-  model: 'gpt-4',
-  prompt: 'Explain quantum computing',
-  maxTokens: 500
-});
+## Step 3: Test on the Playground
 
-// Generate images with DALL·E 3
-const image = await client.generateImage({
-  model: 'dall-e-3',
-  prompt: 'A futuristic cityscape at sunset',
-  size: '1024x1024'
-});
+Head to the **Playground** and make some API calls:
+1. Select a provider and model
+2. Enter a prompt
+3. Click "Generate" to make an API call
 
-// Transcribe audio with Whisper
-const transcription = await client.transcribe({
-  model: 'whisper-v3',
-  file: audioFile,
-  language: 'en'
-});
-\`\`\`
+Each call will be tracked and recorded for your analytics.
 
-## Key Features
+## Step 4: View Analytics on Dashboard
 
-- **Unified API**: Access multiple AI models through a single, consistent interface
-- **Type Safety**: Full TypeScript support with comprehensive type definitions
-- **Real-time Capabilities**: WebSocket support for streaming responses
-- **Automatic Retries**: Built-in error handling and request retries
-- **Rate Limiting**: Smart request throttling to prevent API limits
+Your usage statistics will automatically populate on the **Dashboard**:
+- **Total API calls** - Track your overall usage
+- **Cost tracking** - Monitor spending across providers
+- **Response times** - Analyze latency and performance
+- **Provider distribution** - See which APIs you use most
+
+The more you use the Playground, the more data you'll see in your analytics!
+
+## Tips
+
+- Use the real-time stream to watch API calls as they happen
+- Compare provider performance in the comparison view
+- Export your data for external analysis
     `
   },
   'api-reference': {

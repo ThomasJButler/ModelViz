@@ -8,6 +8,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
+import * as THREE from 'three';
 import { MetricsService } from '@/lib/services/MetricsService';
 
 const ForceGraph3D = dynamic(() => import('react-force-graph-3d'), { ssr: false });
@@ -139,9 +140,9 @@ export function NetworkGraph3D() {
         enableNodeDrag={true}
         enableNavigationControls={true}
         nodeThreeObject={(node: any) => {
-          const sprite = new (window as any).THREE.Sprite(
-            new (window as any).THREE.SpriteMaterial({
-              map: new (window as any).THREE.CanvasTexture(
+          const sprite = new THREE.Sprite(
+            new THREE.SpriteMaterial({
+              map: new THREE.CanvasTexture(
                 generateNodeCanvas(node.name, node.color)
               ),
               transparent: true

@@ -71,7 +71,7 @@ export function CostTrackingChart() {
         }));
 
         // Sort by date
-        chartData.sort((a, b) => new Date(a.date + ' 2024').getTime() - new Date(b.date + ' 2024').getTime());
+        chartData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
         console.log('[CostTrackingChart] Using real data:', chartData.length, 'days,', Array.from(providerSet).length, 'providers');
 
@@ -135,7 +135,7 @@ export function CostTrackingChart() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
         <motion.div
           whileHover={{ scale: 1.02 }}
           className="p-4 rounded-lg border border-matrix-primary/20 bg-matrix-primary/5"
@@ -177,7 +177,7 @@ export function CostTrackingChart() {
       </div>
 
       {/* Cost Chart */}
-      <div className="h-64">
+      <div className="h-48 md:h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={dailyCosts}>
             <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -216,7 +216,7 @@ export function CostTrackingChart() {
       </div>
 
       {/* Cost Breakdown */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         {providers.map(provider => {
           const providerTotal = dailyCosts.reduce((sum, day) => {
             return sum + (Number(day[provider]) || 0);

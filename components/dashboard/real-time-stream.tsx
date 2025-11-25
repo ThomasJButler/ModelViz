@@ -42,6 +42,7 @@ interface StreamItem {
 export function RealTimeStream() {
   const [streamItems, setStreamItems] = useState<StreamItem[]>([]);
   const [isStreaming, setIsStreaming] = useState(true);
+  const [hasRealData, setHasRealData] = useState(false);
   const [stats, setStats] = useState({
     requestsPerMinute: 0,
     avgLatency: 0,
@@ -99,6 +100,7 @@ export function RealTimeStream() {
       const recentMetrics = await service.getRecentMetrics(20);
 
       if (recentMetrics.length > 0) {
+        setHasRealData(true);
         const realStreamItems: StreamItem[] = recentMetrics.map(metric => ({
           id: `real-${metric.timestamp}-${Math.random()}`,
           timestamp: new Date(metric.timestamp),
@@ -115,7 +117,7 @@ export function RealTimeStream() {
 
         setStreamItems(prev => [...realStreamItems, ...prev].slice(0, 50));
 
-        // Calculate stats
+        // Calculate stats from real data
         const successCount = recentMetrics.filter(m => m.status === 'success').length;
         const avgLatency = recentMetrics.reduce((sum, m) => sum + m.latency, 0) / recentMetrics.length;
 
@@ -124,14 +126,17 @@ export function RealTimeStream() {
           avgLatency: Math.round(avgLatency),
           successRate: (successCount / recentMetrics.length) * 100
         });
+      } else {
+        setHasRealData(false);
       }
     };
 
     loadRealMetrics();
 
-    // Simulate streaming data
+    // Simulate streaming data ONLY if no real data exists
     const interval = setInterval(() => {
-      if (isStreaming) {
+      // Only generate demo data if streaming is enabled and no real data exists
+      if (isStreaming && !hasRealData) {
         const newItem = generateStreamItem();
         setStreamItems(prev => [newItem, ...prev].slice(0, 50)); // Keep last 50 items
 
@@ -152,7 +157,7 @@ export function RealTimeStream() {
       clearInterval(interval);
       window.removeEventListener('metrics-updated', handleMetricsUpdate);
     };
-  }, [isStreaming]);
+  }, [isStreaming, hasRealData]);
 
   // Auto-scroll to latest
   useEffect(() => {

@@ -144,7 +144,7 @@ export function APIPerformanceRealtime() {
         </div>
       </div>
 
-      <div className="h-64">
+      <div className="h-48 md:h-64">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -186,7 +186,7 @@ export function APIPerformanceRealtime() {
       </div>
 
       {/* Provider Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         {providers.slice(0, 4).map(provider => {
           const latestData = data[data.length - 1];
           const previousData = data[data.length - 2];
