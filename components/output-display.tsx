@@ -19,12 +19,38 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
 import { EnhancedLoading } from './enhanced-loading';
+import 'highlight.js/styles/github-dark.css';
 
 interface OutputDisplayProps {
   output: any;
   isProcessing: boolean;
   VisualisationType: 'json' | 'chart' | 'text';
+}
+
+/**
+ * Detect if text contains markdown formatting
+ */
+function isMarkdown(text: string): boolean {
+  if (!text || typeof text !== 'string') return false;
+
+  // Check for common markdown patterns
+  const markdownPatterns = [
+    /^#{1,6}\s/m,           // Headers
+    /\*\*.*?\*\*/,          // Bold
+    /\*.*?\*/,              // Italic
+    /`{3}[\s\S]*?`{3}/,     // Code blocks
+    /`[^`]+`/,              // Inline code
+    /^\s*[-*+]\s/m,         // Lists
+    /^\s*\d+\.\s/m,         // Numbered lists
+    /\[.*?\]\(.*?\)/,       // Links
+    /!\[.*?\]\(.*?\)/,      // Images
+  ];
+
+  return markdownPatterns.some(pattern => pattern.test(text));
 }
 
 /**
@@ -142,6 +168,12 @@ export function OutputDisplay({
           </motion.div>
         );
       default:
+        // Check if content looks like markdown
+        const textContent = typeof outputContent === 'object'
+          ? JSON.stringify(outputContent, null, 2)
+          : String(outputContent);
+        const shouldRenderMarkdown = isMarkdown(textContent);
+
         return (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -149,21 +181,69 @@ export function OutputDisplay({
             transition={{ duration: 0.3 }}
             className="relative"
           >
-            <pre className={`text-sm font-mono whitespace-pre-wrap p-4 ${isError ? 'text-destructive' : ''}`}>
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={outputContent}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+            {shouldRenderMarkdown ? (
+              <div className={`prose prose-invert max-w-none p-4 ${isError ? 'text-destructive' : ''}`}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeHighlight]}
+                  components={{
+                    // Custom components for better styling
+                    code: ({node, inline, className, children, ...props}: any) => {
+                      return inline ? (
+                        <code className="px-1.5 py-0.5 rounded bg-matrix-primary/10 text-matrix-primary text-sm" {...props}>
+                          {children}
+                        </code>
+                      ) : (
+                        <code className={`${className} text-sm`} {...props}>
+                          {children}
+                        </code>
+                      );
+                    },
+                    pre: ({node, children, ...props}: any) => (
+                      <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto border border-matrix-primary/20" {...props}>
+                        {children}
+                      </pre>
+                    ),
+                    a: ({node, children, ...props}: any) => (
+                      <a className="text-matrix-primary hover:text-matrix-secondary underline" {...props}>
+                        {children}
+                      </a>
+                    ),
+                    h1: ({node, children, ...props}: any) => (
+                      <h1 className="text-2xl font-bold text-matrix-primary mb-4" {...props}>
+                        {children}
+                      </h1>
+                    ),
+                    h2: ({node, children, ...props}: any) => (
+                      <h2 className="text-xl font-bold text-matrix-primary mb-3" {...props}>
+                        {children}
+                      </h2>
+                    ),
+                    h3: ({node, children, ...props}: any) => (
+                      <h3 className="text-lg font-bold text-matrix-secondary mb-2" {...props}>
+                        {children}
+                      </h3>
+                    ),
+                  }}
                 >
-                  {typeof outputContent === 'object' 
-                    ? JSON.stringify(outputContent, null, 2)
-                    : String(outputContent)}
-                </motion.span>
-              </AnimatePresence>
-            </pre>
+                  {textContent}
+                </ReactMarkdown>
+              </div>
+            ) : (
+              <pre className={`text-sm font-mono whitespace-pre-wrap p-4 ${isError ? 'text-destructive' : ''}`}>
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={outputContent}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {textContent}
+                  </motion.span>
+                </AnimatePresence>
+              </pre>
+            )}
           </motion.div>
         );
     }
@@ -286,9 +366,9 @@ export function OutputDisplay({
         )}
       </div>
 
-      <motion.div 
+      <motion.div
         className={`relative rounded-lg bg-card border overflow-hidden transition-all duration-300 ${
-          isExpanded ? 'fixed inset-4 z-50' : 'min-h-[24rem]'
+          isExpanded ? 'fixed inset-4 z-50' : 'min-h-[24rem] max-h-[32rem]'
         } ${output?.error ? 'border-destructive/50' : 'border-border hover:border-matrix-primary/30'}`}
         layout
       >
@@ -306,10 +386,10 @@ export function OutputDisplay({
           )}
         </AnimatePresence>
 
-        <div className="relative h-full">
+        <div className={`relative ${isExpanded ? 'h-full' : 'h-full'}`}>
           {isProcessing ? (
             <div className="h-full flex items-center justify-center p-8">
-              <EnhancedLoading 
+              <EnhancedLoading
                 variant="ai"
                 message="Processing your request"
                 submessages={[
@@ -326,11 +406,12 @@ export function OutputDisplay({
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
               className="h-full overflow-auto"
+              style={{ maxHeight: isExpanded ? 'none' : '30rem' }}
             >
               {renderVisualisation()}
             </motion.div>
           ) : (
-            <motion.div 
+            <motion.div
               className="h-full flex items-center justify-center text-foreground/50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -338,11 +419,11 @@ export function OutputDisplay({
             >
               <div className="text-center space-y-2">
                 <motion.div
-                  animate={{ 
+                  animate={{
                     y: [0, -10, 0],
                     opacity: [0.5, 1, 0.5]
                   }}
-                  transition={{ 
+                  transition={{
                     duration: 2,
                     repeat: Infinity,
                     ease: "easeInOut"

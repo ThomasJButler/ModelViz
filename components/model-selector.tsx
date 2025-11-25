@@ -60,7 +60,7 @@ export function ModelSelector({ selectedModel, onSelectModel, models }: ModelSel
           >
             {/* Background shimmer effect */}
             <motion.div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100"
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none"
               initial={false}
               animate={isHovered ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.3 }}

@@ -5,10 +5,10 @@
  */
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { Brain, Code, Activity, Shield, Sparkles, Zap, Network, AlertTriangle, CheckCircle2, Timer, Braces, Terminal, Maximize2, Minimize2, Download, Share2, Loader2, Settings } from 'lucide-react';
+import { Brain, Code, Activity, Shield, Sparkles, Zap, Network, AlertTriangle, CheckCircle2, Timer, Braces, Terminal, Maximize2, Minimize2, Download, Share2, Loader2, Settings, DollarSign } from 'lucide-react';
 import { ModelSelector } from '@/components/model-selector';
 import { CodeEditor } from '@/components/code-editor';
 import { OutputDisplay } from '@/components/output-display';
@@ -22,6 +22,7 @@ import { generatePlaygroundResponse, type PlaygroundRequest, type PlaygroundResp
 import { ApiService } from '@/lib/api';
 import { MetricsService } from '@/lib/services/MetricsService';
 import { formatCost } from '@/lib/utils/costCalculator';
+import { HolographicCard } from '@/components/effects/HolographicCard';
 
 type InputFormat = 'json' | 'text' | 'code';
 
@@ -33,8 +34,8 @@ function groupModelsByProvider(simpleModels: SimpleModel[]): ProviderGroupedMode
   const providerNameMap: { [key: string]: string } = {
     'openai': 'OpenAI',
     'anthropic': 'Anthropic',
-    'deepseek': 'DeepSeek',
     'google': 'Google',
+    'perplexity': 'Perplexity',
     'demo': 'Demo'
   };
 
@@ -49,8 +50,8 @@ function groupModelsByProvider(simpleModels: SimpleModel[]): ProviderGroupedMode
     // Map icon based on provider
     let icon = Brain;
     if (provider === 'Anthropic') icon = Sparkles;
-    else if (provider === 'DeepSeek') icon = Code;
     else if (provider === 'Google') icon = Zap;
+    else if (provider === 'Perplexity') icon = Network;
 
     grouped[provider].push({
       id: model.id,
@@ -93,11 +94,6 @@ const defaultPlaceholders: Record<InputFormat, Record<string, string>> = {
   "max_tokens": 500,
   "temperature": 0.8
 }`,
-    deepseek: `{
-  "input": "Explain the advantages of functional programming",
-  "max_tokens": 200,
-  "temperature": 0.7
-}`,
     perplexity: `{
   "input": "Research the latest developments in quantum computing",
   "max_tokens": 300,
@@ -113,7 +109,6 @@ const defaultPlaceholders: Record<InputFormat, Record<string, string>> = {
   text: {
     openai: 'Explain the differences between quantum computing and classical computing.',
     anthropic: 'Write a concise history of artificial intelligence and where it might go in the future.',
-    deepseek: 'What are the best practices for writing clean, maintainable code?',
     perplexity: 'What were the major breakthroughs in AI during the past year?',
     demo: 'Enter your question about quantum computing...'
   },
@@ -142,21 +137,6 @@ async function fetchUserData(userId) {
     return null;
   }
 }`,
-    deepseek: `# Python data processing function
-def process_data(df):
-    """
-    Process a pandas dataframe by cleaning and transforming data
-    """
-    df = df.drop_duplicates()
-
-    df = df.fillna({
-        'numeric_col': df['numeric_col'].mean(),
-        'categorical_col': 'unknown'
-    })
-
-    df['new_feature'] = df['feature1'] / df['feature2']
-
-    return df`,
     perplexity: `// TypeScript React component
 import React, { useState, useEffect } from 'react';
 
@@ -246,52 +226,52 @@ export default function PlaygroundPage() {
   });
 
   /** @constructs */
-  useEffect(() => {
-    const loadModels = async () => {
-      try {
-        setIsLoadingModels(true);
+  const loadModels = useCallback(async () => {
+    try {
+      setIsLoadingModels(true);
 
-        // Initialize ApiService with saved config from localStorage
-        const savedConfig = localStorage.getItem('modelviz_api_config');
-        if (savedConfig) {
-          try {
-            const config = JSON.parse(savedConfig);
-            ApiService.getInstance(config);
-          } catch (initError) {
-            console.error('Error initializing ApiService:', initError);
-          }
+      // Initialize ApiService with saved config from localStorage (synced from /settings)
+      const savedConfig = localStorage.getItem('modelviz_playground_config');
+      if (savedConfig) {
+        try {
+          const config = JSON.parse(savedConfig);
+          ApiService.getInstance(config);
+        } catch (initError) {
+          console.error('Error initializing ApiService:', initError);
         }
-
-        // Use unified model loader
-        const simpleModels = await getAvailableModelsSimple();
-        const models = groupModelsByProvider(simpleModels);
-        setModelGroups(models);
-
-        console.log('[Playground] Loaded models:', {
-          totalModels: simpleModels.length,
-          providers: models.map(g => g.provider)
-        });
-
-        if (models.length > 0 && models[0].models.length > 0) {
-          const defaultModel = models[0].models[0];
-          setSelectedModel(defaultModel.id);
-          setSelectedModelName(defaultModel.name);
-          setSelectedProvider(defaultModel.provider);
-
-          const providerKey = defaultModel.provider.toLowerCase() as string;
-          const placeholderKey = Object.keys(defaultPlaceholders[inputFormat]).includes(providerKey)
-            ? providerKey
-            : 'demo';
-          setInput(defaultPlaceholders[inputFormat][placeholderKey as keyof typeof defaultPlaceholders.json]);
-        }
-      } catch (error) {
-        console.error('Error loading models:', error);
-        setError('Failed to load AI models. Please check your API configuration.');
-      } finally {
-        setIsLoadingModels(false);
       }
-    };
 
+      // Use unified model loader
+      const simpleModels = await getAvailableModelsSimple();
+      const models = groupModelsByProvider(simpleModels);
+      setModelGroups(models);
+
+      console.log('[Playground] Loaded models:', {
+        totalModels: simpleModels.length,
+        providers: models.map(g => g.provider)
+      });
+
+      if (models.length > 0 && models[0].models.length > 0) {
+        const defaultModel = models[0].models[0];
+        setSelectedModel(defaultModel.id);
+        setSelectedModelName(defaultModel.name);
+        setSelectedProvider(defaultModel.provider);
+
+        const providerKey = defaultModel.provider.toLowerCase() as string;
+        const placeholderKey = Object.keys(defaultPlaceholders[inputFormat]).includes(providerKey)
+          ? providerKey
+          : 'demo';
+        setInput(defaultPlaceholders[inputFormat][placeholderKey as keyof typeof defaultPlaceholders.json]);
+      }
+    } catch (error) {
+      console.error('Error loading models:', error);
+      setError('Failed to load AI models. Please check your API configuration.');
+    } finally {
+      setIsLoadingModels(false);
+    }
+  }, [inputFormat]);
+
+  useEffect(() => {
     loadModels();
 
     // Listen for API key changes to reload models in real-time
@@ -305,7 +285,7 @@ export default function PlaygroundPage() {
     return () => {
       window.removeEventListener('api-keys-updated', handleApiKeyChange);
     };
-  }, []);
+  }, [loadModels]);
 
   /** @listens selectedModel, selectedProvider, inputFormat */
   useEffect(() => {
@@ -319,6 +299,27 @@ export default function PlaygroundPage() {
   }, [selectedModel, selectedProvider, inputFormat]);
 
   /** Load persistent metrics from MetricsService */
+  const loadPersistentMetrics = useCallback(async () => {
+    try {
+      const service = MetricsService.getInstance();
+      const aggregated = await service.getAggregatedMetrics('today');
+
+      console.log('[Playground] Loaded persistent metrics:', {
+        totalCalls: aggregated.totalCalls,
+        totalCost: aggregated.totalCost
+      });
+
+      setAlltimeMetrics({
+        requestCount: aggregated.totalCalls,
+        avgLatency: Math.round(aggregated.avgLatency),
+        successRate: aggregated.successRate * 100,
+        totalCost: aggregated.totalCost
+      });
+    } catch (error) {
+      console.error('[Playground] Failed to load persistent metrics:', error);
+    }
+  }, []);
+
   useEffect(() => {
     const initializeAndLoadMetrics = async () => {
       try {
@@ -333,27 +334,6 @@ export default function PlaygroundPage() {
         await loadPersistentMetrics();
       } catch (error) {
         console.error('[Playground] Failed to initialize metrics:', error);
-      }
-    };
-
-    const loadPersistentMetrics = async () => {
-      try {
-        const service = MetricsService.getInstance();
-        const aggregated = await service.getAggregatedMetrics('today');
-
-        console.log('[Playground] Loaded persistent metrics:', {
-          totalCalls: aggregated.totalCalls,
-          totalCost: aggregated.totalCost
-        });
-
-        setAlltimeMetrics({
-          requestCount: aggregated.totalCalls,
-          avgLatency: Math.round(aggregated.avgLatency),
-          successRate: aggregated.successRate * 100,
-          totalCost: aggregated.totalCost
-        });
-      } catch (error) {
-        console.error('[Playground] Failed to load persistent metrics:', error);
       }
     };
 
@@ -377,7 +357,7 @@ export default function PlaygroundPage() {
       window.removeEventListener('metrics-updated', handleMetricsUpdate);
       window.removeEventListener('metrics-update-failed', handleMetricsUpdateFailed);
     };
-  }, []);
+  }, [loadPersistentMetrics]);
 
   const handleProcess = async () => {
     setIsProcessing(true);
@@ -445,11 +425,7 @@ export default function PlaygroundPage() {
   };
 
   return (
-    <div className="min-h-screen pt-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background via-background/95 to-background relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none opacity-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(0,255,0,0.1),_transparent_50%)]" />
-      </div>
-
+    <div className="px-8 pt-12 pb-8">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -506,7 +482,8 @@ export default function PlaygroundPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="p-6 rounded-lg border border-matrix-primary/20 bg-card/80 backdrop-blur-sm shadow-[0_0_15px_rgba(0,255,0,0.1)]">
+          <HolographicCard intensity={0.5} glowColor="rgba(0, 255, 0, 0.3)" interactive={true}>
+            <div className="p-6 rounded-lg border border-matrix-primary/20 bg-black/50 backdrop-blur-xl shadow-[0_0_20px_rgba(0,255,0,0.2)]">
             {isLoadingModels ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-8 h-8 text-matrix-primary animate-spin" />
@@ -588,8 +565,10 @@ export default function PlaygroundPage() {
                 )}
               </div>
             )}
-          </div>
+            </div>
+          </HolographicCard>
         </motion.div>
+
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <motion.div
@@ -619,12 +598,7 @@ export default function PlaygroundPage() {
               })}
             </div>
 
-            <div className="relative">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="absolute -inset-0.5 bg-gradient-to-r from-matrix-primary via-matrix-secondary to-matrix-tertiary rounded-lg blur opacity-20"
-              />
+            <HolographicCard intensity={0.4} glowColor="rgba(0, 255, 0, 0.2)" interactive={true}>
               <div className="relative">
                 {inputFormat === 'json' || inputFormat === 'code' ? (
                   <CodeEditor
@@ -649,7 +623,7 @@ export default function PlaygroundPage() {
                   />
                 )}
               </div>
-            </div>
+            </HolographicCard>
           </motion.div>
 
           <motion.div
@@ -658,7 +632,7 @@ export default function PlaygroundPage() {
             className="space-y-4"
           >
             <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-matrix-primary">Output</h2>
+              <h2 className="text-lg font-semibold text-matrix-primary">Output</h2>
               <div className="flex items-center gap-4">
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -732,12 +706,7 @@ export default function PlaygroundPage() {
               </div>
             </div>
 
-            <div className="relative">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="absolute -inset-0.5 bg-gradient-to-r from-matrix-primary via-matrix-secondary to-matrix-tertiary rounded-lg blur opacity-20"
-              />
+            <HolographicCard intensity={0.4} glowColor="rgba(0, 255, 0, 0.2)" interactive={true}>
               <div className="relative">
                 <OutputDisplay
                   output={output ?
@@ -747,7 +716,7 @@ export default function PlaygroundPage() {
                   VisualisationType={inputFormat === 'json' ? 'json' : 'text'}
                 />
               </div>
-            </div>
+            </HolographicCard>
 
             {output && !isProcessing && output.metadata && !output.error && (
               <motion.div

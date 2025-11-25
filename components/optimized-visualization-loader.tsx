@@ -11,7 +11,8 @@ import React, { Suspense, lazy, useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, Loader2 } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import { ModelVizSpinner } from '@/components/ui/modelviz-logo';
 import { performance } from '@/lib/performance';
 
 // Define visualisation types
@@ -39,15 +40,12 @@ interface VisualisationLoaderProps {
 
 // Custom loading component
 const VisualisationSkeleton = ({ type }: { type: string }) => (
-  <Card className="w-full h-[500px] flex items-center justify-center bg-muted/10">
+  <Card className="w-full h-[500px] flex items-center justify-center bg-black/50 border-matrix-primary/20">
     <div className="text-center space-y-4">
-      <div className="relative">
-        <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
-        <div className="absolute inset-0 blur-xl bg-primary/20 animate-pulse" />
-      </div>
+      <ModelVizSpinner size="lg" />
       <div className="space-y-2">
-        <p className="text-sm font-medium">Loading {type.replace('-', ' ')}</p>
-        <p className="text-xs text-muted-foreground">Optimizing performance...</p>
+        <p className="text-sm font-medium text-matrix-primary">Loading {type.replace('-', ' ')}</p>
+        <p className="text-xs text-matrix-primary/70">Optimizing performance...</p>
       </div>
     </div>
   </Card>
@@ -108,10 +106,6 @@ const visualisations = {
     'network-graph',
     () => import('@/components/visualisations/network-graph')
   ),
-  'data-flow': createLazyVisualization(
-    'data-flow',
-    () => import('@/components/visualisations/data-flow')
-  ),
   'real-time-metrics': createLazyVisualization(
     'real-time-metrics',
     () => import('@/components/visualisations/real-time-metrics')
@@ -120,37 +114,9 @@ const visualisations = {
     'advanced-chart',
     () => import('@/components/visualisations/advanced-chart')
   ),
-  'resource-tree': createLazyVisualization(
-    'resource-tree',
-    () => import('@/components/visualisations/resource-tree')
-  ),
-  'particle-universe': createLazyVisualization(
-    'particle-universe',
-    () => import('@/components/visualisations/particle-universe')
-  ),
-  'neural-flow': createLazyVisualization(
-    'neural-flow',
-    () => import('@/components/visualisations/neural-flow')
-  ),
   'network-3d': createLazyVisualization(
     'network-3d',
     () => import('@/components/visualisations/network-3d')
-  ),
-  'quantum-field': createLazyVisualization(
-    'quantum-field',
-    () => import('@/components/visualisations/quantum-field')
-  ),
-  'model-evolution': createLazyVisualization(
-    'model-evolution',
-    () => import('@/components/visualisations/scientific/model-evolution')
-  ),
-  'data-cleaner': createLazyVisualization(
-    'data-cleaner',
-    () => import('@/components/visualisations/scientific/data-cleaner')
-  ),
-  'ai-consciousness': createLazyVisualization(
-    'ai-consciousness',
-    () => import('@/components/visualisations/ai-consciousness')
   ),
   'enhanced-network-graph': createLazyVisualization(
     'enhanced-network-graph',
