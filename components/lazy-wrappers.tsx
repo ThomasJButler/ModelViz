@@ -74,51 +74,6 @@ export const LazyNetwork3D = dynamic(
   }
 );
 
-/**
- * @constructor
- */
-export const LazyParticleUniverse = dynamic(
-  () => import('@/components/visualisations/particle-universe'),
-  {
-    loading: () => <VisualizationSkeleton />,
-    ssr: false,
-  }
-);
-
-/**
- * @constructor
- */
-export const LazyAIConsciousness = dynamic(
-  () => import('@/components/visualisations/ai-consciousness'),
-  {
-    loading: () => <VisualizationSkeleton />,
-    ssr: false,
-  }
-);
-
-// Lazy loaded D3 visualizations
-/**
- * @constructor
- */
-export const LazyResourceTree = dynamic(
-  () => import('@/components/visualisations/resource-tree'),
-  {
-    loading: () => <VisualizationSkeleton />,
-    ssr: false,
-  }
-);
-
-/**
- * @constructor
- */
-export const LazyModelEvolution = dynamic(
-  () => import('@/components/visualisations/scientific/model-evolution'),
-  {
-    loading: () => <VisualizationSkeleton />,
-    ssr: false,
-  }
-);
-
 // Lazy loaded chart components
 /**
  * @constructor
