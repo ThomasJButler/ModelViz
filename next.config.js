@@ -7,19 +7,13 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Explicitly enable Turbopack (default in Next.js 16)
+  turbopack: {},
+
   experimental: {
     // Enable React Server Components
     serverActions: {
       bodySizeLimit: '2mb'
-    },
-    // Turbopack configuration
-    turbo: {
-      rules: {
-        // Custom rules for Turbopack
-      },
-      resolve: {
-        // Custom resolve options
-      }
     },
     // Enable optimized package imports
     optimizePackageImports: [
@@ -30,7 +24,6 @@ const nextConfig = {
     ]
   },
   // Production optimizations
-  swcMinify: true,
   productionBrowserSourceMaps: false,
   generateEtags: true,
   // Split chunks optimization
@@ -83,7 +76,12 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['images.unsplash.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
     // Enable new image optimization
     unoptimized: false,
     // Modern image formats
@@ -92,9 +90,6 @@ const nextConfig = {
     minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   // Add performance optimisations
   poweredByHeader: false,

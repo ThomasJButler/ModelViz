@@ -95,3 +95,8 @@ dev/
 /__tests__
 /lib
 /components/settings
+ANALYTICS_ENHANCEMENT_PLAN.md
+*.md
+/app/api
+/lib
+/lib
