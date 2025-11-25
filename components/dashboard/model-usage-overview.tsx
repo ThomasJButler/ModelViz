@@ -92,14 +92,14 @@ export function ModelUsageOverview() {
             avgCost: 0.0135
           },
           {
-            modelKey: 'DeepSeek:deepseek-chat',
-            provider: 'DeepSeek',
-            model: 'deepseek-chat',
-            calls: 98,
-            avgLatency: 1580,
-            successRate: 97.1,
-            totalCost: 0.85,
-            avgCost: 0.0087
+            modelKey: 'Perplexity:sonar-pro',
+            provider: 'Perplexity',
+            model: 'sonar-pro',
+            calls: 125,
+            avgLatency: 1100,
+            successRate: 98.5,
+            totalCost: 1.25,
+            avgCost: 0.0100
           }
         ];
         setModels(demoModels);

@@ -8,7 +8,6 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { Brain } from 'lucide-react';
 
 interface LoadingAnimationProps {
   isLoading: boolean;
@@ -28,11 +27,11 @@ export function LoadingAnimation({ isLoading, onLoadingComplete }: LoadingAnimat
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-center"
     >
-      {/* Backdrop with maximum blur */}
-      <motion.div 
+      {/* Transparent backdrop - allows background animation to show through */}
+      <motion.div
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
-        className="absolute inset-0 bg-background/95 backdrop-blur-3xl"
+        className="absolute inset-0 bg-background/10 backdrop-blur-sm"
       />
       
       {/* Loading Animation Container */}
@@ -91,23 +90,92 @@ export function LoadingAnimation({ isLoading, onLoadingComplete }: LoadingAnimat
           />
         </svg>
 
-        {/* Center icon with glow effect */}
-        <motion.div
-          className="relative w-40 h-40 rounded-full bg-background/50 backdrop-blur-sm flex items-center justify-center"
-          animate={{
-            boxShadow: [
-              "0 0 30px rgba(0, 255, 0, 0.3)",
-              "0 0 50px rgba(0, 255, 0, 0.2)",
-              "0 0 30px rgba(0, 255, 0, 0.3)"
-            ]
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
-          <Brain className="w-20 h-20 text-matrix-primary" />
+        {/* Hexagon animation from homepage */}
+        <motion.div className="relative w-64 h-64">
+          {/* Outer hexagonal frame */}
+          <motion.div
+            className="absolute inset-0"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          >
+            <svg viewBox="0 0 100 100" className="w-full h-full">
+              <polygon
+                points="50,5 90,25 90,75 50,95 10,75 10,25"
+                fill="none"
+                stroke="url(#gradient1-loader)"
+                strokeWidth="0.5"
+                className="opacity-60"
+              />
+              <defs>
+                <linearGradient id="gradient1-loader" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#00ff00" />
+                  <stop offset="100%" stopColor="#00ffff" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </motion.div>
+
+          {/* Middle hexagonal frame */}
+          <motion.div
+            className="absolute inset-8"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          >
+            <svg viewBox="0 0 100 100" className="w-full h-full">
+              <polygon
+                points="50,5 90,25 90,75 50,95 10,75 10,25"
+                fill="none"
+                stroke="url(#gradient2-loader)"
+                strokeWidth="0.8"
+                className="opacity-70"
+              />
+              <defs>
+                <linearGradient id="gradient2-loader" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#00ffff" />
+                  <stop offset="100%" stopColor="#00ff00" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </motion.div>
+
+          {/* Inner glowing core */}
+          <motion.div
+            className="absolute inset-16 rounded-full bg-gradient-to-br from-matrix-primary/20 to-matrix-secondary/20 backdrop-blur-sm flex items-center justify-center"
+            animate={{
+              scale: [1, 1.1, 1],
+              boxShadow: [
+                "0 0 30px rgba(0, 255, 0, 0.3)",
+                "0 0 60px rgba(0, 255, 255, 0.5)",
+                "0 0 30px rgba(0, 255, 0, 0.3)"
+              ]
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          >
+            {/* Orbiting particles */}
+            {[0, 120, 240].map((angle, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-2 h-2 rounded-full bg-matrix-primary"
+                style={{
+                  left: '50%',
+                  top: '50%',
+                  marginLeft: '-4px',
+                  marginTop: '-4px'
+                }}
+                animate={{
+                  rotate: [angle, angle + 360],
+                  x: [0, Math.cos((angle * Math.PI) / 180) * 40, 0],
+                  y: [0, Math.sin((angle * Math.PI) / 180) * 40, 0]
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: i * 0.3
+                }}
+              />
+            ))}
+          </motion.div>
         </motion.div>
       </motion.div>
     </motion.div>

@@ -25,11 +25,10 @@ export function ProviderDistribution() {
   const [selectedMetric, setSelectedMetric] = useState<'calls' | 'tokens' | 'cost'>('calls');
 
   const colors = {
-    OpenAI: '#00ff00',
-    Anthropic: '#00ffff',
-    DeepSeek: '#ff00ff',
-    Google: '#ffff00',
-    Perplexity: '#ff8800',
+    OpenAI: '#10B981',      // Green
+    Anthropic: '#8B5CF6',   // Purple
+    Perplexity: '#06B6D4',  // Cyan
+    Google: '#3B82F6',      // Blue
     Mistral: '#00ff88',
     Cohere: '#8800ff'
   };
@@ -67,7 +66,7 @@ export function ProviderDistribution() {
         const demoData: ProviderData[] = [
           { name: 'OpenAI', value: 450, color: colors.OpenAI, calls: 450, cost: 12.50 },
           { name: 'Anthropic', value: 320, color: colors.Anthropic, calls: 320, cost: 8.20 },
-          { name: 'DeepSeek', value: 180, color: colors.DeepSeek, calls: 180, cost: 2.10 },
+          { name: 'Perplexity', value: 210, color: colors.Perplexity, calls: 210, cost: 2.10 },
           { name: 'Google', value: 120, color: colors.Google, calls: 120, cost: 3.40 }
         ];
 
@@ -93,6 +92,7 @@ export function ProviderDistribution() {
     return () => {
       window.removeEventListener('metrics-updated', handleUpdate);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMetric]);
 
   const totalValue = data.reduce((sum, item) => sum + item.value, 0);

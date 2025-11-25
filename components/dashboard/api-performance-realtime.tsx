@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
-import { Activity, TrendingUp, TrendingDown } from 'lucide-react';
+import { Activity, TrendingUp, TrendingDown, Brain } from 'lucide-react';
 import { MetricsService } from '@/lib/services/MetricsService';
 import { format } from 'date-fns';
 
@@ -23,11 +23,10 @@ export function APIPerformanceRealtime() {
   const [providers, setProviders] = useState<string[]>([]);
 
   const colors = {
-    OpenAI: '#00ff00',
-    Anthropic: '#00ffff',
-    DeepSeek: '#ff00ff',
-    Google: '#ffff00',
-    Perplexity: '#ff8800',
+    OpenAI: '#10B981',      // Green
+    Anthropic: '#8B5CF6',   // Purple
+    Perplexity: '#06B6D4',  // Cyan
+    Google: '#3B82F6',      // Blue
     Mistral: '#00ff88',
     Cohere: '#8800ff'
   };
@@ -106,11 +105,11 @@ export function APIPerformanceRealtime() {
           timestamp: `${i * 2}:00`,
           OpenAI: 120 + Math.random() * 40,
           Anthropic: 110 + Math.random() * 30,
-          DeepSeek: 90 + Math.random() * 20,
+          Perplexity: 95 + Math.random() * 25,
           Google: 100 + Math.random() * 25
         }));
         setData(demoData);
-        setProviders(['OpenAI', 'Anthropic', 'DeepSeek', 'Google']);
+        setProviders(['OpenAI', 'Anthropic', 'Perplexity', 'Google']);
       }
 
       setLoading(false);
@@ -130,7 +129,7 @@ export function APIPerformanceRealtime() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Activity className="w-8 h-8 text-matrix-primary animate-pulse" />
+        <Brain className="w-20 h-20 text-matrix-primary animate-pulse" />
       </div>
     );
   }

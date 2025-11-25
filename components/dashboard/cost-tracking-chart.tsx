@@ -25,11 +25,10 @@ export function CostTrackingChart() {
   const [providers, setProviders] = useState<string[]>([]);
 
   const colors = {
-    OpenAI: '#00ff00',
-    Anthropic: '#00ffff',
-    DeepSeek: '#ff00ff',
-    Google: '#ffff00',
-    Perplexity: '#ff8800',
+    OpenAI: '#10B981',      // Green
+    Anthropic: '#8B5CF6',   // Purple
+    Perplexity: '#06B6D4',  // Cyan
+    Google: '#3B82F6',      // Blue
     Mistral: '#00ff88',
     Cohere: '#8800ff'
   };
@@ -93,12 +92,12 @@ export function CostTrackingChart() {
           date: format(subDays(new Date(), 6 - i), 'MMM dd'),
           OpenAI: 1.5 + Math.random() * 0.8,
           Anthropic: 1.2 + Math.random() * 0.6,
-          DeepSeek: 0.3 + Math.random() * 0.2,
+          Perplexity: 0.5 + Math.random() * 0.3,
           Google: 0.8 + Math.random() * 0.4
         }));
 
         setDailyCosts(demoData);
-        setProviders(['OpenAI', 'Anthropic', 'DeepSeek', 'Google']);
+        setProviders(['OpenAI', 'Anthropic', 'Perplexity', 'Google']);
         setTotalCost(25.40);
         setProjectedMonthlyCost(108.60);
       }
