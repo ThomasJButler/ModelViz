@@ -59,6 +59,7 @@ export default function ComparePage() {
     return () => {
       window.removeEventListener('api-keys-updated', handleApiKeyChange);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadModels = async () => {
