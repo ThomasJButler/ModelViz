@@ -13,6 +13,8 @@ import { MatrixBackground } from '@/components/matrix-background';
 import { PageTransition } from '@/components/page-transition';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
+import './interactions.css';
+
 const jetBrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   display: 'swap',

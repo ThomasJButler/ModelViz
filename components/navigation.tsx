@@ -22,6 +22,7 @@ export function Navigation() {
   const links = [
     { href: '/dashboard', label: 'Dashboard', icon: Layout },
     { href: '/playground', label: 'Playground', icon: Playground },
+    { href: '/about', label: 'About', icon: BookOpen },
     { href: '/docs', label: 'Documentation', icon: Code },
   ];
 

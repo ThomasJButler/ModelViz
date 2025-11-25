@@ -3,9 +3,6 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* Import enhanced interactions */
-@import './interactions.css';
-
 /* Base theme variables */
 @layer base {
   :root {

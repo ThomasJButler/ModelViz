@@ -18,13 +18,14 @@ export default function ModelEvolution() {
 
   /** @constructs */
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    
-    renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
-    containerRef.current.appendChild(renderer.domElement);
+
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
 
     // Neural network structure
     const layers = [4, 6, 8, 6, 4];
@@ -151,11 +152,11 @@ export default function ModelEvolution() {
 
     animate();
     const handleResize = () => {
-      if (!containerRef.current) return;
-      
-      camera.aspect = containerRef.current.clientWidth / containerRef.current.clientHeight;
+      if (!container) return;
+
+      camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+      renderer.setSize(container.clientWidth, container.clientHeight);
     };
 
     window.addEventListener('resize', handleResize);
@@ -164,7 +165,7 @@ export default function ModelEvolution() {
       cancelAnimationFrame(frame);
       window.removeEventListener('resize', handleResize);
       renderer.dispose();
-      containerRef.current?.removeChild(renderer.domElement);
+      container?.removeChild(renderer.domElement);
     };
   }, []);
 
