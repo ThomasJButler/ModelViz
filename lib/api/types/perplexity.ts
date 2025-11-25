@@ -1,14 +1,13 @@
 /**
  * @author Tom Butler
- * @date 2025-10-23
+ * @date 2025-01-24
  * @description TypeScript type definitions for Perplexity AI API requests and responses
  */
 
 // Basic types
 export interface Message {
-  role: 'system' | 'user' | 'assistant' | 'tool';
+  role: 'user' | 'assistant' | 'system';
   content: string;
-  name?: string;
 }
 
 export interface FunctionDefinition {
@@ -26,6 +25,12 @@ export interface ToolCall {
   };
 }
 
+export interface ToolResult {
+  tool_call_id: string;
+  role: 'tool';
+  content: string;
+}
+
 // Request types
 export interface ChatCompletionRequest {
   model: string;
@@ -36,8 +41,11 @@ export interface ChatCompletionRequest {
   stream?: boolean;
   presence_penalty?: number;
   frequency_penalty?: number;
-  tools?: FunctionDefinition[];
-  tool_choice?: 'auto' | 'none' | { function: { name: string } };
+  stop?: string[];
+  return_images?: boolean;
+  return_related_questions?: boolean;
+  search_domain_filter?: string[];
+  search_recency_filter?: 'day' | 'week' | 'month' | 'year';
 }
 
 // Response types
@@ -53,14 +61,16 @@ export interface ChatCompletionResponse {
       content: string | null;
       tool_calls?: ToolCall[];
     };
-    logprobs: any;
-    finish_reason: 'stop' | 'length' | 'tool_calls';
+    finish_reason: 'stop' | 'length' | 'tool_calls' | 'content_filter';
   }>;
   usage: {
     prompt_tokens: number;
     completion_tokens: number;
     total_tokens: number;
   };
+  citations?: string[];
+  images?: string[];
+  related_questions?: string[];
 }
 
 // Model related types
@@ -68,10 +78,11 @@ export interface ModelObject {
   id: string;
   name: string;
   description: string;
-  context_length: number;
   capabilities: string[];
+  context_length: number;
 }
 
 export interface ListModelsResponse {
-  models: ModelObject[];
+  object: 'list';
+  data: ModelObject[];
 }

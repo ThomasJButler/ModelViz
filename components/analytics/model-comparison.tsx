@@ -168,6 +168,7 @@ export function ModelComparison() {
         window.removeEventListener('metrics-updated', handleUpdate);
       };
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

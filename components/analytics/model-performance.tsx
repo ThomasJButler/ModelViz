@@ -9,9 +9,17 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Tooltip } from 'recharts';
+import { ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Tooltip, Legend } from 'recharts';
 import { Brain, Zap, Shield, Target } from 'lucide-react';
 import { MetricsService } from '@/lib/services/MetricsService';
+
+// Provider color scheme matching the plan
+const providerColors = {
+  openai: '#10B981',    // Green
+  anthropic: '#8B5CF6', // Purple
+  deepseek: '#F59E0B',  // Orange
+  google: '#3B82F6'     // Blue
+};
 
 interface PerformanceMetric {
   metric: string;
@@ -32,6 +40,21 @@ export function ModelPerformance() {
   const [models, setModels] = useState<ModelInfo[]>([]);
   const [performanceData, setPerformanceData] = useState<Record<string, PerformanceMetric[]>>({});
   const [loading, setLoading] = useState(true);
+
+  // Helper to get provider color from model ID
+  const getProviderColor = (modelId: string): string => {
+    const lowerModelId = modelId.toLowerCase();
+    if (lowerModelId.includes('openai') || lowerModelId.includes('gpt')) {
+      return providerColors.openai;
+    } else if (lowerModelId.includes('anthropic') || lowerModelId.includes('claude')) {
+      return providerColors.anthropic;
+    } else if (lowerModelId.includes('deepseek')) {
+      return providerColors.deepseek;
+    } else if (lowerModelId.includes('google') || lowerModelId.includes('gemini')) {
+      return providerColors.google;
+    }
+    return '#00ff00'; // Default green for unknown providers
+  };
 
   // Normalize a value to 0-100 scale
   const normalizeValue = (value: number, min: number, max: number, invert: boolean = false): number => {
@@ -193,6 +216,58 @@ export function ModelPerformance() {
 
   const benchmarks = getBenchmarks();
 
+  // Calculate insights from real data
+  const getInsights = () => {
+    if (!selectedModel || !performanceData[selectedModel]) {
+      return {
+        optimizationTarget: 'N/A',
+        optimizationDesc: 'Configure APIs to see insights',
+        peakPerformance: 'N/A',
+        peakDesc: 'No data available',
+        reliabilityScore: 'N/A',
+        reliabilityDesc: 'No data available'
+      };
+    }
+
+    const metrics = performanceData[selectedModel];
+    const successRate = metrics.find(m => m.metric === 'Success Rate')?.value || 0;
+    const speed = metrics.find(m => m.metric === 'Speed (p95)')?.value || 0;
+    const costEfficiency = metrics.find(m => m.metric === 'Cost Efficiency')?.value || 0;
+    const reliability = metrics.find(m => m.metric === 'Reliability')?.value || 0;
+
+    // Average all metrics for overall performance
+    const allValues = metrics.map(m => m.value);
+    const avgPerformance = allValues.reduce((a, b) => a + b, 0) / allValues.length;
+
+    // Optimization target: room for improvement (100 - current avg)
+    const headroom = Math.max(0, 100 - avgPerformance);
+
+    // Peak performance: highest individual metric
+    const peak = Math.max(...allValues);
+
+    // Reliability score: convert to letter grade
+    const getGrade = (score: number) => {
+      if (score >= 98) return 'A+';
+      if (score >= 95) return 'A';
+      if (score >= 90) return 'A-';
+      if (score >= 85) return 'B+';
+      if (score >= 80) return 'B';
+      if (score >= 75) return 'B-';
+      return 'C+';
+    };
+
+    return {
+      optimizationTarget: `+${headroom.toFixed(1)}%`,
+      optimizationDesc: headroom > 5 ? 'Performance headroom available' : 'Near optimal performance',
+      peakPerformance: `${peak.toFixed(1)}%`,
+      peakDesc: peak >= 95 ? 'Excellent performance' : 'Good performance',
+      reliabilityScore: getGrade(reliability),
+      reliabilityDesc: reliability >= 95 ? 'Highly stable' : 'Stable operation'
+    };
+  };
+
+  const insights = getInsights();
+
   return (
     <div className="space-y-6">
       <div className="flex gap-4">
@@ -229,10 +304,10 @@ export function ModelPerformance() {
                 <PolarAngleAxis dataKey="metric" stroke="#666" />
                 <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#666" />
                 <Radar
-                  name="Performance"
+                  name={selectedModel}
                   dataKey="value"
-                  stroke="#00ff00"
-                  fill="#00ff00"
+                  stroke={getProviderColor(selectedModel)}
+                  fill={getProviderColor(selectedModel)}
                   fillOpacity={0.3}
                 />
                 <Tooltip
@@ -240,6 +315,9 @@ export function ModelPerformance() {
                     backgroundColor: '#1a1a1a',
                     border: '1px solid #333',
                     borderRadius: '8px',
+                  }}
+                  formatter={(value: number, name: string) => {
+                    return [`${value.toFixed(1)}%`, name];
                   }}
                 />
               </RadarChart>
@@ -284,22 +362,22 @@ export function ModelPerformance() {
         {[
           {
             title: 'Optimisation Target',
-            value: '+15%',
-            description: 'Performance headroom available',
+            value: insights.optimizationTarget,
+            description: insights.optimizationDesc,
             icon: Target,
             colour: 'text-matrix-primary'
           },
           {
             title: 'Peak Performance',
-            value: '98.5%',
-            description: 'Maximum efficiency achieved',
+            value: insights.peakPerformance,
+            description: insights.peakDesc,
             icon: Zap,
             colour: 'text-matrix-secondary'
           },
           {
             title: 'Reliability Score',
-            value: 'A+',
-            description: 'System stability rating',
+            value: insights.reliabilityScore,
+            description: insights.reliabilityDesc,
             icon: Shield,
             colour: 'text-matrix-tertiary'
           }

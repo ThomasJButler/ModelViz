@@ -13,15 +13,11 @@ import { Brain, Shield, Network, Activity, LineChart, BarChart, Clock, AlertTria
 import { UsagePatterns } from './usage-patterns';
 import { ResourceUtilization } from './resource-utilization';
 import { CostAnalysis } from './cost-analysis';
-import { PredictiveTrends } from './predictive-trends';
 import { RetentionMetrics } from './retention-metrics';
 import { AlertsOverview } from './alerts-overview';
 import { ModelPerformance } from './model-performance';
-import { SecurityInsights } from './security-insights';
 import { APIGateway } from './api-gateway';
-import { SystemHealth } from './system-health';
 import { AIScorecard } from './ai-scorecard';
-import { NeuralActivityMap } from './neural-activity-map';
 
 const tabs = [
   {
@@ -29,14 +25,7 @@ const tabs = [
     label: 'Usage Patterns',
     icon: LineChart,
     component: UsagePatterns,
-    description: 'Recharts area charts showing token consumption trends with heatmap visualisation for peak usage periods'
-  },
-  {
-    id: 'neural-map',
-    label: 'Neural Activity Map',
-    icon: Layers,
-    component: NeuralActivityMap,
-    description: 'Canvas-based 3D visualisation with pulse waves, particle effects, lightning bolts, and matrix rain showing real-time neural network activity'
+    description: 'Recharts area charts showing token consumption trends by provider with time range selection'
   },
   {
     id: 'resources',
@@ -50,21 +39,14 @@ const tabs = [
     label: 'Cost Analysis',
     icon: Clock,
     component: CostAnalysis,
-    description: 'Recharts stacked bar charts tracking inference, training, and storage costs with optimisation recommendations'
-  },
-  {
-    id: 'predictions',
-    label: 'Predictive Trends',
-    icon: AlertTriangle,
-    component: PredictiveTrends,
-    description: 'Recharts dual-line forecast combining 24h historical data with 12h predictions and confidence intervals'
+    description: 'Recharts stacked bar charts tracking costs by provider with optimisation recommendations'
   },
   {
     id: 'performance',
     label: 'Model Performance',
     icon: Brain,
     component: ModelPerformance,
-    description: 'Recharts radar charts comparing 6 metrics (accuracy, latency, reliability, throughput, cost, scalability) across GPT-4, Claude, and LLaMA'
+    description: 'Recharts radar charts comparing metrics with provider-specific colors for each model'
   },
   {
     id: 'f1score',
@@ -74,25 +56,11 @@ const tabs = [
     description: 'Recharts time series tracking precision, recall, F1 score, and accuracy trends with confusion matrix data'
   },
   {
-    id: 'security',
-    label: 'Security Insights',
-    icon: Shield,
-    component: SecurityInsights,
-    description: 'Recharts area chart monitoring security events with threat categorisation and severity tracking'
-  },
-  {
     id: 'api',
     label: 'API Gateway',
     icon: Network,
     component: APIGateway,
     description: 'Dual charts showing request volume, endpoint latency (ms), and error rate distribution across 4 API routes'
-  },
-  {
-    id: 'health',
-    label: 'System Health',
-    icon: Activity,
-    component: SystemHealth,
-    description: 'Real-time Recharts line graphs with 2-second updates displaying CPU, memory, disk, and network utilisation'
   }
 ];
 

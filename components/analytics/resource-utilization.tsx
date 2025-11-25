@@ -116,6 +116,7 @@ export function ResourceUtilization() {
         window.removeEventListener('metrics-updated', handleUpdate);
       };
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeRange]);
 
   // Get the current data based on selected resource

@@ -9,11 +9,19 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Cell } from 'recharts';
 import { DollarSign, TrendingDown, TrendingUp, AlertCircle } from 'lucide-react';
 import { MetricsService } from '@/lib/services/MetricsService';
 import { formatCost, projectMonthlyCost } from '@/lib/utils/costCalculator';
 import { format } from 'date-fns';
+
+// Provider color scheme matching the plan
+const providerColors = {
+  openai: '#10B981',    // Green
+  anthropic: '#8B5CF6', // Purple
+  deepseek: '#F59E0B',  // Orange
+  google: '#3B82F6'     // Blue
+};
 
 /**
  * @constructor
@@ -83,23 +91,23 @@ export function CostAnalysis() {
         } else {
           // Fall back to demo data
           setCostData([
-            { date: 'Jan 01', OpenAI: 0.12, Anthropic: 0.08, DeepSeek: 0.04, total: 0.24 },
-            { date: 'Jan 02', OpenAI: 0.15, Anthropic: 0.09, DeepSeek: 0.045, total: 0.285 },
-            { date: 'Jan 03', OpenAI: 0.13, Anthropic: 0.085, DeepSeek: 0.042, total: 0.257 },
-            { date: 'Jan 04', OpenAI: 0.16, Anthropic: 0.095, DeepSeek: 0.048, total: 0.303 },
-            { date: 'Jan 05', OpenAI: 0.14, Anthropic: 0.088, DeepSeek: 0.044, total: 0.272 },
-            { date: 'Jan 06', OpenAI: 0.17, Anthropic: 0.10, DeepSeek: 0.05, total: 0.32 },
-            { date: 'Jan 07', OpenAI: 0.145, Anthropic: 0.092, DeepSeek: 0.046, total: 0.283 }
+            { date: 'Jan 01', openai: 0.12, anthropic: 0.08, deepseek: 0.04, google: 0.03, total: 0.27 },
+            { date: 'Jan 02', openai: 0.15, anthropic: 0.09, deepseek: 0.045, google: 0.035, total: 0.32 },
+            { date: 'Jan 03', openai: 0.13, anthropic: 0.085, deepseek: 0.042, google: 0.032, total: 0.289 },
+            { date: 'Jan 04', openai: 0.16, anthropic: 0.095, deepseek: 0.048, google: 0.038, total: 0.341 },
+            { date: 'Jan 05', openai: 0.14, anthropic: 0.088, deepseek: 0.044, google: 0.034, total: 0.306 },
+            { date: 'Jan 06', openai: 0.17, anthropic: 0.10, deepseek: 0.05, google: 0.04, total: 0.36 },
+            { date: 'Jan 07', openai: 0.145, anthropic: 0.092, deepseek: 0.046, google: 0.036, total: 0.319 }
           ]);
-          setTotalCost(2.0);
-          setProjectedMonthly(8.57);
+          setTotalCost(2.24);
+          setProjectedMonthly(9.6);
         }
       } catch (error) {
         console.error('Error loading cost data:', error);
         // Fall back to demo data on error
         setCostData([
-          { date: 'Jan 01', OpenAI: 0.12, Anthropic: 0.08, DeepSeek: 0.04, total: 0.24 },
-          { date: 'Jan 02', OpenAI: 0.15, Anthropic: 0.09, DeepSeek: 0.045, total: 0.285 }
+          { date: 'Jan 01', openai: 0.12, anthropic: 0.08, deepseek: 0.04, google: 0.03, total: 0.27 },
+          { date: 'Jan 02', openai: 0.15, anthropic: 0.09, deepseek: 0.045, google: 0.035, total: 0.32 }
         ]);
         setTotalCost(0.525);
         setProjectedMonthly(2.25);
@@ -222,14 +230,18 @@ export function CostAnalysis() {
                     border: '1px solid #333',
                     borderRadius: '8px',
                   }}
-                  formatter={(value: number) => formatCost(value)}
+                  formatter={(value: number, name: string) => {
+                    const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+                    return [formatCost(value), formattedName];
+                  }}
                 />
-                <Legend />
-                <Bar dataKey="OpenAI" name="OpenAI" fill="#00ff00" stackId="a" />
-                <Bar dataKey="Anthropic" name="Anthropic" fill="#00ffff" stackId="a" />
-                <Bar dataKey="DeepSeek" name="DeepSeek" fill="#ff00ff" stackId="a" />
-                <Bar dataKey="Perplexity" name="Perplexity" fill="#ffff00" stackId="a" />
-                <Bar dataKey="Google" name="Google" fill="#ff0080" stackId="a" />
+                <Legend
+                  formatter={(value: string) => value.charAt(0).toUpperCase() + value.slice(1)}
+                />
+                <Bar dataKey="openai" name="openai" fill={providerColors.openai} stackId="a" />
+                <Bar dataKey="anthropic" name="anthropic" fill={providerColors.anthropic} stackId="a" />
+                <Bar dataKey="deepseek" name="deepseek" fill={providerColors.deepseek} stackId="a" />
+                <Bar dataKey="google" name="google" fill={providerColors.google} stackId="a" />
               </BarChart>
             </ResponsiveContainer>
           </div>
