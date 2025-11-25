@@ -8,73 +8,69 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { Brain, Sparkles } from 'lucide-react';
+import { Brain } from 'lucide-react';
 
 /**
  * @constructor
  */
 export function VisualisationLoader() {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="w-full h-24 flex items-center justify-center bg-card/50 backdrop-blur rounded-lg border border-matrix-primary/20"
-    >
-      <div className="relative flex items-center gap-4">
-        {/* Rotating rings */}
-        <div className="relative">
-          <motion.div
-            className="absolute inset-0 rounded-full border-2 border-matrix-primary/20"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-          />
-          
-          <motion.div
-            className="absolute inset-1 rounded-full border-2 border-matrix-secondary/30"
-            animate={{ rotate: -360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          />
-
-          {/* Icon container */}
-          <motion.div
-            className="relative w-12 h-12 rounded-full bg-background/30 backdrop-blur-sm flex items-center justify-center"
-            animate={{
-              boxShadow: [
-                "0 0 20px rgba(0, 255, 0, 0.3)",
-                "0 0 40px rgba(0, 255, 0, 0.2)",
-                "0 0 20px rgba(0, 255, 0, 0.3)"
-              ]
-            }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            {/* Alternating icons */}
-            <motion.div
-              animate={{ opacity: [1, 0] }}
-              transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
-              className="absolute"
-            >
-              <Brain className="w-6 h-6 text-matrix-primary" />
-            </motion.div>
-            <motion.div
-              animate={{ opacity: [0, 1] }}
-              transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
-              className="absolute"
-            >
-              <Sparkles className="w-6 h-6 text-matrix-secondary" />
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Loading text */}
-        <motion.span
-          className="text-matrix-primary font-medium"
-          animate={{ opacity: [0.5, 1] }}
-          transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
+    <div className="w-full h-64 flex items-center justify-center bg-black/50 backdrop-blur rounded-lg border border-matrix-primary/20">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{
+          opacity: [0.3, 1, 0.3],
+          scale: [0.9, 1.1, 0.9],
+          rotateZ: [0, 5, -5, 0]
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="relative"
+      >
+        {/* Glow effect behind the brain */}
+        <motion.div
+          className="absolute inset-0 blur-3xl"
+          animate={{
+            opacity: [0.2, 0.5, 0.2]
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
         >
-          Loading Visualisation...
-        </motion.span>
-      </div>
-    </motion.div>
+          <Brain className="w-20 h-20 text-matrix-primary" />
+        </motion.div>
+
+        {/* Main brain icon */}
+        <Brain className="w-20 h-20 text-matrix-primary relative z-10" />
+
+        {/* Orbiting particles */}
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-matrix-primary rounded-full"
+            style={{
+              top: '50%',
+              left: '50%',
+            }}
+            animate={{
+              x: [0, 40 * Math.cos(i * 120 * Math.PI / 180), 0],
+              y: [0, 40 * Math.sin(i * 120 * Math.PI / 180), 0],
+              opacity: [0, 1, 0]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              delay: i * 0.3,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </motion.div>
+    </div>
   );
 }
