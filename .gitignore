@@ -100,3 +100,4 @@ ANALYTICS_ENHANCEMENT_PLAN.md
 /app/api
 /lib
 /lib
+modelviz-api-keys*.json
