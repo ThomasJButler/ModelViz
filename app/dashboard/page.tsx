@@ -6,7 +6,8 @@
 
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useEffectsEnabled, useIsMobile } from "@/hooks/use-media-query";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Activity,
@@ -20,8 +21,7 @@ import {
   XCircle,
   Sparkles,
   BarChart3,
-  GitCompare,
-  Menu
+  GitCompare
 } from "lucide-react";
 import dynamic from 'next/dynamic';
 import { analytics } from '@/lib/analytics';
@@ -41,11 +41,13 @@ import { ProviderComparison } from '@/components/dashboard/provider-comparison';
 import { APIHealthMonitor } from '@/components/dashboard/api-health-monitor';
 import { TokenEfficiency } from '@/components/dashboard/token-efficiency';
 import { RequestTimeline } from '@/components/dashboard/request-timeline';
+import { RateLimits } from '@/components/dashboard/rate-limits';
+import { ErrorAnalysis } from '@/components/dashboard/error-analysis';
+import { RequestHistory } from '@/components/dashboard/request-history';
 
 // Import epic visualization components
 import { MatrixRain } from '@/components/effects/MatrixRain';
 import { ParticleField } from '@/components/effects/ParticleField';
-import { CyberpunkOverlay } from '@/components/effects/CyberpunkOverlay';
 import { HolographicCard } from '@/components/effects/HolographicCard';
 import { FloatingMetrics } from '@/components/3d/FloatingMetrics';
 import { DataStream3D } from '@/components/dashboard/DataStream3D';
@@ -92,9 +94,14 @@ export default function DashboardPage() {
     modelsUsed: 0
   });
   const [hasApiKeys, setHasApiKeys] = useState(false);
-  const [showEffects, setShowEffects] = useState(true);
+  const [userEffectsPreference, setUserEffectsPreference] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Check if effects should be enabled (disabled on mobile or reduced motion)
+  const effectsEnabled = useEffectsEnabled();
+  const showEffects = effectsEnabled && userEffectsPreference;
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const isMobile = useIsMobile();
 
   // Check if user has API keys configured
   const checkApiKeys = useCallback(() => {
@@ -138,13 +145,15 @@ export default function DashboardPage() {
     analytics.trackFeatureUsage('dashboard_view_change', { view });
   };
 
-  // Render different views based on currentView
+  // Render different views based on currentView (mobile always shows overview)
+  const activeView = isMobile ? 'overview' : currentView;
+
   const renderContent = () => {
-    switch (currentView) {
+    switch (activeView) {
       case 'overview':
         return (
           <div className="space-y-6">
-            {/* Hero Stats with Holographic Effects */}
+            {/* Summary Stats Cards Only */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
               <HolographicCard intensity={0.7} glowColor="rgba(0, 255, 0, 0.5)">
                 <motion.div
@@ -267,72 +276,34 @@ export default function DashboardPage() {
               </motion.div>
             </div>
 
-            {/* Main Dashboard Grid - Stacked Vertically */}
-            <div className="grid grid-cols-1 gap-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-              >
-                <APIPerformanceRealtime />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-              >
-                <CostTrackingChart />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-              >
-                <ModelUsageOverview />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-              >
-                <ProviderDistribution />
-              </motion.div>
-
-              {/* New Visualization Components */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-              >
-                <APIHealthMonitor />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-              >
-                <TokenEfficiency />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-              >
-                <RequestTimeline />
-              </motion.div>
-            </div>
+            {/* Quick Navigation to Views */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+            >
+              <h3 className="text-lg font-semibold text-matrix-primary mb-4">Quick Navigation</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                {[
+                  { label: 'Real-Time', icon: Activity, view: 'real-time' },
+                  { label: 'Performance', icon: Zap, view: 'performance' },
+                  { label: 'Cost Analysis', icon: DollarSign, view: 'cost' },
+                  { label: 'Compare', icon: GitCompare, view: 'compare' },
+                  { label: 'Network', icon: Network, view: 'network' },
+                ].map((item) => (
+                  <motion.button
+                    key={item.view}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setCurrentView(item.view)}
+                    className="p-3 bg-matrix-primary/5 hover:bg-matrix-primary/10 rounded-lg border border-matrix-primary/20 transition-colors flex flex-col items-center gap-2"
+                  >
+                    <item.icon className="w-5 h-5 text-matrix-primary" />
+                    <span className="text-sm text-foreground/80">{item.label}</span>
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
           </div>
         );
 
@@ -361,7 +332,15 @@ export default function DashboardPage() {
               animate={{ opacity: 1, x: 0 }}
               className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
             >
-              <ModelPerformance />
+              <APIHealthMonitor />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+            >
+              <TokenEfficiency />
             </motion.div>
           </div>
         );
@@ -389,13 +368,31 @@ export default function DashboardPage() {
 
       case 'compare':
         return (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-          >
-            <ProviderComparison />
-          </motion.div>
+          <div className="grid grid-cols-1 gap-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+            >
+              <ProviderComparison />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+            >
+              <ModelUsageOverview />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+            >
+              <ProviderDistribution />
+            </motion.div>
+          </div>
         );
 
       case 'network':
@@ -430,16 +427,49 @@ export default function DashboardPage() {
               animate={{ opacity: 1, x: 0 }}
               className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
             >
-              <ModelPerformance />
+              <UsagePatterns />
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
             >
-              <UsagePatterns />
+              <RequestTimeline />
             </motion.div>
           </div>
+        );
+
+      case 'rate-limits':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <RateLimits />
+          </motion.div>
+        );
+
+      case 'errors':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <ErrorAnalysis />
+          </motion.div>
+        );
+
+      case 'history':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <RequestHistory />
+          </motion.div>
         );
 
       default:
@@ -448,13 +478,12 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black overflow-x-hidden">
+    <div className="bg-gradient-to-br from-black via-gray-900 to-black overflow-x-hidden">
       {/* Epic Background Effects - Very Subtle - Show on all devices */}
       {showEffects && (
         <div className="fixed inset-0 pointer-events-none z-0">
           <MatrixRain intensity={0.05} speed={0.3} fontSize={10} color="#00ff00" />
           <ParticleField particleCount={25} color="#00ff00" connectionDistance={60} />
-          <CyberpunkOverlay intensity={0.15} />
         </div>
       )}
 
@@ -466,17 +495,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="relative z-10 lg:flex">
-        {/* Mobile Menu Button - positioned below navigation */}
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="fixed top-16 left-2 z-30 p-2 bg-black/90 border border-matrix-primary/30 rounded-lg
-                   text-matrix-primary hover:bg-matrix-primary/10 transition-colors lg:hidden
-                   shadow-lg shadow-matrix-primary/20"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-
-        {/* Sidebar Navigation */}
+        {/* Desktop Sidebar Navigation - hidden on mobile for simplified experience */}
         <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] z-20 hidden lg:block">
           <SidebarNavigation
             onNavigate={handleViewChange}
@@ -485,20 +504,8 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* Mobile Sidebar */}
-        <div className="lg:hidden">
-          <SidebarNavigation
-            onNavigate={(path) => {
-              handleViewChange(path);
-              setSidebarOpen(false);
-            }}
-            isOpen={sidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-          />
-        </div>
-
         {/* Main Content Area */}
-        <div className={`flex-1 min-w-0 w-full transition-all duration-300 px-2 sm:px-4 md:px-6 lg:px-8 pt-14 sm:pt-16 lg:pt-20 pb-20 lg:pb-8 ${
+        <div className={`flex-1 min-w-0 w-full transition-all duration-300 px-2 sm:px-4 md:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-20 pb-20 lg:pb-8 ${
           sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-[280px]'
         }`}>
           {/* Header */}
@@ -544,10 +551,10 @@ export default function DashboardPage() {
             </div>
           </motion.div>
 
-          {/* Dynamic Content Area */}
+          {/* Dynamic Content Area - Mobile always shows overview */}
           <AnimatePresence mode="wait">
             <motion.div
-              key={currentView}
+              key={activeView}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

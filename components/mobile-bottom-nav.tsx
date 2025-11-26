@@ -17,7 +17,6 @@ import {
   Settings,
   BookOpen,
   Info,
-  User,
   X
 } from 'lucide-react';
 
@@ -46,11 +45,6 @@ const mainNavItems: NavItem[] = [
 ];
 
 const moreMenuItems: NavItem[] = [
-  {
-    href: '/profile',
-    label: 'Profile',
-    icon: <User className="w-5 h-5" />
-  },
   {
     href: '/settings',
     label: 'Settings',

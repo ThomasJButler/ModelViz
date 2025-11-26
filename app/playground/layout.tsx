@@ -10,7 +10,7 @@ import { ProtectedRoute } from '@/components/protected-route';
 import { PlaygroundSidebar } from '@/components/playground/playground-sidebar';
 import { MatrixRain } from '@/components/effects/MatrixRain';
 import { ParticleField } from '@/components/effects/ParticleField';
-import { CyberpunkOverlay } from '@/components/effects/CyberpunkOverlay';
+import { useEffectsEnabled } from '@/hooks/use-media-query';
 
 /**
  * Playground layout component
@@ -22,32 +22,26 @@ export default function PlaygroundLayout({
   children: React.ReactNode;
 }) {
   const [currentSection, setCurrentSection] = useState('playground');
-  const [showEffects, setShowEffects] = useState(true);
+  const [userEffectsPreference, setUserEffectsPreference] = useState(true);
+
+  // Check if effects should be enabled (disabled on mobile or reduced motion)
+  const effectsEnabled = useEffectsEnabled();
+  const showEffects = effectsEnabled && userEffectsPreference;
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
+      <div className="bg-gradient-to-br from-black via-gray-900 to-black">
         {/* Epic Background Effects - Very subtle */}
         {showEffects && (
           <>
             <MatrixRain intensity={0.08} speed={0.4} fontSize={10} color="#00ff00" />
             <ParticleField particleCount={40} color="#00ff00" connectionDistance={80} />
-            <CyberpunkOverlay intensity={0.2} />
           </>
         )}
 
-        {/* Animated Background - Controlled by effects toggle */}
-        {showEffects && (
-          <div className="fixed inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-matrix-primary/3 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-matrix-secondary/3 rounded-full blur-3xl animate-pulse delay-1000" />
-            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-matrix-tertiary/3 rounded-full blur-3xl animate-pulse delay-2000" />
-          </div>
-        )}
-
-        <div className="relative z-10 flex">
-          {/* Sidebar Navigation */}
-          <div className="fixed left-0 top-0 h-screen z-20">
+        <div className="relative z-10 flex items-start">
+          {/* Sidebar Navigation - Hidden on mobile, shown on desktop */}
+          <div className="fixed left-0 top-0 h-screen z-20 hidden lg:block">
             <PlaygroundSidebar
               onNavigate={setCurrentSection}
               currentSection={currentSection}
@@ -59,17 +53,17 @@ export default function PlaygroundLayout({
             />
           </div>
 
-          {/* Main Content Area */}
-          <div className="flex-1 ml-[280px]">
+          {/* Main Content Area - Responsive margin */}
+          <div className="flex-1 lg:ml-[280px]">
             {children}
           </div>
         </div>
 
-        {/* Effects Toggle Button */}
+        {/* Effects Toggle Button - Hidden on mobile since effects are auto-disabled */}
         <button
-          onClick={() => setShowEffects(!showEffects)}
+          onClick={() => setUserEffectsPreference(!userEffectsPreference)}
           className="fixed bottom-4 right-4 z-30 px-3 py-1.5 rounded-lg bg-black/80 border border-matrix-primary/20
-                     text-matrix-primary text-xs hover:bg-matrix-primary/10 transition-all"
+                     text-matrix-primary text-xs hover:bg-matrix-primary/10 transition-all hidden lg:block"
         >
           Effects: {showEffects ? 'ON' : 'OFF'}
         </button>

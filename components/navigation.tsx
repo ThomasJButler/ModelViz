@@ -11,7 +11,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Terminal, LineChart, Code, Brain, Play as Playground, BookOpen, Layout, Settings, User } from 'lucide-react';
+import { Terminal, LineChart, Code, Brain, Play as Playground, BookOpen, Layout, Settings } from 'lucide-react';
 
 /**
  * @constructor
@@ -23,7 +23,6 @@ export function Navigation() {
     { href: '/dashboard', label: 'Dashboard', icon: Layout },
     { href: '/playground', label: 'Playground', icon: Playground },
     { href: '/about', label: 'About', icon: BookOpen },
-    { href: '/profile', label: 'Profile', icon: User },
     { href: '/docs', label: 'Documentation', icon: Code },
   ];
 

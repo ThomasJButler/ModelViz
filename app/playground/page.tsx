@@ -8,8 +8,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { Brain, Code, Activity, Shield, Sparkles, Zap, Network, AlertTriangle, CheckCircle2, Timer, Braces, Terminal, Maximize2, Minimize2, Download, Share2, Loader2, Settings, DollarSign, Menu } from 'lucide-react';
-import { PlaygroundSidebar } from '@/components/playground/playground-sidebar';
+import { Brain, Code, Activity, Sparkles, Zap, Network, AlertTriangle, CheckCircle2, Timer, Braces, Terminal, Maximize2, Minimize2, Download, Share2, Loader2, Settings, ChevronDown } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-media-query';
 import { ModelSelector } from '@/components/model-selector';
 import { CodeEditor } from '@/components/code-editor';
 import { OutputDisplay } from '@/components/output-display';
@@ -225,7 +225,7 @@ export default function PlaygroundPage() {
     successRate: 100,
     totalCost: 0
   });
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   /** @constructs */
   const loadModels = useCallback(async () => {
@@ -427,26 +427,8 @@ export default function PlaygroundPage() {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setSidebarOpen(true)}
-        className="fixed top-16 left-2 z-30 p-2 bg-black/90 border border-matrix-primary/30 rounded-lg
-                 text-matrix-primary hover:bg-matrix-primary/10 transition-colors lg:hidden
-                 shadow-lg shadow-matrix-primary/20"
-      >
-        <Menu className="w-5 h-5" />
-      </button>
-
-      {/* Mobile Sidebar */}
-      <div className="lg:hidden">
-        <PlaygroundSidebar
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-        />
-      </div>
-
-      <div className="px-4 md:px-8 py-12">
+    <div>
+      <div className="px-4 md:px-8 pt-4 pb-12 lg:py-12">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -515,7 +497,82 @@ export default function PlaygroundPage() {
                 <AlertTriangle className="w-6 h-6 mr-2" />
                 <p>{error}</p>
               </div>
+            ) : isMobile ? (
+              /* Mobile: Simple dropdown selectors */
+              <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Provider Dropdown */}
+                  <div className="relative">
+                    <label className="block text-xs text-matrix-primary/70 mb-1">Provider</label>
+                    <div className="relative">
+                      <select
+                        value={selectedProvider}
+                        onChange={(e) => {
+                          const provider = e.target.value;
+                          setSelectedProvider(provider);
+                          const providerModels = modelGroups.find(group => group.provider === provider)?.models || [];
+                          if (providerModels.length > 0) {
+                            setSelectedModel(providerModels[0].id);
+                            setSelectedModelName(providerModels[0].name);
+                          }
+                        }}
+                        className="w-full appearance-none px-3 py-2.5 pr-8 rounded-lg bg-black/60 border border-matrix-primary/30
+                                 text-matrix-primary text-sm focus:border-matrix-primary focus:outline-none focus:ring-1 focus:ring-matrix-primary/50"
+                      >
+                        {modelGroups.map(group => (
+                          <option key={group.provider} value={group.provider}>
+                            {group.provider}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-matrix-primary/50 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* Model Dropdown */}
+                  <div className="relative">
+                    <label className="block text-xs text-matrix-primary/70 mb-1">Model</label>
+                    <div className="relative">
+                      <select
+                        value={selectedModel}
+                        onChange={(e) => {
+                          const id = e.target.value;
+                          setSelectedModel(id);
+                          const model = modelGroups
+                            .flatMap(group => group.models)
+                            .find(model => model.id === id);
+                          if (model) {
+                            setSelectedModelName(model.name);
+                          }
+                        }}
+                        className="w-full appearance-none px-3 py-2.5 pr-8 rounded-lg bg-black/60 border border-matrix-primary/30
+                                 text-matrix-primary text-sm focus:border-matrix-primary focus:outline-none focus:ring-1 focus:ring-matrix-primary/50"
+                      >
+                        {modelGroups
+                          .filter(group => group.provider === selectedProvider)
+                          .flatMap(group => group.models)
+                          .map(model => (
+                            <option key={model.id} value={model.id}>
+                              {model.name}
+                            </option>
+                          ))}
+                      </select>
+                      <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-matrix-primary/50 pointer-events-none" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Compact model info on mobile */}
+                {selectedModelData && (
+                  <div className="flex items-center gap-3 text-xs text-matrix-primary/70">
+                    <span>{selectedModelData.metrics.latency}</span>
+                    <span>•</span>
+                    <span>{selectedModelData.metrics.tokens}</span>
+                  </div>
+                )}
+              </div>
             ) : (
+              /* Desktop: Full grid selectors */
               <div className="flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-4">
                   <ProviderSelector
@@ -655,45 +712,54 @@ export default function PlaygroundPage() {
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-matrix-primary">Output</h2>
               <div className="flex items-center gap-4">
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex items-center gap-4 text-sm"
-                >
-                  <button
-                    onClick={() => setMetricsView(v => v === 'session' ? 'alltime' : 'session')}
-                    className="px-2 py-1 text-xs rounded bg-matrix-primary/10 border border-matrix-primary/30
-                             text-matrix-primary hover:bg-matrix-primary/20 transition-colors"
+                {/* Desktop: Full metrics | Mobile: Simplified */}
+                {isMobile ? (
+                  <div className="flex items-center gap-3 text-xs text-matrix-primary/70">
+                    <span>{metrics.requestCount} calls</span>
+                    <span>•</span>
+                    <span>{metrics.avgLatency.toFixed(0)}ms</span>
+                  </div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex items-center gap-4 text-sm"
                   >
-                    {metricsView === 'session' ? 'Session' : 'All Time'}
-                  </button>
-                  <div className="flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-matrix-tertiary" />
-                    <span className="text-matrix-tertiary">
-                      {(metricsView === 'session' ? metrics.requestCount : alltimeMetrics.requestCount)} calls
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Timer className="w-4 h-4 text-matrix-secondary" />
-                    <span className="text-matrix-secondary">
-                      {(metricsView === 'session' ? metrics.avgLatency : alltimeMetrics.avgLatency).toFixed(0)}ms
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-matrix-primary" />
-                    <span className="text-matrix-primary">
-                      {(metricsView === 'session' ? metrics.successRate : alltimeMetrics.successRate).toFixed(1)}%
-                    </span>
-                  </div>
-                  {metricsView === 'alltime' && (
+                    <button
+                      onClick={() => setMetricsView(v => v === 'session' ? 'alltime' : 'session')}
+                      className="px-2 py-1 text-xs rounded bg-matrix-primary/10 border border-matrix-primary/30
+                               text-matrix-primary hover:bg-matrix-primary/20 transition-colors"
+                    >
+                      {metricsView === 'session' ? 'Session' : 'All Time'}
+                    </button>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-matrix-tertiary">Cost:</span>
-                      <span className="text-matrix-secondary font-mono">
-                        {formatCost(alltimeMetrics.totalCost)}
+                      <Activity className="w-4 h-4 text-matrix-tertiary" />
+                      <span className="text-matrix-tertiary">
+                        {(metricsView === 'session' ? metrics.requestCount : alltimeMetrics.requestCount)} calls
                       </span>
                     </div>
-                  )}
-                </motion.div>
+                    <div className="flex items-center gap-2">
+                      <Timer className="w-4 h-4 text-matrix-secondary" />
+                      <span className="text-matrix-secondary">
+                        {(metricsView === 'session' ? metrics.avgLatency : alltimeMetrics.avgLatency).toFixed(0)}ms
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-matrix-primary" />
+                      <span className="text-matrix-primary">
+                        {(metricsView === 'session' ? metrics.successRate : alltimeMetrics.successRate).toFixed(1)}%
+                      </span>
+                    </div>
+                    {metricsView === 'alltime' && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-matrix-tertiary">Cost:</span>
+                        <span className="text-matrix-secondary font-mono">
+                          {formatCost(alltimeMetrics.totalCost)}
+                        </span>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
                 {output && !output.error && (
                   <div className="flex gap-2">
                     <motion.button

@@ -20,7 +20,10 @@ import {
   Network,
   Brain,
   Sparkles,
-  X
+  X,
+  Gauge,
+  AlertTriangle,
+  History
 } from 'lucide-react';
 import { ModelVizLogo } from '@/components/ui/modelviz-logo';
 
@@ -81,6 +84,27 @@ const navItems: NavItem[] = [
     icon: <Brain className="w-5 h-5" />,
     path: '/dashboard/insights',
     description: 'AI-powered analytics'
+  },
+  {
+    id: 'rate-limits',
+    label: 'Rate Limits',
+    icon: <Gauge className="w-5 h-5" />,
+    path: '/dashboard/rate-limits',
+    description: 'API rate limit tracking'
+  },
+  {
+    id: 'errors',
+    label: 'Error Analysis',
+    icon: <AlertTriangle className="w-5 h-5" />,
+    path: '/dashboard/errors',
+    description: 'Failed requests & debugging'
+  },
+  {
+    id: 'history',
+    label: 'Request History',
+    icon: <History className="w-5 h-5" />,
+    path: '/dashboard/history',
+    description: 'Detailed request logs'
   }
 ];
 
@@ -259,17 +283,6 @@ export function SidebarNavigation({ onNavigate, isOpen = true, onClose, onCollap
                   )}
                 </AnimatePresence>
 
-                {/* New Badge for special features */}
-                {!isCollapsed && (item.id === 'network' || item.id === 'insights') && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="px-2 py-0.5 bg-matrix-secondary/20 text-matrix-secondary
-                             text-xs rounded-full border border-matrix-secondary/30"
-                  >
-                    NEW
-                  </motion.div>
-                )}
               </motion.button>
 
               {/* Tooltip for collapsed state */}
