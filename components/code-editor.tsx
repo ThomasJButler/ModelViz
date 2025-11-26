@@ -50,9 +50,9 @@ export function CodeEditor({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="relative">
-        <div className="absolute right-4 top-4 z-10 flex gap-2">
+    <div className="w-full space-y-4">
+      <div className="relative w-full">
+        <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-10 flex gap-2">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -66,20 +66,21 @@ export function CodeEditor({
             whileTap={{ scale: 0.95 }}
             onClick={onProcess}
             disabled={isProcessing}
-            className="px-4 py-2 rounded-lg bg-matrix-primary text-background font-semibold flex items-center gap-2 disabled:opacity-50"
+            className="px-3 sm:px-4 py-2 rounded-lg bg-matrix-primary text-background font-semibold flex items-center gap-2 disabled:opacity-50"
           >
             {isProcessing ? (
               <RefreshCw className="w-4 h-4 animate-spin" />
             ) : (
               <Play className="w-4 h-4" />
             )}
-            Run
+            <span className="hidden sm:inline">Run</span>
           </motion.button>
         </div>
 
-        <div className="relative font-mono rounded-lg overflow-hidden border border-border">
+        <div className="relative w-full font-mono rounded-lg overflow-hidden border border-matrix-primary/20 bg-background/70">
           <Editor
-            height="400px"
+            height="300px"
+            width="100%"
             defaultValue={getPlaceholder()}
             value={value}
             onChange={(val) => onChange(val || '')}
@@ -94,6 +95,7 @@ export function CodeEditor({
               automaticLayout: true,
               fontFamily: 'JetBrains Mono, monospace',
               tabSize: 2,
+              wordWrap: 'on',
             }}
             onMount={handleEditorDidMount}
           />

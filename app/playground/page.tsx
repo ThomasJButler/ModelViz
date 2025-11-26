@@ -677,8 +677,8 @@ export default function PlaygroundPage() {
               })}
             </div>
 
-            <HolographicCard intensity={0.4} glowColor="rgba(0, 255, 0, 0.2)" interactive={true}>
-              <div className="relative">
+            <HolographicCard intensity={0.4} glowColor="rgba(0, 255, 0, 0.2)" interactive={true} className="w-full">
+              <div className="relative w-full">
                 {inputFormat === 'json' || inputFormat === 'code' ? (
                   <CodeEditor
                     value={input}

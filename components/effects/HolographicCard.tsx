@@ -79,7 +79,7 @@ export function HolographicCard({
       } : undefined}
     >
       <motion.div
-        className="relative"
+        className="relative w-full"
         style={!interactive ? {
           rotateX,
           rotateY,
@@ -99,7 +99,7 @@ export function HolographicCard({
         />
 
         {/* Content */}
-        <div className="relative z-10">
+        <div className="relative z-10 w-full">
           {children}
         </div>
       </motion.div>

@@ -21,7 +21,8 @@ import {
   XCircle,
   Sparkles,
   BarChart3,
-  GitCompare
+  GitCompare,
+  ChevronRight
 } from "lucide-react";
 import dynamic from 'next/dynamic';
 import { analytics } from '@/lib/analytics';
@@ -283,23 +284,29 @@ export default function DashboardPage() {
               className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
             >
               <h3 className="text-lg font-semibold text-matrix-primary mb-4">Quick Navigation</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+              <div className="flex flex-col divide-y divide-matrix-primary/20">
                 {[
-                  { label: 'Real-Time', icon: Activity, view: 'real-time' },
-                  { label: 'Performance', icon: Zap, view: 'performance' },
-                  { label: 'Cost Analysis', icon: DollarSign, view: 'cost' },
-                  { label: 'Compare', icon: GitCompare, view: 'compare' },
-                  { label: 'Network', icon: Network, view: 'network' },
+                  { label: 'Real-Time', icon: Activity, view: 'real-time', description: 'Live API activity stream' },
+                  { label: 'Performance', icon: Zap, view: 'performance', description: 'API latency & health metrics' },
+                  { label: 'Cost Analysis', icon: DollarSign, view: 'cost', description: 'Spending & cost tracking' },
+                  { label: 'Compare', icon: GitCompare, view: 'compare', description: 'Provider comparison' },
+                  { label: 'Network', icon: Network, view: 'network', description: '3D visualization' },
                 ].map((item) => (
                   <motion.button
                     key={item.view}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ x: 4, backgroundColor: 'rgba(0, 255, 0, 0.05)' }}
+                    whileTap={{ scale: 0.99 }}
                     onClick={() => setCurrentView(item.view)}
-                    className="p-3 bg-matrix-primary/5 hover:bg-matrix-primary/10 rounded-lg border border-matrix-primary/20 transition-colors flex flex-col items-center gap-2"
+                    className="py-4 px-2 flex items-center gap-4 text-left transition-colors first:pt-0 last:pb-0"
                   >
-                    <item.icon className="w-5 h-5 text-matrix-primary" />
-                    <span className="text-sm text-foreground/80">{item.label}</span>
+                    <div className="p-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary/20">
+                      <item.icon className="w-5 h-5 text-matrix-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-sm font-medium text-foreground/90 block">{item.label}</span>
+                      <span className="text-xs text-foreground/50">{item.description}</span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-matrix-primary/50" />
                   </motion.button>
                 ))}
               </div>
