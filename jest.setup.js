@@ -57,6 +57,14 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
 }
 
+// Mock IDBKeyRange for IndexedDB tests
+global.IDBKeyRange = {
+  bound: jest.fn((lower, upper) => ({ lower, upper, type: 'bound' })),
+  upperBound: jest.fn((upper) => ({ upper, type: 'upperBound' })),
+  lowerBound: jest.fn((lower) => ({ lower, type: 'lowerBound' })),
+  only: jest.fn((value) => ({ value, type: 'only' })),
+}
+
 // Suppress console errors in tests unless explicitly testing error scenarios
 const originalError = console.error
 beforeAll(() => {
