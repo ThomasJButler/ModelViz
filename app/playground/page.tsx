@@ -428,7 +428,7 @@ export default function PlaygroundPage() {
 
   return (
     <div>
-      <div className="px-4 md:px-8 pt-4 pb-12 lg:py-12">
+      <div className="px-4 sm:px-6 lg:px-8 pt-4 pb-20 lg:pb-12 lg:pt-12">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -648,10 +648,11 @@ export default function PlaygroundPage() {
         </motion.div>
 
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="flex flex-col gap-6">
+          {/* Input Section */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
             className="space-y-4"
           >
             <div className="flex gap-2">
@@ -704,9 +705,11 @@ export default function PlaygroundPage() {
             </HolographicCard>
           </motion.div>
 
+          {/* Output Section */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
             className="space-y-4"
           >
             <div className="flex items-center justify-between">

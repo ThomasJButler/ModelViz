@@ -138,7 +138,7 @@ export function MobileBottomNav() {
               <Link
                 key={item.href + item.label}
                 href={item.href}
-                className="relative flex flex-col items-center gap-1 px-4 py-2 min-w-[72px]"
+                className="relative flex flex-col items-center gap-1 px-3 sm:px-4 py-2 min-w-[60px] sm:min-w-[72px]"
               >
                 {/* Active indicator */}
                 {active && (
@@ -183,7 +183,7 @@ export function MobileBottomNav() {
           {/* More button */}
           <button
             onClick={() => setShowMoreMenu(!showMoreMenu)}
-            className="relative flex flex-col items-center gap-1 px-4 py-2 min-w-[72px]"
+            className="relative flex flex-col items-center gap-1 px-3 sm:px-4 py-2 min-w-[60px] sm:min-w-[72px]"
           >
             {showMoreMenu && (
               <motion.div

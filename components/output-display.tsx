@@ -368,7 +368,7 @@ export function OutputDisplay({
 
       <motion.div
         className={`relative rounded-lg bg-card border overflow-hidden transition-all duration-300 ${
-          isExpanded ? 'fixed inset-4 z-50' : 'min-h-[24rem] max-h-[32rem]'
+          isExpanded ? 'fixed inset-4 z-50' : 'min-h-[20rem] sm:min-h-[24rem] lg:min-h-[28rem]'
         } ${output?.error ? 'border-destructive/50' : 'border-border hover:border-matrix-primary/30'}`}
         layout
       >
@@ -405,8 +405,8 @@ export function OutputDisplay({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="h-full overflow-auto"
-              style={{ maxHeight: isExpanded ? 'none' : '30rem' }}
+              className="h-full overflow-auto scrollbar-thin scrollbar-thumb-matrix-primary/30 scrollbar-track-transparent"
+              style={{ maxHeight: isExpanded ? 'none' : '50rem' }}
             >
               {renderVisualisation()}
             </motion.div>

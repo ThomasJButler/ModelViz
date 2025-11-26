@@ -52,7 +52,7 @@ export function Navigation() {
             </Link>
           </div>
 
-          <div className="hidden sm:flex sm:items-center sm:space-x-8">
+          <div className="hidden lg:flex lg:items-center lg:space-x-8">
             {links.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
@@ -74,7 +74,7 @@ export function Navigation() {
           </div>
 
           <button
-            className="sm:hidden p-2"
+            className="lg:hidden p-2"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
@@ -92,12 +92,12 @@ export function Navigation() {
       {/* Mobile menu */}
       <motion.div
         id="mobile-menu"
-        className="sm:hidden"
+        className="lg:hidden overflow-hidden"
         initial={false}
         animate={isOpen ? "open" : "closed"}
         variants={{
-          open: { height: 'auto', opacity: 1 },
-          closed: { height: 0, opacity: 0 }
+          open: { height: 'auto', opacity: 1, pointerEvents: 'auto' as const },
+          closed: { height: 0, opacity: 0, pointerEvents: 'none' as const }
         }}
         role="menu"
         aria-orientation="vertical"

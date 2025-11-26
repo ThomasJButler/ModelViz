@@ -23,6 +23,7 @@ export default function PlaygroundLayout({
 }) {
   const [currentSection, setCurrentSection] = useState('playground');
   const [userEffectsPreference, setUserEffectsPreference] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Check if effects should be enabled (disabled on mobile or reduced motion)
   const effectsEnabled = useEffectsEnabled();
@@ -41,10 +42,11 @@ export default function PlaygroundLayout({
 
         <div className="relative z-10 flex items-start">
           {/* Sidebar Navigation - Hidden on mobile, shown on desktop */}
-          <div className="fixed left-0 top-0 h-screen z-20 hidden lg:block">
+          <div className="fixed left-0 top-16 h-[calc(100vh-64px)] z-20 hidden lg:block">
             <PlaygroundSidebar
               onNavigate={setCurrentSection}
               currentSection={currentSection}
+              onCollapseChange={setSidebarCollapsed}
               metrics={{
                 totalTests: 42,
                 savedTemplates: 15,
@@ -53,8 +55,8 @@ export default function PlaygroundLayout({
             />
           </div>
 
-          {/* Main Content Area - Responsive margin */}
-          <div className="flex-1 lg:ml-[280px]">
+          {/* Main Content Area - Responsive margin based on sidebar state */}
+          <div className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-[280px]'}`}>
             {children}
           </div>
         </div>

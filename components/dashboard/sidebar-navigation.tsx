@@ -173,42 +173,27 @@ export function SidebarNavigation({ onNavigate, isOpen = true, onClose, onCollap
 
       {/* Logo Section */}
       <div className="p-4 border-b border-matrix-primary/20">
-        <div className="flex items-center gap-2">
-          <motion.div
-            animate={{ scale: isCollapsed ? 0.9 : 1 }}
-            className="flex-1 flex items-center gap-2 min-w-0"
-          >
-            <div className="flex-shrink-0">
-              <ModelVizLogo size="sm" animated={true} />
-            </div>
-            <AnimatePresence>
-              {!isCollapsed && (
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="flex flex-col min-w-0 overflow-hidden"
-                >
-                  <span className="text-matrix-primary font-bold text-lg truncate">ModelViz</span>
-                  <span className="text-xs text-matrix-primary/60 truncate">API Analytics</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+        <div className="flex items-center gap-3">
+          <div className="flex-shrink-0">
+            <ModelVizLogo size="sm" animated={false} />
+          </div>
 
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+          <div className={`flex-1 min-w-0 transition-all ${isCollapsed ? 'hidden' : 'block'}`}>
+            <span className="text-matrix-primary font-bold text-lg block truncate">ModelViz</span>
+            <span className="text-xs text-matrix-primary/60 block truncate">API Analytics</span>
+          </div>
+
+          <button
             onClick={handleCollapse}
             className="flex-shrink-0 p-2 rounded-lg border border-matrix-primary/20 bg-black/80
-                     hover:bg-matrix-primary/10 transition-colors relative z-10 hidden lg:flex"
+                     hover:bg-matrix-primary/10 transition-colors hidden lg:flex items-center justify-center"
           >
             {isCollapsed ? (
               <ChevronRight className="w-4 h-4 text-matrix-primary" />
             ) : (
               <ChevronLeft className="w-4 h-4 text-matrix-primary" />
             )}
-          </motion.button>
+          </button>
         </div>
       </div>
 
