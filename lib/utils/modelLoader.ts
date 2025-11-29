@@ -68,34 +68,15 @@ export async function getAvailableModelsSimple(): Promise<SimpleModel[]> {
           .filter((model: { id: string }) => {
             const id = model.id.toLowerCase();
 
-            // Only include main models: GPT-3.5 Turbo, GPT-4o, GPT-4o-mini
-            // Exclude GPT-5 and all specialized variants
-            const isMainModel = (
-              id.startsWith('gpt-3.5-turbo') ||
-              id.startsWith('gpt-4o')
-            );
+            // Only allow exact base models - no dated variants
+            // Working models: gpt-3.5-turbo, gpt-4o, gpt-4o-mini
+            const allowedModels = [
+              'gpt-3.5-turbo',
+              'gpt-4o',
+              'gpt-4o-mini'
+            ];
 
-            // Exclude special variants
-            const isExcluded = (
-              id.includes('realtime') ||
-              id.includes('audio') ||
-              id.includes('transcribe') ||
-              id.includes('diarize') ||
-              id.includes('image') ||
-              id.includes('codex') ||
-              id.includes('nano') ||
-              id.includes('tts') ||
-              id.includes('whisper') ||
-              id.includes('instruct') ||
-              id.includes('search') ||
-              id.includes('-16k') ||
-              id.includes('vision') ||
-              id.startsWith('gpt-5') ||  // Future models not yet released
-              id.startsWith('gpt-4-turbo') ||  // Exclude GPT-4 Turbo
-              (id === 'gpt-4' || id.startsWith('gpt-4-0'))  // Exclude older GPT-4 variants
-            );
-
-            return isMainModel && !isExcluded;
+            return allowedModels.includes(id);
           })
           .forEach((model: { id: string }) => {
             models.push({
