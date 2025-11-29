@@ -1,10 +1,10 @@
 # ModelViz
 
-Interactive analytics platform for comparing AI models across multiple providers with real-time performance metrics, cost analysis, and 3D visualizations.
+Interactive analytics platform for comparing AI models across multiple providers with real-time performance metrics, cost analysis, and 3D visualisations.
 
 ## What It Does
 
-Compare OpenAI, Anthropic, Google (Gemini), and Perplexity models side by side. Test prompts across multiple models simultaneously, track usage metrics, analyze costs, and visualize API performance with an immersive cyberpunk-themed interface.
+Compare OpenAI, Anthropic, Google (Gemini), and Perplexity models side by side. Test prompts across multiple models simultaneously, track usage metrics, analyse costs, and visualise API performance with an immersive cyberpunk-themed interface.
 
 <img width="1164" height="771" alt="image" src="https://github.com/user-attachments/assets/8450977e-f3b3-4087-8300-3846541f272e" />
 
@@ -50,8 +50,8 @@ Demo mode available without API keys for testing the interface.
 | Page | Description |
 |------|-------------|
 | **Playground** | Test AI models with text, JSON, or code input |
-| **Compare** | Side-by-side model comparison with metrics |
-| **Dashboard** | 10 analytics views (real-time, cost, performance, 3D network) |
+| **Dashboard** | Real-time API analytics with multiple views |
+| **Analytics** | Advanced insights and predictive analytics |
 | **Settings** | API key management with import/export |
 
 ## Project Structure
@@ -59,12 +59,12 @@ Demo mode available without API keys for testing the interface.
 ```text
 ModelViz/
 ├── app/                    # Next.js app router pages
-│   ├── playground/        # AI playground with 3D visualizations
-│   ├── compare/           # Model comparison tool
-│   ├── dashboard/         # Analytics dashboard
+│   ├── playground/        # AI playground with 3D visualisations
+│   ├── dashboard/         # Real-time API analytics
+│   ├── analytics/         # Advanced insights
 │   └── settings/          # API configuration
 ├── components/            # React components
-│   ├── 3d/               # 3D visualization components
+│   ├── 3d/               # 3D visualisation components
 │   ├── effects/          # Cyberpunk visual effects
 │   └── ui/               # UI primitives
 ├── lib/                   # Core business logic
@@ -92,7 +92,7 @@ npm run lint
 
 ## Deployment
 
-Optimized for Vercel deployment. Includes:
+Optimised for Vercel deployment. Includes:
 
 - Turbopack for fast development
 - Bundle splitting for optimal loading
