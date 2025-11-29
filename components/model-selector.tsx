@@ -31,7 +31,7 @@ export function ModelSelector({ selectedModel, onSelectModel, models }: ModelSel
   const [hoveredModel, setHoveredModel] = useState<string | null>(null);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-3">
       {models.map((model, index) => {
         const Icon = model.icon;
         const isSelected = model.id === selectedModel;
@@ -52,7 +52,7 @@ export function ModelSelector({ selectedModel, onSelectModel, models }: ModelSel
             }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`relative p-4 rounded-lg border text-left overflow-hidden group model-card ${
+            className={`relative p-3 rounded-lg border text-left overflow-hidden group model-card ${
               isSelected
                 ? 'border-matrix-primary bg-matrix-primary/10 shadow-[0_0_20px_rgba(0,255,0,0.2)]'
                 : 'border-border bg-card hover:border-matrix-primary/50'
@@ -60,7 +60,7 @@ export function ModelSelector({ selectedModel, onSelectModel, models }: ModelSel
           >
             {/* Background shimmer effect */}
             <motion.div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100"
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none"
               initial={false}
               animate={isHovered ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.3 }}
@@ -92,7 +92,7 @@ export function ModelSelector({ selectedModel, onSelectModel, models }: ModelSel
               transition={{ duration: 0.4 }}
               className="relative z-10"
             >
-              <Icon className={`w-6 h-6 mb-2 transition-colors duration-300 ${
+              <Icon className={`w-5 h-5 mb-1.5 transition-colors duration-300 ${
                 isSelected ? 'text-matrix-primary' : 'text-foreground/70 group-hover:text-matrix-primary'
               }`} />
               
@@ -114,12 +114,12 @@ export function ModelSelector({ selectedModel, onSelectModel, models }: ModelSel
 
             {/* Content */}
             <motion.div className="relative z-10">
-              <h3 className={`font-semibold mb-1 transition-colors duration-300 ${
+              <h3 className={`text-sm font-semibold mb-0.5 transition-colors duration-300 ${
                 isSelected ? 'text-matrix-primary' : 'group-hover:text-matrix-primary'
               }`}>
                 {model.name}
               </h3>
-              <p className="text-sm text-foreground/70">{model.description}</p>
+              <p className="text-xs text-foreground/70">{model.description}</p>
             </motion.div>
 
             {/* Glow effect for selected state */}

@@ -1,12 +1,20 @@
 # ModelViz
 
-Interactive tool for comparing OpenAI, Anthropic, DeepSeek, and Perplexity models side by side with real-time performance metrics and visualisations.
+Interactive analytics platform for comparing AI models across multiple providers with real-time performance metrics, cost analysis, and 3D visualizations.
 
 ## What It Does
 
-Portfolio project demonstrating multi-AI model comparison. Test different models with the same prompt, compare response times, token usage, and export results. Includes 3D network visualisations and performance analytics (demo data)
+Compare OpenAI, Anthropic, Google (Gemini), and Perplexity models side by side. Test prompts across multiple models simultaneously, track usage metrics, analyze costs, and visualize API performance with an immersive cyberpunk-themed interface.
 
-<img width="1311" height="871" alt="image" src="https://github.com/user-attachments/assets/1a5e773d-93a3-4fe1-8941-1d524230f5f5" />
+## v2.0 Features
+
+- **Real Data Integration** - Track actual API usage, costs, and performance metrics
+- **Multi-Provider Support** - OpenAI, Anthropic, Google Gemini, Perplexity
+- **Model Comparison** - Run the same prompt across multiple models simultaneously
+- **3D Visualizations** - Interactive network graphs and data stream visualizations
+- **Cost Analytics** - Real-time cost tracking with provider comparisons
+- **Cyberpunk UI** - Matrix-themed interface with holographic effects
+- **Privacy-First** - All data stored client-side (localStorage + IndexedDB)
 
 ## Installation
 
@@ -14,46 +22,91 @@ Portfolio project demonstrating multi-AI model comparison. Test different models
 git clone https://github.com/ThomasJButler/modelviz.git
 cd modelviz
 npm install
-cp .env.example .env.local
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Environment Variables
+## API Key Configuration
 
-API keys are optional - demo mode works without them:
+API keys are configured in the Settings page (stored securely in browser localStorage):
 
-```env
-OPENAI_API_KEY=your_key_here
-ANTHROPIC_API_KEY=your_key_here
-DEEPSEEK_API_KEY=your_key_here
-PERPLEXITY_API_KEY=your_key_here
-```
+| Provider | Key Format | Models |
+|----------|-----------|--------|
+| OpenAI | `sk-...` | GPT-4o, GPT-4 Turbo, GPT-3.5, o1 |
+| Anthropic | `sk-ant-...` | Claude 3.5 Sonnet, Claude 3 Opus/Haiku |
+| Google | `AIza...` | Gemini 2.0 Flash, Gemini 1.5 Pro/Flash |
+| Perplexity | `pplx-...` | Sonar models |
 
-See [.env.example](.env.example) for feature flags and rate limiting configuration.
+Demo mode available without API keys for testing the interface.
 
 ## Tech Stack
 
-**Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion
-**Visualisations**: Three.js, D3.js, Recharts
-**UI Components**: Radix UI, shadcn/ui
-**Code Editor**: Monaco Editor
+| Category | Technologies |
+|----------|-------------|
+| **Framework** | Next.js 16 (App Router, Turbopack), React 19 |
+| **Language** | TypeScript (strict mode) |
+| **Styling** | Tailwind CSS, Framer Motion 12 |
+| **3D Graphics** | @react-three/fiber, @react-three/drei |
+| **Charts** | Recharts |
+| **UI** | Radix UI, shadcn/ui |
+| **Editor** | Monaco Editor |
+| **Storage** | LocalStorage, IndexedDB (90-day retention) |
 
-## Key Features
+## Key Pages
 
-- Playground for testing AI models with JSON, text, or code input
-- Side-by-side model comparison with metrics
-- Model recommender based on use case
-- Custom model builder
-- 12+ visualisation types (3D graphs, heatmaps, network analysis)
-- Performance monitoring and analytics
+| Page | Description |
+|------|-------------|
+| **Playground** | Test AI models with text, JSON, or code input |
+| **Compare** | Side-by-side model comparison with metrics |
+| **Dashboard** | 10 analytics views (real-time, cost, performance, 3D network) |
+| **Settings** | API key management with import/export |
+
+## Project Structure
+
+```text
+ModelViz/
+├── app/                    # Next.js app router pages
+│   ├── playground/        # AI playground with 3D visualizations
+│   ├── compare/           # Model comparison tool
+│   ├── dashboard/         # Analytics dashboard
+│   └── settings/          # API configuration
+├── components/            # React components
+│   ├── 3d/               # 3D visualization components
+│   ├── effects/          # Cyberpunk visual effects
+│   └── ui/               # UI primitives
+├── lib/                   # Core business logic
+│   ├── api/              # API clients (OpenAI, Anthropic, Google, Perplexity)
+│   ├── services/         # MetricsService, ComparisonService
+│   └── utils/            # Cost calculator, utilities
+└── __tests__/            # Test files
+```
+
+## Development
+
+```bash
+# Run development server
+npm run dev
+
+# Run tests
+npm test
+
+# Build for production
+npm run build
+
+# Type check
+npm run lint
+```
 
 ## Deployment
 
-Optimised for Vercel. Bundle splitting configured for framework, UI, visualisations, and editor chunks. See [next.config.js](next.config.js) for webpack configuration.
+Optimized for Vercel deployment. Includes:
 
-## Licence
+- Turbopack for fast development
+- Bundle splitting for optimal loading
+- Edge-compatible API routes
+
+## License
 
 MIT - see [LICENSE](LICENSE)
 

@@ -15,8 +15,8 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
     openai: { apiKey: '' },
     news: { apiKey: '' },
     anthropic: { apiKey: '' },
-    deepseek: { apiKey: '' },
-    perplexity: { apiKey: '' }
+    perplexity: { apiKey: '' },
+    google: { apiKey: '' }
   });
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<{
@@ -27,61 +27,61 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
     openai: boolean;
     news: boolean;
     anthropic: boolean;
-    deepseek: boolean;
     perplexity: boolean;
+    google: boolean;
   }>({
     openai: false,
     news: false,
     anthropic: false,
-    deepseek: false,
-    perplexity: false
+    perplexity: false,
+    google: false
   });
   const [testResults, setTestResults] = useState<{
     openai: boolean | null;
     news: boolean | null;
     anthropic: boolean | null;
-    deepseek: boolean | null;
     perplexity: boolean | null;
+    google: boolean | null;
   }>({
     openai: null,
     news: null,
     anthropic: null,
-    deepseek: null,
-    perplexity: null
+    perplexity: null,
+    google: null
   });
 
   // Load saved config on mount
   useEffect(() => {
     const loadSavedConfig = () => {
       try {
-        const savedConfig = localStorage.getItem('ai_comparison_api_config');
+        const savedConfig = localStorage.getItem('modelviz_api_config');
         if (savedConfig) {
           const parsedConfig = JSON.parse(savedConfig) as ApiConfig;
           // Mask API keys in the UI
           setConfig({
-            openai: { 
-              apiKey: parsedConfig.openai?.apiKey 
+            openai: {
+              apiKey: parsedConfig.openai?.apiKey
                 ? parsedConfig.openai.apiKey.substring(0, 4) + '...' + parsedConfig.openai.apiKey.slice(-4)
-                : '' 
+                : ''
             },
-            news: { 
-              apiKey: parsedConfig.news?.apiKey 
+            news: {
+              apiKey: parsedConfig.news?.apiKey
                 ? parsedConfig.news.apiKey.substring(0, 4) + '...' + parsedConfig.news.apiKey.slice(-4)
-                : '' 
+                : ''
             },
             anthropic: {
               apiKey: parsedConfig.anthropic?.apiKey
                 ? parsedConfig.anthropic.apiKey.substring(0, 4) + '...' + parsedConfig.anthropic.apiKey.slice(-4)
                 : ''
             },
-            deepseek: {
-              apiKey: parsedConfig.deepseek?.apiKey
-                ? parsedConfig.deepseek.apiKey.substring(0, 4) + '...' + parsedConfig.deepseek.apiKey.slice(-4)
-                : ''
-            },
             perplexity: {
               apiKey: parsedConfig.perplexity?.apiKey
                 ? parsedConfig.perplexity.apiKey.substring(0, 4) + '...' + parsedConfig.perplexity.apiKey.slice(-4)
+                : ''
+            },
+            google: {
+              apiKey: parsedConfig.google?.apiKey
+                ? parsedConfig.google.apiKey.substring(0, 4) + '...' + parsedConfig.google.apiKey.slice(-4)
                 : ''
             }
           });
@@ -119,7 +119,7 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
 
     try {
       // Use the real API keys, not the masked ones displayed in the UI
-      const savedConfig = localStorage.getItem('ai_comparison_api_config');
+      const savedConfig = localStorage.getItem('modelviz_api_config');
       let updatedConfig: ApiConfig = { openai: { apiKey: '' }, news: { apiKey: '' } };
       
       if (savedConfig) {
@@ -139,17 +139,17 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
       if (config.anthropic?.apiKey && !config.anthropic.apiKey.includes('...')) {
         updatedConfig.anthropic = { apiKey: config.anthropic.apiKey };
       }
-      
-      if (config.deepseek?.apiKey && !config.deepseek.apiKey.includes('...')) {
-        updatedConfig.deepseek = { apiKey: config.deepseek.apiKey };
-      }
-      
+
       if (config.perplexity?.apiKey && !config.perplexity.apiKey.includes('...')) {
         updatedConfig.perplexity = { apiKey: config.perplexity.apiKey };
       }
 
+      if (config.google?.apiKey && !config.google.apiKey.includes('...')) {
+        updatedConfig.google = { apiKey: config.google.apiKey };
+      }
+
       // Save to localStorage
-      localStorage.setItem('ai_comparison_api_config', JSON.stringify(updatedConfig));
+      localStorage.setItem('modelviz_api_config', JSON.stringify(updatedConfig));
       
       // Update ApiService
       if (ApiService.getInstance) {
@@ -185,12 +185,12 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
     }));
   };
 
-  const testConnection = async (service: 'openai' | 'news' | 'anthropic' | 'deepseek' | 'perplexity') => {
+  const testConnection = async (service: 'openai' | 'news' | 'anthropic' | 'perplexity' | 'google') => {
     setIsTesting(prev => ({ ...prev, [service]: true }));
     
     try {
       // Get the actual API key
-      const savedConfig = localStorage.getItem('ai_comparison_api_config');
+      const savedConfig = localStorage.getItem('modelviz_api_config');
       let apiKey = config[service]?.apiKey || '';
       
       // If the key is masked, use the saved one
@@ -222,11 +222,11 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
           case 'anthropic':
             api = ApiService.getInstance().getAnthropic();
             break;
-          case 'deepseek':
-            api = ApiService.getInstance().getDeepSeek();
-            break;
           case 'perplexity':
             api = ApiService.getInstance().getPerplexity();
+            break;
+          case 'google':
+            api = ApiService.getInstance().getGoogle();
             break;
         }
       } catch (error) {
@@ -241,11 +241,11 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
           case 'anthropic':
             api = ApiService.getInstance().getAnthropic();
             break;
-          case 'deepseek':
-            api = ApiService.getInstance().getDeepSeek();
-            break;
           case 'perplexity':
             api = ApiService.getInstance().getPerplexity();
+            break;
+          case 'google':
+            api = ApiService.getInstance().getGoogle();
             break;
         }
       }
@@ -259,7 +259,7 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
         if (!success) {
           throw new Error('News API connection test failed');
         }
-      } else if (service === 'anthropic' || service === 'deepseek' || service === 'perplexity') {
+      } else if (service === 'anthropic' || service === 'perplexity' || service === 'google') {
         // Use test connection for the new providers
         const success = await api.testConnection();
         if (!success) {
@@ -409,39 +409,39 @@ export function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
 
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  DeepSeek API Key
+                  Google Gemini API Key
                 </label>
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    value={config.deepseek?.apiKey || ''}
-                    onChange={(e) => handleInputChange('deepseek', e.target.value)}
-                    placeholder="Your DeepSeek API key"
+                    value={config.google?.apiKey || ''}
+                    onChange={(e) => handleInputChange('google', e.target.value)}
+                    placeholder="Your Google API key"
                     className="flex-1 px-3 py-2 bg-background rounded-md border border-border focus:border-matrix-primary focus:ring-1 focus:ring-matrix-primary outline-none text-sm"
                   />
                   <button
                     className={`px-3 py-2 rounded-md border border-border hover:border-matrix-primary text-xs flex items-center gap-1 ${
-                      testResults.deepseek === true
+                      testResults.google === true
                         ? 'bg-green-500/10 text-green-500 border-green-500/30'
-                        : testResults.deepseek === false
+                        : testResults.google === false
                           ? 'bg-red-500/10 text-red-500 border-red-500/30'
                           : 'bg-background'
                     }`}
-                    onClick={() => testConnection('deepseek')}
-                    disabled={isTesting.deepseek}
+                    onClick={() => testConnection('google')}
+                    disabled={isTesting.google}
                   >
-                    {isTesting.deepseek ? (
+                    {isTesting.google ? (
                       <span className="inline-block w-3 h-3 border-2 border-matrix-primary border-t-transparent rounded-full animate-spin"></span>
-                    ) : testResults.deepseek === true ? (
+                    ) : testResults.google === true ? (
                       <CheckCircle2 className="w-3 h-3" />
-                    ) : testResults.deepseek === false ? (
+                    ) : testResults.google === false ? (
                       <AlertCircle className="w-3 h-3" />
                     ) : null}
                     Test
                   </button>
                 </div>
                 <p className="mt-1 text-xs text-foreground/50">
-                  Get from: <a href="https://platform.deepseek.com/" target="_blank" rel="noopener noreferrer" className="text-matrix-primary hover:underline">DeepSeek Platform</a>
+                  Get from: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-matrix-primary hover:underline">Google AI Studio</a>
                 </p>
               </div>
 

@@ -46,13 +46,13 @@ const sections = [
   },
   {
     id: 'guides',
-    title: 'Guides',
+    title: 'API Key Setup',
     icon: FileText,
     subsections: [
-      { id: 'best-practices', label: 'Best Practices' },
-      { id: 'error-handling', label: 'Error Handling' },
-      { id: 'advanced-topics', label: 'Advanced Topics' },
-      { id: 'security', label: 'Security' }
+      { id: 'openai', label: 'OpenAI' },
+      { id: 'anthropic', label: 'Anthropic' },
+      { id: 'google-gemini-', label: 'Google (Gemini)' },
+      { id: 'perplexity', label: 'Perplexity' }
     ]
   }
 ];

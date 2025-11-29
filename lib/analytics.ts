@@ -116,8 +116,6 @@ class Analytics {
 
     try {
       // Production would send to analytics service (Google Analytics, Mixpanel, etc.)
-      console.log('Analytics events:', events);
-
       // Simulate network request
       await new Promise(resolve => setTimeout(resolve, 100));
     } catch (error) {

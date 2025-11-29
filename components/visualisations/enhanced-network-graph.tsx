@@ -38,7 +38,7 @@ export default function EnhancedNetworkGraph() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedNode, setSelectedNode] = useState<NodeWithPosition | null>(null);
   const [hoveredNode, setHoveredNode] = useState<NodeWithPosition | null>(null);
-  let animationId: number;
+  const animationIdRef = useRef<number>();
   const nodeTypeConfig: Record<string, NodeTypeConfig> = {
     api: { color: "#00FF00", baseSize: 8 },
     model: { color: "#00FFFF", baseSize: 7 },
@@ -328,7 +328,7 @@ export default function EnhancedNetworkGraph() {
         }
       });
 
-      animationId = requestAnimationFrame(animate);
+      animationIdRef.current = requestAnimationFrame(animate);
     }
 
     animate();
@@ -338,8 +338,11 @@ export default function EnhancedNetworkGraph() {
       window.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
-      cancelAnimationFrame(animationId);
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+      }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

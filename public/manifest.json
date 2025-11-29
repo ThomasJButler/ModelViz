@@ -1,0 +1,26 @@
+{
+  "name": "ModelViz",
+  "short_name": "ModelViz",
+  "description": "Interactive AI Model Comparison and Analytics Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00ff00",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/modelviz.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/modelviz.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities", "developer"],
+  "lang": "en-US"
+}

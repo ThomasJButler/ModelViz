@@ -212,7 +212,7 @@ export class BatchProcessor<T, R> {
 export class LocalStorageCache {
   private prefix: string;
 
-  constructor(prefix: string = 'ai-showcase') {
+  constructor(prefix: string = 'modelviz') {
     this.prefix = prefix;
   }
 

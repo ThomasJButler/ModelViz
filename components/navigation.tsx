@@ -9,8 +9,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Terminal, LineChart, Code, Brain, Play as Playground, BookOpen, Layout } from 'lucide-react';
+import { Terminal, LineChart, Code, Brain, Play as Playground, BookOpen, Layout, Settings } from 'lucide-react';
 
 /**
  * @constructor
@@ -19,16 +20,15 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const links = [
+    { href: '/about', label: 'About', icon: BookOpen },
     { href: '/dashboard', label: 'Dashboard', icon: Layout },
-    { href: '/models', label: 'Models', icon: Brain },
     { href: '/playground', label: 'Playground', icon: Playground },
-    { href: '/analytics', label: 'Analytics', icon: LineChart },
-    { href: '/docs', label: 'Documentation', icon: Code },
+    { href: '/docs', label: 'Docs', icon: Code },
   ];
 
   return (
-    <nav 
-      className="fixed w-full z-50 bg-background/80 backdrop-blur-sm border-b border-border"
+    <nav
+      className="fixed w-full z-50 bg-black/90 backdrop-blur-xl border-b border-matrix-primary/20"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -40,12 +40,19 @@ export function Navigation() {
               className="flex items-center space-x-2 px-2 text-matrix-primary hover:text-matrix-secondary transition-colors"
               aria-label="ModelViz Home"
             >
-              <Brain className="w-8 h-8" aria-hidden="true" />
+              <Image
+                src="/modelviz.png"
+                alt="ModelViz Logo"
+                width={32}
+                height={32}
+                className="rounded-md"
+                priority
+              />
               <span className="text-xl font-bold tracking-tight">ModelViz</span>
             </Link>
           </div>
 
-          <div className="hidden sm:flex sm:items-center sm:space-x-8">
+          <div className="hidden lg:flex lg:items-center lg:space-x-8">
             {links.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
@@ -57,10 +64,17 @@ export function Navigation() {
                 <span>{label}</span>
               </Link>
             ))}
+            <Link
+              href="/settings"
+              className="flex items-center justify-center p-2 rounded-lg text-foreground/80 hover:text-matrix-primary hover:bg-matrix-primary/10 transition-all duration-200"
+              aria-label="Settings"
+            >
+              <Settings className="h-5 w-5" aria-hidden="true" />
+            </Link>
           </div>
 
           <button
-            className="sm:hidden p-2"
+            className="lg:hidden p-2"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
@@ -78,12 +92,12 @@ export function Navigation() {
       {/* Mobile menu */}
       <motion.div
         id="mobile-menu"
-        className="sm:hidden"
+        className="lg:hidden overflow-hidden"
         initial={false}
         animate={isOpen ? "open" : "closed"}
         variants={{
-          open: { height: 'auto', opacity: 1 },
-          closed: { height: 0, opacity: 0 }
+          open: { height: 'auto', opacity: 1, pointerEvents: 'auto' as const },
+          closed: { height: 0, opacity: 0, pointerEvents: 'none' as const }
         }}
         role="menu"
         aria-orientation="vertical"
@@ -102,6 +116,15 @@ export function Navigation() {
               <span>{label}</span>
             </Link>
           ))}
+          <Link
+            href="/settings"
+            className="flex items-center space-x-2 px-3 py-2 text-base text-foreground/80 hover:text-matrix-primary transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+            role="menuitem"
+          >
+            <Settings className="h-5 w-5" aria-hidden="true" />
+            <span>Settings</span>
+          </Link>
         </div>
       </motion.div>
     </nav>

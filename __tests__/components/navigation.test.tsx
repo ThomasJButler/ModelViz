@@ -13,9 +13,8 @@ jest.mock('next/link', () => ({
 describe('Navigation', () => {
   const navigationLinks = [
     { href: '/dashboard', label: 'Dashboard' },
-    { href: '/models', label: 'Models' },
     { href: '/playground', label: 'Playground' },
-    { href: '/analytics', label: 'Analytics' },
+    { href: '/about', label: 'About' },
     { href: '/docs', label: 'Documentation' },
   ]
 
@@ -96,11 +95,11 @@ describe('Navigation', () => {
 
   it('renders responsive layout classes', () => {
     render(<Navigation />)
-    
+
     // Check for responsive classes on desktop navigation container
-    const desktopNav = document.querySelector('.hidden.sm\\:flex')
+    const desktopNav = document.querySelector('.hidden.lg\\:flex')
     expect(desktopNav).toBeInTheDocument()
-    expect(desktopNav).toHaveClass('hidden', 'sm:flex', 'sm:items-center')
+    expect(desktopNav).toHaveClass('hidden', 'lg:flex', 'lg:items-center')
   })
 
   it('includes accessibility labels for icons', () => {

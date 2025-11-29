@@ -11,8 +11,8 @@ import { OpenAIClient } from './clients/openaiClient';
 import { WeatherClient } from './clients/weatherClient';
 import { NewsClient } from './clients/newsClient';
 import { AnthropicClient } from './clients/anthropicClient';
-import { DeepSeekClient } from './clients/deepseekClient';
 import { PerplexityClient } from './clients/perplexityClient';
+import { GoogleClient } from './clients/googleClient';
 
 // Base API client
 export { ApiClient, type RequestOptions, type ApiError } from './apiClient';
@@ -22,16 +22,16 @@ export { OpenAIClient } from './clients/openaiClient';
 export { WeatherClient } from './clients/weatherClient';
 export { NewsClient } from './clients/newsClient';
 export { AnthropicClient } from './clients/anthropicClient';
-export { DeepSeekClient } from './clients/deepseekClient';
 export { PerplexityClient } from './clients/perplexityClient';
+export { GoogleClient } from './clients/googleClient';
 
 // API Types
 export * as OpenAITypes from './types/openai';
 export * as WeatherTypes from './types/weather';
 export * as NewsTypes from './types/news';
 export * as AnthropicTypes from './types/anthropic';
-export * as DeepSeekTypes from './types/deepseek';
 export * as PerplexityTypes from './types/perplexity';
+export * as GoogleTypes from './types/google';
 
 // Transformers
 export * from './transformers/networkGraphData';
@@ -47,10 +47,10 @@ export interface ApiConfig {
   anthropic?: {
     apiKey: string;
   };
-  deepseek?: {
+  perplexity?: {
     apiKey: string;
   };
-  perplexity?: {
+  google?: {
     apiKey: string;
   };
   // Index signature for dynamic access
@@ -67,8 +67,8 @@ export class ApiService {
   private weatherClient?: WeatherClient;
   private newsClient?: NewsClient;
   private anthropicClient?: AnthropicClient;
-  private deepseekClient?: DeepSeekClient;
   private perplexityClient?: PerplexityClient;
+  private googleClient?: GoogleClient;
   
   private constructor(config: ApiConfig) {
     this.config = config;
@@ -106,11 +106,11 @@ export class ApiService {
     if (config.anthropic) {
       this.anthropicClient = undefined;
     }
-    if (config.deepseek) {
-      this.deepseekClient = undefined;
-    }
     if (config.perplexity) {
       this.perplexityClient = undefined;
+    }
+    if (config.google) {
+      this.googleClient = undefined;
     }
   }
   
@@ -175,22 +175,6 @@ export class ApiService {
   }
   
   /**
-   * Gets the DeepSeek client instance, creating it if needed
-   * @return Configured DeepSeek client
-   */
-  public getDeepSeek(): DeepSeekClient {
-    if (!this.deepseekClient) {
-      if (!this.config.deepseek?.apiKey) {
-        throw new Error('DeepSeek API key is not configured');
-      }
-      
-      this.deepseekClient = new DeepSeekClient(this.config.deepseek.apiKey);
-    }
-    
-    return this.deepseekClient;
-  }
-  
-  /**
    * Gets the Perplexity client instance, creating it if needed
    * @return Configured Perplexity client
    */
@@ -199,10 +183,26 @@ export class ApiService {
       if (!this.config.perplexity?.apiKey) {
         throw new Error('Perplexity API key is not configured');
       }
-      
+
       this.perplexityClient = new PerplexityClient(this.config.perplexity.apiKey);
     }
-    
+
     return this.perplexityClient;
+  }
+
+  /**
+   * Gets the Google client instance, creating it if needed
+   * @return Configured Google client
+   */
+  public getGoogle(): GoogleClient {
+    if (!this.googleClient) {
+      if (!this.config.google?.apiKey) {
+        throw new Error('Google API key is not configured');
+      }
+
+      this.googleClient = new GoogleClient(this.config.google.apiKey);
+    }
+
+    return this.googleClient;
   }
 }

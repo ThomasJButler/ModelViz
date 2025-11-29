@@ -1,343 +1,469 @@
 /**
  * @author Tom Butler
- * @date 2025-10-23
- * @description Dashboard page displaying interactive data visualisations with dynamic loading and error handling
+ * @date 2025-11-24
+ * @description Epic dashboard with sidebar navigation and comprehensive API analytics
  */
+
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useIsMobile } from "@/hooks/use-media-query";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Brain,
-  LineChart,
-  Network,
   Activity,
   Zap,
-  Shield,
-  Boxes,
-  Trees as TreeStructure,
-  Sparkles,
-  Atom,
-  EuroIcon as Neurons,
-  Cpu,
-  Layers
+  DollarSign,
+  Brain,
+  Network,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  BarChart3,
+  ChevronRight
 } from "lucide-react";
 import dynamic from 'next/dynamic';
-import { VisualisationLoader } from '@/components/visualisation-loader';
-import Loading from '../loading';
 import { analytics } from '@/lib/analytics';
 import { ErrorBoundary } from '@/components/error-boundary';
+import { MetricsService } from '@/lib/services/MetricsService';
+import { getConfiguredProviders } from '@/lib/storage/apiKeyStorage';
+import Link from 'next/link';
 
-// Dynamically import Visualisation components with loading states
-const AdvancedChart = dynamic(() => import('@/components/visualisations/advanced-chart'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const DataFlowDiagram = dynamic(() => import('@/components/visualisations/data-flow'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const NetworkGraph = dynamic(() => import('@/components/visualisations/network-graph'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const EnhancedNetworkGraph = dynamic(() => import('@/components/visualisations/enhanced-network-graph'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const RealTimeMetrics = dynamic(() => import('@/components/visualisations/real-time-metrics'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const DataCleaner = dynamic(() => import('@/components/visualisations/scientific/data-cleaner'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const ModelEvolution = dynamic(() => import('@/components/visualisations/scientific/model-evolution'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const ResourceTree = dynamic(() => import('@/components/visualisations/resource-tree'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const ParticleUniverse = dynamic(() => import('@/components/visualisations/particle-universe'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const QuantumField = dynamic(() => import('@/components/visualisations/quantum-field'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const NeuralFlow = dynamic(() => import('@/components/visualisations/neural-flow'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const AIConsciousness = dynamic(() => import('@/components/visualisations/ai-consciousness'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const AIThoughtStream = dynamic(() => import('@/components/visualisations/ai-thought-stream'), {
-  loading: () => <VisualisationLoader />,
-  ssr: false
-});
-const LatentSpaceExplorer = dynamic(() => import('@/components/visualisations/latent-space-explorer'), {
-  loading: () => <VisualisationLoader />,
+// Import new dashboard components
+import { SidebarNavigation } from '@/components/dashboard/sidebar-navigation';
+import { APIPerformanceRealtime } from '@/components/dashboard/api-performance-realtime';
+import { CostTrackingChart } from '@/components/dashboard/cost-tracking-chart';
+import { APIHealthMonitor } from '@/components/dashboard/api-health-monitor';
+import { TokenEfficiency } from '@/components/dashboard/token-efficiency';
+import { RequestHistory } from '@/components/dashboard/request-history';
+import { UsageTrends } from '@/components/dashboard/usage-trends';
+import { ModelInsights } from '@/components/dashboard/model-insights';
+import { ProviderHealthDashboard } from '@/components/dashboard/provider-health';
+import { ModelOutputStats } from '@/components/dashboard/model-output-stats';
+
+const CostAnalysis = dynamic(() => import('@/components/analytics/cost-analysis').then(mod => ({ default: mod.CostAnalysis })), {
+  loading: () => <div className="flex items-center justify-center h-64"><Brain className="w-20 h-20 text-matrix-primary animate-pulse" /></div>,
   ssr: false
 });
 
-const Visualisations = [
-  {
-    id: 'ai-consciousness',
-    title: 'AI Consciousness',
-    description: 'WebGL particle system demonstrating GPU-accelerated rendering with 10,000+ interactive nodes',
-    icon: Cpu,
-    component: AIConsciousness
-  },
-  {
-    id: 'ai-thought-stream',
-    title: 'AI Thought Stream',
-    description: 'Canvas-based flowing consciousness visualization with branching thoughts across NLP, vision, logic & creativity domains',
-    icon: Brain,
-    component: AIThoughtStream
-  },
-  {
-    id: 'latent-space',
-    title: 'Latent Space Explorer',
-    description: '3D semantic space navigation with concept clusters, mouse-controlled camera, and starfield background effects',
-    icon: Layers,
-    component: LatentSpaceExplorer
-  },
-  {
-    id: 'particle-universe',
-    title: 'Particle Universe',
-    description: 'Three.js 3D scene with physics-based particle interactions and mouse-responsive gravity fields',
-    icon: Sparkles,
-    component: ParticleUniverse
-  },
-  {
-    id: 'api-network',
-    title: 'API Provider Network',
-    description: 'D3.js force-directed graph showing API provider relationships with 24 nodes and dynamic connections',
-    icon: Network,
-    component: EnhancedNetworkGraph
-  },
-  {
-    id: 'quantum-field',
-    title: 'Quantum Field',
-    description: 'Canvas-based wave interference simulation with real-time magnetic field interaction physics',
-    icon: Atom,
-    component: QuantumField
-  },
-  {
-    id: 'neural-flow',
-    title: 'Neural Flow',
-    description: 'Animated neural network (4-6-6-3 architecture) showing forward propagation with weighted connections',
-    icon: Neurons,
-    component: NeuralFlow
-  },
-  {
-    id: 'advanced-chart',
-    title: 'Model Response Times',
-    description: 'Recharts area chart tracking 24-hour response time trends for GPT-4, Claude, DeepSeek & Perplexity',
-    icon: LineChart,
-    component: AdvancedChart
-  },
-  {
-    id: 'data-flow',
-    title: 'Data Flow',
-    description: 'SVG-based animated pipeline showing data transformation stages with throughput and latency metrics',
-    icon: Activity,
-    component: DataFlowDiagram
-  },
-  {
-    id: 'network-graph',
-    title: 'Network Analysis',
-    description: 'D3.js simulation with Barnes-Hut approximation for efficient multi-body collision detection',
-    icon: Network,
-    component: NetworkGraph
-  },
-  {
-    id: 'real-time',
-    title: 'AI Performance Metrics',
-    description: 'Recharts line graph with 1-second updates showing token consumption, API throughput, and success rates',
-    icon: Zap,
-    component: RealTimeMetrics
-  },
-  {
-    id: 'data-cleaner',
-    title: 'Data Privacy Scanner',
-    description: 'Pattern recognition demo detecting PII (SSN, credit cards, API keys) with Framer Motion animations',
-    icon: Shield,
-    component: DataCleaner
-  },
-  {
-    id: 'model-evolution',
-    title: 'Neural Network',
-    description: 'Animated network topology evolution showing layer formation and connection pruning over time',
-    icon: Brain,
-    component: ModelEvolution
-  },
-  {
-    id: 'resource-tree',
-    title: 'Resource Tree',
-    description: 'D3.js collapsible tree diagram visualising hierarchical resource allocation and dependencies',
-    icon: TreeStructure,
-    component: ResourceTree
-  }
-];
+interface SummaryStats {
+  totalCalls: number;
+  avgLatency: number;
+  totalCost: number;
+  successRate: number;
+  providersActive: number;
+  modelsUsed: number;
+}
 
-/**
- * @constructor
- */
 export default function DashboardPage() {
-  const [selectedTab, setSelectedTab] = useState(Visualisations[0].id);
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [currentView, setCurrentView] = useState('overview');
+  const [summaryStats, setSummaryStats] = useState<SummaryStats>({
+    totalCalls: 0,
+    avgLatency: 0,
+    totalCost: 0,
+    successRate: 0,
+    providersActive: 0,
+    modelsUsed: 0
+  });
+  const [hasApiKeys, setHasApiKeys] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const isMobile = useIsMobile();
 
-  /** @constructs */
-  useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * Visualisations.length);
-    setSelectedTab(Visualisations[randomIndex].id);
-
-    analytics.trackPageView('/dashboard');
+  // Check if user has API keys configured
+  const checkApiKeys = useCallback(() => {
+    const configuredProviders = getConfiguredProviders();
+    setHasApiKeys(configuredProviders.length > 0);
   }, []);
 
-  const handleTabChange = async (id: string) => {
-    try {
-      setIsLoading(true);
-      setLoadingProgress(0);
+  // Load summary stats
+  const loadStats = useCallback(async () => {
+    const service = MetricsService.getInstance();
+    const aggregated = await service.getAggregatedMetrics('week');
 
-      // Track Visualisation change
-      analytics.trackFeatureUsage('Visualisation_change', { from: selectedTab, to: id });
+    setSummaryStats({
+      totalCalls: aggregated.totalCalls,
+      avgLatency: Math.round(aggregated.avgLatency),
+      totalCost: aggregated.totalCost,
+      successRate: aggregated.successRate * 100,
+      providersActive: Object.keys(aggregated.byProvider).length || 4,
+      modelsUsed: Object.keys(aggregated.byModel).length || 8
+    });
+  }, []);
 
-      // Simulate progressive loading
-      const loadingInterval = setInterval(() => {
-        setLoadingProgress(prev => Math.min(prev + 10, 90));
-      }, 100);
+  useEffect(() => {
+    checkApiKeys();
+    loadStats();
+    analytics.trackPageView('/dashboard');
 
-      // Change tab
-      setSelectedTab(id);
+    // Listen for metrics updates
+    const handleUpdate = () => loadStats();
+    window.addEventListener('metrics-updated', handleUpdate);
 
-      // Complete loading after minimum time
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setLoadingProgress(100);
+    return () => {
+      window.removeEventListener('metrics-updated', handleUpdate);
+    };
+  }, [checkApiKeys, loadStats]);
 
-      // Cleanup
-      clearInterval(loadingInterval);
-    } catch (error) {
-      analytics.trackError(error as Error, { context: 'Visualisation_change' });
-    } finally {
-      setIsLoading(false);
-      setLoadingProgress(0);
+  const handleViewChange = (path: string) => {
+    // Extract view from path (e.g., /dashboard/real-time -> real-time)
+    const view = path === '/dashboard' ? 'overview' : path.split('/').pop() || 'overview';
+    setCurrentView(view);
+    analytics.trackFeatureUsage('dashboard_view_change', { view });
+  };
+
+  // Render different views based on currentView (mobile always shows overview)
+  const activeView = isMobile ? 'overview' : currentView;
+
+  const renderContent = () => {
+    switch (activeView) {
+      case 'overview':
+        return (
+          <div className="space-y-6">
+            {/* Summary Stats Cards Only */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-black/50 rounded-lg border border-matrix-primary/20"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart3 className="w-4 h-4 text-matrix-primary" />
+                  <span className="text-xs text-foreground/60">Total Calls</span>
+                </div>
+                <p className="text-2xl font-bold text-matrix-primary">
+                  {summaryStats.totalCalls.toLocaleString()}
+                </p>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-black/50 rounded-lg border border-matrix-secondary/20"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Zap className="w-4 h-4 text-matrix-secondary" />
+                  <span className="text-xs text-foreground/60">Avg Latency</span>
+                </div>
+                <p className="text-2xl font-bold text-matrix-secondary">
+                  {summaryStats.avgLatency}ms
+                </p>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-black/50 rounded-lg border border-matrix-tertiary/20"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <DollarSign className="w-4 h-4 text-matrix-tertiary" />
+                  <span className="text-xs text-foreground/60">Total Cost</span>
+                </div>
+                <p className="text-2xl font-bold text-matrix-tertiary">
+                  ${summaryStats.totalCost.toFixed(2)}
+                </p>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-black/50 rounded-lg border border-matrix-primary/20"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  {summaryStats.successRate >= 95 ? (
+                    <CheckCircle className="w-4 h-4 text-matrix-primary" />
+                  ) : summaryStats.successRate >= 80 ? (
+                    <AlertCircle className="w-4 h-4 text-yellow-500" />
+                  ) : (
+                    <XCircle className="w-4 h-4 text-red-500" />
+                  )}
+                  <span className="text-xs text-foreground/60">Success Rate</span>
+                </div>
+                <p className="text-2xl font-bold text-matrix-primary">
+                  {summaryStats.successRate.toFixed(1)}%
+                </p>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-black/50 rounded-lg border border-purple-500/20"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Network className="w-4 h-4 text-purple-500" />
+                  <span className="text-xs text-foreground/60">Providers</span>
+                </div>
+                <p className="text-2xl font-bold text-purple-500">
+                  {summaryStats.providersActive}
+                </p>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-black/50 rounded-lg border border-cyan-500/20"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Brain className="w-4 h-4 text-cyan-500" />
+                  <span className="text-xs text-foreground/60">Models</span>
+                </div>
+                <p className="text-2xl font-bold text-cyan-500">
+                  {summaryStats.modelsUsed}
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Provider Status Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+              {[
+                { name: 'OpenAI', color: '#10B981', status: 'operational' },
+                { name: 'Anthropic', color: '#8B5CF6', status: 'operational' },
+                { name: 'Google', color: '#3B82F6', status: 'operational' },
+                { name: 'Perplexity', color: '#06B6D4', status: 'operational' },
+              ].map((provider) => (
+                <motion.div
+                  key={provider.name}
+                  whileHover={{ scale: 1.02 }}
+                  className="p-4 bg-black/50 rounded-lg border border-matrix-primary/20"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <div
+                      className="w-2 h-2 rounded-full animate-pulse"
+                      style={{ backgroundColor: provider.color }}
+                    />
+                    <span className="text-sm font-medium text-foreground/90">{provider.name}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3 text-green-500" />
+                    <span className="text-xs text-green-500 capitalize">{provider.status}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Getting Started Guide - shown when no data */}
+            {summaryStats.totalCalls === 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+              >
+                <h3 className="text-lg font-semibold text-matrix-primary mb-3">Getting Started</h3>
+                <p className="text-sm text-foreground/70 mb-4">
+                  Your dashboard will display real-time analytics once you start using the AI models.
+                </p>
+                <ol className="space-y-3 text-sm text-foreground/80">
+                  <li className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-matrix-primary/20 text-matrix-primary text-xs flex items-center justify-center font-bold">1</span>
+                    <span><strong className="text-matrix-primary">Add API Keys</strong> — Go to Settings and add your provider API keys</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-matrix-primary/20 text-matrix-primary text-xs flex items-center justify-center font-bold">2</span>
+                    <span><strong className="text-matrix-primary">Use the Playground</strong> — Test AI models and generate responses</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-matrix-primary/20 text-matrix-primary text-xs flex items-center justify-center font-bold">3</span>
+                    <span><strong className="text-matrix-primary">View Analytics</strong> — Stats will automatically appear here as you use the models</span>
+                  </li>
+                </ol>
+                <div className="mt-4 flex gap-3">
+                  <Link
+                    href="/settings"
+                    className="px-4 py-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary text-sm hover:bg-matrix-primary/20 transition-colors"
+                  >
+                    Add API Keys
+                  </Link>
+                  <Link
+                    href="/playground"
+                    className="px-4 py-2 rounded-lg bg-matrix-secondary/10 border border-matrix-secondary text-matrix-secondary text-sm hover:bg-matrix-secondary/20 transition-colors"
+                  >
+                    Open Playground
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        );
+
+      case 'trends':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <UsageTrends />
+          </motion.div>
+        );
+
+      case 'insights':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <ModelInsights />
+          </motion.div>
+        );
+
+      case 'health':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <ProviderHealthDashboard />
+          </motion.div>
+        );
+
+      case 'output':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <ModelOutputStats />
+          </motion.div>
+        );
+
+      case 'performance':
+        return (
+          <div className="grid grid-cols-1 gap-6">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+            >
+              <APIPerformanceRealtime />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+            >
+              <APIHealthMonitor />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+            >
+              <TokenEfficiency />
+            </motion.div>
+          </div>
+        );
+
+      case 'cost':
+        return (
+          <div className="grid grid-cols-1 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+            >
+              <CostTrackingChart />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+            >
+              <CostAnalysis />
+            </motion.div>
+          </div>
+        );
+
+      case 'history':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <RequestHistory />
+          </motion.div>
+        );
+
+      default:
+        return null;
     }
   };
 
-  const selectedViz = Visualisations.find(v => v.id === selectedTab);
-
   return (
-    <div className="min-h-screen pt-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
-        >
-          <div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-matrix-primary to-matrix-secondary text-transparent bg-clip-text">
-              Data Visualisations Dashboard
-            </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-foreground/70">
-              Explore advanced data visualisations and insights
-            </p>
-          </div>
-        </motion.div>
+    <div className="bg-gradient-to-br from-black via-gray-900 to-black overflow-x-hidden">
+      {/* Animated Background - Very Subtle */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-matrix-primary/[0.02] rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-matrix-secondary/[0.02] rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-matrix-tertiary/[0.02] rounded-full blur-3xl animate-pulse delay-2000" />
+      </div>
 
-        {/* Visualisation Tabs */}
-        <div className="mb-8 overflow-x-auto pb-2">
-          <div className="flex flex-nowrap gap-2 min-w-max">
-            {Visualisations.map((viz) => {
-              const Icon = viz.icon;
-              const isSelected = selectedTab === viz.id;
-              
-              return (
-                <motion.button
-                  key={viz.id}
-                  onClick={() => handleTabChange(viz.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                    isSelected
-                      ? 'bg-matrix-primary/20 text-matrix-primary border border-matrix-primary/30'
-                      : 'text-foreground/70 hover:text-matrix-primary hover:bg-matrix-primary/10 border border-transparent'
-                  }`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="text-sm whitespace-nowrap">{viz.title}</span>
-                </motion.button>
-              );
-            })}
-          </div>
+      <div className="relative z-10 lg:flex">
+        {/* Desktop Sidebar Navigation - hidden on mobile for simplified experience */}
+        <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] z-20 hidden lg:block">
+          <SidebarNavigation
+            onNavigate={handleViewChange}
+            isOpen={true}
+            onCollapseChange={setSidebarCollapsed}
+            activeView={currentView}
+          />
         </div>
 
-        {/* Visualisation Display */}
-        <ErrorBoundary>
+        {/* Main Content Area */}
+        <div className={`flex-1 min-w-0 w-full transition-all duration-300 px-2 sm:px-4 md:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-20 pb-20 lg:pb-8 ${
+          sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-[280px]'
+        }`}>
+          {/* Header */}
           <motion.div
-            layout
-            className="relative rounded-lg border border-border bg-card overflow-hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 md:mb-8"
           >
-            {/* Header */}
-            <div className="p-4 sm:p-6 border-b border-border">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold mb-1">{selectedViz?.title}</h2>
-                  <p className="text-xs sm:text-sm text-foreground/70">{selectedViz?.description}</p>
-                </div>
-                {selectedViz && <selectedViz.icon className="w-5 h-5 sm:w-6 sm:h-6 text-matrix-primary" />}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-matrix-primary mb-2">
+                  ModelViz Analytics
+                </h1>
               </div>
-            </div>
-            
-            {/* Loading Progress */}
-            {isLoading && loadingProgress > 0 && (
-              <div className="absolute top-0 left-0 w-full h-1 bg-matrix-primary/20">
+
+              {/* API Keys Alert */}
+              {!hasApiKeys && (
                 <motion.div
-                  className="h-full bg-matrix-primary"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${loadingProgress}%` }}
-                  transition={{ duration: 0.3 }}
-                />
-              </div>
-            )}
-            
-            {/* Content */}
-            <div className="p-4 sm:p-6">
-              <Suspense fallback={<VisualisationLoader />}>
-                <AnimatePresence mode="wait">
-                  {isLoading ? (
-                    <motion.div
-                      key="loader"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Loading />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key={selectedTab}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {selectedViz && <selectedViz.component />}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </Suspense>
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 text-yellow-500" />
+                    <div>
+                      <p className="text-sm text-yellow-600 dark:text-yellow-400">
+                        No API keys configured
+                      </p>
+                      <Link
+                        href="/settings"
+                        className="text-xs underline hover:text-yellow-700 dark:hover:text-yellow-300"
+                      >
+                        Add keys in Settings
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
           </motion.div>
-        </ErrorBoundary>
+
+          {/* Dynamic Content Area - Mobile always shows overview */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeView}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ErrorBoundary>
+                {renderContent()}
+              </ErrorBoundary>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

@@ -36,7 +36,7 @@ export function PlaygroundGuide({ onClose }: PlaygroundGuideProps) {
         "Test different AI models with your inputs",
         "Experiment with various input formats",
         "View detailed model responses",
-        "Compare performance across models"
+        "Track response times and token usage"
       ]
     },
     {

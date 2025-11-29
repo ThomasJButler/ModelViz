@@ -79,6 +79,7 @@ export function ComparisonView({ leftContent, rightContent, onClose }: Compariso
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const copyToClipboard = (content: string) => {

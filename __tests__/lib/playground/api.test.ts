@@ -1,5 +1,6 @@
 import { generatePlaygroundResponse, type PlaygroundRequest } from '@/lib/playground/api'
 import { ApiService } from '@/lib/api'
+import * as apiKeyStorage from '@/lib/storage/apiKeyStorage'
 
 // Mock the API service
 jest.mock('@/lib/api', () => ({
@@ -8,36 +9,56 @@ jest.mock('@/lib/api', () => ({
   }
 }))
 
+// Mock the API key storage
+jest.mock('@/lib/storage/apiKeyStorage', () => ({
+  hasApiKey: jest.fn(),
+  getApiKey: jest.fn(),
+  updateLastUsed: jest.fn()
+}))
+
+// Mock MetricsService
+jest.mock('@/lib/services/MetricsService', () => ({
+  MetricsService: {
+    getInstance: jest.fn().mockReturnValue({
+      recordMetric: jest.fn().mockResolvedValue(undefined)
+    })
+  }
+}))
+
 describe('Playground API', () => {
   let mockApiService: any
   let mockOpenAIClient: any
   let mockAnthropicClient: any
-  let mockDeepSeekClient: any
+  let mockPerplexityClient: any
 
   beforeEach(() => {
     jest.clearAllMocks()
-    
+
     // Mock API clients
     mockOpenAIClient = {
       generateCompletion: jest.fn()
     }
-    
+
     mockAnthropicClient = {
       generateCompletion: jest.fn()
     }
-    
-    mockDeepSeekClient = {
-      generateText: jest.fn()
+
+    mockPerplexityClient = {
+      generateCompletion: jest.fn()
     }
-    
+
     mockApiService = {
       getOpenAI: jest.fn().mockReturnValue(mockOpenAIClient),
       getAnthropic: jest.fn().mockReturnValue(mockAnthropicClient),
-      getDeepSeek: jest.fn().mockReturnValue(mockDeepSeekClient),
-      getPerplexity: jest.fn()
+      getPerplexity: jest.fn().mockReturnValue(mockPerplexityClient),
+      updateConfig: jest.fn()
     }
-    
+
     ;(ApiService.getInstance as jest.Mock).mockReturnValue(mockApiService)
+
+    // Default: API keys are configured
+    ;(apiKeyStorage.hasApiKey as jest.Mock).mockReturnValue(true)
+    ;(apiKeyStorage.getApiKey as jest.Mock).mockReturnValue('test-api-key')
   })
 
   describe('generatePlaygroundResponse', () => {
@@ -64,7 +85,7 @@ describe('Playground API', () => {
         1024,  // default maxTokens
         0.7    // default temperature
       )
-      
+
       expect(result).toEqual({
         content: 'Test response from GPT-4',
         metadata: {
@@ -101,7 +122,7 @@ describe('Playground API', () => {
         1000,
         0.7
       )
-      
+
       expect(result.content).toBe('Test response from Claude')
       expect(result.metadata?.tokens_used).toBe(75)
     })
@@ -133,12 +154,13 @@ describe('Playground API', () => {
         1024,  // default maxTokens - JSON parsing happens in playground page, not API
         0.7    // default temperature - JSON parsing happens in playground page, not API
       )
-      
+
       expect(result.content).toBe('Quantum computing explanation...')
     })
 
-    it('returns demo response when API is not configured', async () => {
-      mockApiService.getOpenAI = undefined
+    it('returns error when API is not configured', async () => {
+      // API key not configured
+      ;(apiKeyStorage.hasApiKey as jest.Mock).mockReturnValue(false)
 
       const request: PlaygroundRequest = {
         modelId: 'gpt-4',
@@ -149,9 +171,8 @@ describe('Playground API', () => {
 
       const result = await generatePlaygroundResponse(request)
 
-      expect(result.content).toContain('This is a demo response')
-      expect(result.metadata?.model).toBe('gpt-4')
-      expect(result.metadata?.tokens_used).toBeGreaterThan(0)
+      expect(result.error).toContain('No API key configured for OpenAI')
+      expect(result.content).toBe('')
     })
 
     it('handles errors gracefully', async () => {
@@ -170,7 +191,7 @@ describe('Playground API', () => {
       expect(result.content).toBe('')
     })
 
-    it('handles code input format', async () => {
+    it('handles code input format with Demo provider', async () => {
       const codeInput = `
 def calculate_fibonacci(n):
     if n <= 1:
@@ -179,21 +200,18 @@ def calculate_fibonacci(n):
       `
 
       const request: PlaygroundRequest = {
-        modelId: 'deepseek-coder',
-        provider: 'DeepSeek',
+        modelId: 'demo-model',
+        provider: 'Demo',
         input: codeInput,
         inputFormat: 'code'
       }
 
-      // Set DeepSeek as undefined to test demo response
-      mockApiService.getDeepSeek = undefined
-
-      // Should return demo response for unconfigured provider
+      // Demo provider doesn't need API key check
       const result = await generatePlaygroundResponse(request)
 
       expect(result.content).toBeDefined()
-      expect(result.content).toContain('demo response')
-      expect(result.metadata?.model).toBe('deepseek-coder')
+      expect(result.content).toContain('Code Analysis')
+      expect(result.metadata?.model).toBe('demo-model')
     })
 
     it('calculates confidence score based on response length', async () => {

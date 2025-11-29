@@ -16,7 +16,6 @@ describe('Playground Models', () => {
     mockApiService = {
       getOpenAI: jest.fn(),
       getAnthropic: jest.fn(),
-      getDeepSeek: jest.fn(),
       getPerplexity: jest.fn()
     }
     ;(ApiService.getInstance as jest.Mock).mockReturnValue(mockApiService)
@@ -27,7 +26,6 @@ describe('Playground Models', () => {
       // Mock all API clients as undefined
       mockApiService.getOpenAI = undefined
       mockApiService.getAnthropic = undefined
-      mockApiService.getDeepSeek = undefined
       mockApiService.getPerplexity = undefined
 
       const models = await getAvailableModels()
@@ -106,15 +104,15 @@ describe('Playground Models', () => {
         listModels: jest.fn().mockResolvedValue([{ name: 'claude-3-opus' }])
       })
 
-      // Mock DeepSeek
-      mockApiService.getDeepSeek.mockReturnValue({
-        listModels: jest.fn().mockResolvedValue([{ id: 'deepseek-chat' }])
+      // Mock Perplexity
+      mockApiService.getPerplexity.mockReturnValue({
+        listModels: jest.fn().mockResolvedValue([{ id: 'sonar-small-online' }])
       })
 
       const models = await getAvailableModels()
 
       expect(models).toHaveLength(3)
-      expect(models.map(g => g.provider)).toEqual(['OpenAI', 'Anthropic', 'DeepSeek'])
+      expect(models.map(g => g.provider)).toEqual(['OpenAI', 'Anthropic', 'Perplexity'])
     })
 
     it('assigns correct capabilities based on model type', async () => {

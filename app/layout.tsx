@@ -7,12 +7,15 @@ import { Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Navigation } from '@/components/navigation';
+import { MobileBottomNav } from '@/components/mobile-bottom-nav';
 import { Footer } from '@/components/footer';
 import { DemoBanner } from '@/components/demo-banner';
 import { MatrixBackground } from '@/components/matrix-background';
 import { PageTransition } from '@/components/page-transition';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
+import './interactions.css';
+
 const jetBrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   display: 'swap',
@@ -43,9 +46,12 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   icons: {
-    icon: '/icons/favicon-32x32.svg',
-    shortcut: '/icons/favicon-16x16.svg',
-    apple: '/icons/apple-touch-icon.svg'
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/modelviz.png', type: 'image/png', sizes: '32x32' }
+    ],
+    shortcut: '/modelviz.png',
+    apple: '/modelviz.png'
   }
 };
 
@@ -58,6 +64,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Run migration on client side only
+  if (typeof window !== 'undefined') {
+    import('@/lib/utils/migrate-storage').then(({ migrateLocalStorage }) => {
+      migrateLocalStorage();
+    });
+  }
+
   return (
     <html
       lang="en"
@@ -65,10 +78,10 @@ export default function RootLayout({
       className="scroll-smooth"
     >
       <head>
-        <meta name="application-name" content="AI Comparison" />
+        <meta name="application-name" content="ModelViz" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-        <meta name="apple-mobile-web-app-title" content="AI Comparison" />
+        <meta name="apple-mobile-web-app-title" content="ModelViz" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#0d0d0d" />
@@ -88,8 +101,9 @@ export default function RootLayout({
             <div className="content-wrapper min-h-screen flex flex-col">
               <DemoBanner />
               <Navigation />
-              <main className="flex-1">{children}</main>
-              <Footer />
+              <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+              <Footer className="hidden lg:block" />
+              <MobileBottomNav />
             </div>
           </PageTransition>
           <Toaster />

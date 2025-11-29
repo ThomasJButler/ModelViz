@@ -24,7 +24,7 @@ interface Node {
  */
 export default function NetworkGraph() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  let animationId: number;
+  const animationIdRef = useRef<number>();
 
   /** @constructs */
   useEffect(() => {
@@ -149,13 +149,15 @@ export default function NetworkGraph() {
         ctx.fill();
       });
 
-      animationId = requestAnimationFrame(animate);
+      animationIdRef.current = requestAnimationFrame(animate);
     }
 
     animate();
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      cancelAnimationFrame(animationId);
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+      }
     };
   }, []);
 

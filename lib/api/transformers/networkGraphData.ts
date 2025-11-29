@@ -71,7 +71,7 @@ export function createApiNetworkData(options: {
     
     connections.push({
       source: 'user',
-      target: 'ai-comparison',
+      target: 'modelviz',
       strength: 1,
       dataFlow: 75,
       status: 'active',
@@ -129,7 +129,7 @@ export function createApiNetworkData(options: {
     });
     
     connections.push({
-      source: 'ai-comparison',
+      source: 'modelviz',
       target: 'openai',
       strength: 0.9,
       dataFlow: 80,
@@ -156,7 +156,7 @@ export function createApiNetworkData(options: {
     });
     
     connections.push({
-      source: 'ai-comparison',
+      source: 'modelviz',
       target: 'weather',
       strength: 0.7,
       dataFlow: 30,
@@ -183,7 +183,7 @@ export function createApiNetworkData(options: {
     });
     
     connections.push({
-      source: 'ai-comparison',
+      source: 'modelviz',
       target: 'news',
       strength: 0.6,
       dataFlow: 25,
@@ -209,7 +209,7 @@ export function createApiNetworkData(options: {
   });
   
   connections.push({
-    source: 'ai-comparison',
+    source: 'modelviz',
     target: 'storage',
     strength: 0.8,
     dataFlow: 50,

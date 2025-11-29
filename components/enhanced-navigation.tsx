@@ -29,7 +29,7 @@ const navigationItems = [
   { href: '/playground', label: 'Playground', icon: Brain },
   { href: '/models', label: 'Models', icon: Code },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/profile', label: 'Settings', icon: Settings },
+  { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
 /**

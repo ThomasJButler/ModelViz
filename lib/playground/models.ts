@@ -40,7 +40,7 @@ export async function getAvailableModels(): Promise<ProviderGroupedModels[]> {
   } catch {
     // Not initialized yet, try to initialize from localStorage
     if (typeof window !== 'undefined') {
-      const savedConfig = localStorage.getItem('ai_comparison_api_config');
+      const savedConfig = localStorage.getItem('modelviz_api_config');
       if (savedConfig) {
         try {
           const config = JSON.parse(savedConfig);
@@ -124,38 +124,7 @@ export async function getAvailableModels(): Promise<ProviderGroupedModels[]> {
     } catch (error) {
       console.error('Error loading Anthropic models:', error);
     }
-    
-    // Check for DeepSeek models
-    try {
-      const apiService = ApiService.getInstance();
-      if (apiService.getDeepSeek) {
-        const deepseekModels = await apiService.getDeepSeek().listModels();
-        
-        const deepseekModelOptions: ModelOption[] = deepseekModels.map((model: any) => ({
-          id: model.id,
-          name: formatModelName(model.id),
-          description: getModelDescription(model.id, 'DeepSeek'),
-          icon: getModelIcon(model.id, 'DeepSeek'),
-          provider: 'DeepSeek',
-          capabilities: getModelCapabilities(model.id, 'DeepSeek'),
-          metrics: {
-            latency: getModelLatency(model.id, 'DeepSeek'),
-            accuracy: getModelAccuracy(model.id, 'DeepSeek'),
-            tokens: getModelTokenLimit(model.id, 'DeepSeek')
-          }
-        }));
-        
-        if (deepseekModelOptions.length > 0) {
-          result.push({
-            provider: 'DeepSeek',
-            models: deepseekModelOptions
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Error loading DeepSeek models:', error);
-    }
-    
+
     // Check for Perplexity models
     try {
       const apiService = ApiService.getInstance();
@@ -252,38 +221,61 @@ export async function getAvailableModels(): Promise<ProviderGroupedModels[]> {
 
 function formatModelName(modelId: string): string {
   // Handle different naming conventions
-  if (modelId.includes('gpt')) {
+  if (modelId.includes('gpt') || modelId.startsWith('o')) {
     // OpenAI models
     return modelId
-      .replace('gpt-3.5-turbo', 'GPT-3.5 Turbo')
-      .replace('gpt-4', 'GPT-4')
+      // GPT-5 series
+      .replace('gpt-5.1-chat-latest', 'GPT-5.1 Chat')
+      .replace('gpt-5.1', 'GPT-5.1')
+      .replace('gpt-5-nano', 'GPT-5 Nano')
+      .replace('gpt-5', 'GPT-5')
+      // GPT-4 series
+      .replace('gpt-4.1-nano', 'GPT-4.1 Nano')
+      .replace('gpt-4.1-mini', 'GPT-4.1 Mini')
+      .replace('gpt-4.1', 'GPT-4.1')
       .replace('gpt-4-turbo', 'GPT-4 Turbo')
       .replace('gpt-4-vision', 'GPT-4 Vision')
+      .replace('gpt-4o-mini', 'GPT-4o Mini')
+      .replace('gpt-4o', 'GPT-4o')
+      .replace('gpt-4', 'GPT-4')
+      // GPT-3.5 series
+      .replace('gpt-3.5-turbo', 'GPT-3.5 Turbo')
+      // o-series models
+      .replace(/^o4-mini/, 'o4 Mini')
+      .replace(/^o3-mini/, 'o3 Mini')
+      .replace(/^o3/, 'o3')
+      .replace(/^o1-mini/, 'o1 Mini')
+      .replace(/^o1/, 'o1')
+      // General cleanup
       .replace(/-(\d{8})/, ' (Updated $1)')
       .replace(/-preview/, ' Preview');
   } else if (modelId.includes('claude')) {
     // Anthropic models
     return modelId
+      // Claude 4 series
+      .replace('claude-opus-4-5', 'Claude Opus 4.5')
+      .replace('claude-sonnet-4-5', 'Claude Sonnet 4.5')
+      .replace('claude-opus-4-1', 'Claude Opus 4.1')
+      .replace('claude-opus-4', 'Claude Opus 4')
+      .replace('claude-sonnet-4', 'Claude Sonnet 4')
+      // Claude 3 series
+      .replace('claude-3-7-sonnet', 'Claude 3.7 Sonnet')
+      .replace('claude-3-5-haiku', 'Claude 3.5 Haiku')
+      .replace('claude-3-5-sonnet', 'Claude 3.5 Sonnet')
       .replace('claude-3-opus', 'Claude 3 Opus')
       .replace('claude-3-sonnet', 'Claude 3 Sonnet')
       .replace('claude-3-haiku', 'Claude 3 Haiku')
+      // Claude 2 series
       .replace('claude-2.1', 'Claude 2.1')
-      .replace(/-(\d{8})/, ' (Updated $1)');
-  } else if (modelId.includes('deepseek')) {
-    // DeepSeek models
-    return modelId
-      .replace('deepseek-chat', 'DeepSeek Chat')
-      .replace('deepseek-coder', 'DeepSeek Coder')
-      .replace('deepseek-lite', 'DeepSeek Lite');
-  } else if (modelId.includes('llama') || modelId.includes('mistral') || modelId.includes('sonar')) {
+      // Remove date stamps
+      .replace(/-(\d{8})/, '');
+  } else if (modelId.includes('sonar') || modelId.includes('pplx')) {
     // Perplexity models
     return modelId
-      .replace('llama-3-70b-instruct', 'Llama 3 70B')
-      .replace('llama-3-8b-instruct', 'Llama 3 8B')
-      .replace('mistral-7b-instruct', 'Mistral 7B')
-      .replace('sonar-small-online', 'Sonar Small (Online)')
-      .replace('sonar-medium-online', 'Sonar Medium (Online)')
-      .replace('sonar-large-online', 'Sonar Large (Online)');
+      .replace('sonar-pro', 'Sonar Pro')
+      .replace('sonar-reasoning', 'Sonar Pro Reasoning')
+      .replace('sonar', 'Sonar')
+      .replace('pplx-', 'Perplexity ');
   }
   
   // Default formatting
@@ -321,18 +313,7 @@ function getModelDescription(modelId: string, provider: string = 'OpenAI'): stri
       return 'Previous generation Claude model with good performance';
     }
   }
-  
-  // Descriptions for DeepSeek models
-  if (provider === 'DeepSeek') {
-    if (modelId.includes('coder')) {
-      return 'Specialized model for code generation and analysis';
-    } else if (modelId.includes('lite')) {
-      return 'Lightweight and efficient general purpose model';
-    } else {
-      return 'Advanced conversational AI for general purpose tasks';
-    }
-  }
-  
+
   // Descriptions for Perplexity models
   if (provider === 'Perplexity') {
     if (modelId.includes('sonar')) {
@@ -365,12 +346,6 @@ function getModelIcon(modelId: string, provider: string = 'OpenAI'): LucideIcon 
     }
   } else if (provider === 'Anthropic') {
     return Sparkles;
-  } else if (provider === 'DeepSeek') {
-    if (modelId.includes('coder')) {
-      return Code;
-    } else {
-      return Network;
-    }
   } else if (provider === 'Perplexity') {
     if (modelId.includes('sonar')) {
       return Zap;
@@ -399,10 +374,6 @@ function getModelCapabilities(modelId: string, provider: string = 'OpenAI'): str
     } else if (modelId.includes('sonnet')) {
       capabilities.push('Tool Use', 'Content Creation');
     }
-  } else if (provider === 'DeepSeek') {
-    if (modelId.includes('coder')) {
-      capabilities.push('Code Generation', 'Technical Writing');
-    }
   } else if (provider === 'Perplexity') {
     if (modelId.includes('sonar')) {
       capabilities.push('Web Search', 'Current Information');
@@ -430,8 +401,6 @@ function getModelLatency(modelId: string, provider: string = 'OpenAI'): string {
     } else {
       return '~150ms';
     }
-  } else if (provider === 'DeepSeek') {
-    return '~200ms';
   } else if (provider === 'Perplexity') {
     if (modelId.includes('sonar')) {
       return '~400ms'; // Longer due to web search
@@ -461,12 +430,6 @@ function getModelAccuracy(modelId: string, provider: string = 'OpenAI'): string 
     } else {
       return '90-95%';
     }
-  } else if (provider === 'DeepSeek') {
-    if (modelId.includes('coder')) {
-      return '90-97%';
-    } else {
-      return '90-95%';
-    }
   } else if (provider === 'Perplexity') {
     if (modelId.includes('sonar')) {
       return '92-98%'; // Potentially more accurate with web search
@@ -492,8 +455,6 @@ function getModelTokenLimit(modelId: string, provider: string = 'OpenAI'): strin
     }
   } else if (provider === 'Anthropic') {
     return '200K';
-  } else if (provider === 'DeepSeek') {
-    return '32K';
   } else if (provider === 'Perplexity') {
     if (modelId.includes('sonar')) {
       return '12K';
