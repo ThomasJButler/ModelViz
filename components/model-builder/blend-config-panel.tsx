@@ -80,7 +80,6 @@ export function BlendConfigPanel({
 
     // Listen for API key changes to reload models in real-time
     const handleApiKeyChange = () => {
-      console.log('[Model Builder] API key changed, reloading models...');
       loadModels();
     };
 

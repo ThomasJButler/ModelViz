@@ -40,12 +40,6 @@ export function TokenEfficiency() {
       const aggregated = await service.getAggregatedMetrics('week');
       const recentMetrics = await service.getRecentMetrics(500);
 
-      console.log('[TokenEfficiency] Aggregated:', {
-        totalCalls: aggregated.totalCalls,
-        totalCost: aggregated.totalCost,
-        providers: Object.keys(aggregated.byProvider)
-      });
-
       if (recentMetrics.length > 0) {
         // Calculate real token data
         let totalInput = 0;

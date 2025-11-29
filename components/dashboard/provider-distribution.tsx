@@ -39,13 +39,6 @@ export function ProviderDistribution() {
       const service = MetricsService.getInstance();
       const aggregated = await service.getAggregatedMetrics('week');
 
-      console.log('[ProviderDistribution] Aggregated data:', {
-        providers: Object.keys(aggregated.byProvider),
-        totalCalls: aggregated.totalCalls,
-        totalCost: aggregated.totalCost,
-        selectedMetric
-      });
-
       if (Object.keys(aggregated.byProvider).length > 0) {
         // Real data
         const providerData: ProviderData[] = Object.entries(aggregated.byProvider).map(([provider, stats]) => ({
@@ -58,10 +51,8 @@ export function ProviderDistribution() {
           cost: stats.totalCost
         }));
 
-        console.log('[ProviderDistribution] Using real data:', providerData.length, 'providers');
         setData(providerData);
       } else {
-        console.log('[ProviderDistribution] Using demo data - no real providers available');
         // Demo data
         const demoData: ProviderData[] = [
           { name: 'OpenAI', value: 450, color: colors.OpenAI, calls: 450, cost: 12.50 },

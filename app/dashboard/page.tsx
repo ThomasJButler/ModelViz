@@ -161,11 +161,11 @@ export default function DashboardPage() {
 
               <motion.div
                 whileHover={{ scale: 1.02 }}
-                className="p-4 bg-black/50 rounded-lg border border-green-500/20"
+                className="p-4 bg-black/50 rounded-lg border border-matrix-primary/20"
               >
                 <div className="flex items-center gap-2 mb-2">
                   {summaryStats.successRate >= 95 ? (
-                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <CheckCircle className="w-4 h-4 text-matrix-primary" />
                   ) : summaryStats.successRate >= 80 ? (
                     <AlertCircle className="w-4 h-4 text-yellow-500" />
                   ) : (
@@ -173,7 +173,7 @@ export default function DashboardPage() {
                   )}
                   <span className="text-xs text-foreground/60">Success Rate</span>
                 </div>
-                <p className="text-2xl font-bold text-green-500">
+                <p className="text-2xl font-bold text-matrix-primary">
                   {summaryStats.successRate.toFixed(1)}%
                 </p>
               </motion.div>
@@ -205,38 +205,75 @@ export default function DashboardPage() {
               </motion.div>
             </div>
 
-            {/* Quick Navigation to Views */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-            >
-              <h3 className="text-lg font-semibold text-matrix-primary mb-4">Quick Navigation</h3>
-              <div className="flex flex-col divide-y divide-matrix-primary/20">
-                {[
-                  { label: 'Usage Trends', icon: Activity, view: 'trends', description: 'Usage patterns & growth' },
-                  { label: 'Model Insights', icon: Brain, view: 'insights', description: 'Model rankings & efficiency' },
-                  { label: 'Provider Health', icon: Network, view: 'health', description: 'Uptime & reliability' },
-                ].map((item) => (
-                  <motion.button
-                    key={item.view}
-                    whileHover={{ x: 4, backgroundColor: 'rgba(0, 255, 0, 0.05)' }}
-                    whileTap={{ scale: 0.99 }}
-                    onClick={() => setCurrentView(item.view)}
-                    className="py-4 px-2 flex items-center gap-4 text-left transition-colors first:pt-0 last:pb-0"
+            {/* Provider Status Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+              {[
+                { name: 'OpenAI', color: '#10B981', status: 'operational' },
+                { name: 'Anthropic', color: '#8B5CF6', status: 'operational' },
+                { name: 'Google', color: '#3B82F6', status: 'operational' },
+                { name: 'Perplexity', color: '#06B6D4', status: 'operational' },
+              ].map((provider) => (
+                <motion.div
+                  key={provider.name}
+                  whileHover={{ scale: 1.02 }}
+                  className="p-4 bg-black/50 rounded-lg border border-matrix-primary/20"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <div
+                      className="w-2 h-2 rounded-full animate-pulse"
+                      style={{ backgroundColor: provider.color }}
+                    />
+                    <span className="text-sm font-medium text-foreground/90">{provider.name}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3 text-green-500" />
+                    <span className="text-xs text-green-500 capitalize">{provider.status}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Getting Started Guide - shown when no data */}
+            {summaryStats.totalCalls === 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+              >
+                <h3 className="text-lg font-semibold text-matrix-primary mb-3">Getting Started</h3>
+                <p className="text-sm text-foreground/70 mb-4">
+                  Your dashboard will display real-time analytics once you start using the AI models.
+                </p>
+                <ol className="space-y-3 text-sm text-foreground/80">
+                  <li className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-matrix-primary/20 text-matrix-primary text-xs flex items-center justify-center font-bold">1</span>
+                    <span><strong className="text-matrix-primary">Add API Keys</strong> — Go to Settings and add your provider API keys</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-matrix-primary/20 text-matrix-primary text-xs flex items-center justify-center font-bold">2</span>
+                    <span><strong className="text-matrix-primary">Use the Playground</strong> — Test AI models and generate responses</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-matrix-primary/20 text-matrix-primary text-xs flex items-center justify-center font-bold">3</span>
+                    <span><strong className="text-matrix-primary">View Analytics</strong> — Stats will automatically appear here as you use the models</span>
+                  </li>
+                </ol>
+                <div className="mt-4 flex gap-3">
+                  <Link
+                    href="/settings"
+                    className="px-4 py-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary text-matrix-primary text-sm hover:bg-matrix-primary/20 transition-colors"
                   >
-                    <div className="p-2 rounded-lg bg-matrix-primary/10 border border-matrix-primary/20">
-                      <item.icon className="w-5 h-5 text-matrix-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <span className="text-sm font-medium text-foreground/90 block">{item.label}</span>
-                      <span className="text-xs text-foreground/50">{item.description}</span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-matrix-primary/50" />
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
+                    Add API Keys
+                  </Link>
+                  <Link
+                    href="/playground"
+                    className="px-4 py-2 rounded-lg bg-matrix-secondary/10 border border-matrix-secondary text-matrix-secondary text-sm hover:bg-matrix-secondary/20 transition-colors"
+                  >
+                    Open Playground
+                  </Link>
+                </div>
+              </motion.div>
+            )}
           </div>
         );
 

@@ -43,12 +43,6 @@ export default function RealTimeMetrics() {
       const service = MetricsService.getInstance();
       const aggregated = await service.getAggregatedMetrics('today');
 
-      console.log('[RealTimeMetrics] Initial load:', {
-        totalCalls: aggregated.totalCalls,
-        hasHourlyStats: !!aggregated.hourlyStats,
-        hourlyStatsLength: aggregated.hourlyStats?.length || 0
-      });
-
       if (aggregated.totalCalls > 0) {
         setHasRealData(true);
 
@@ -92,11 +86,8 @@ export default function RealTimeMetrics() {
 
         // Keep last 20 data points
         const recentData = chartData.slice(-20);
-
-        console.log('[RealTimeMetrics] Using real data:', recentData.length, 'data points');
         setData(recentData);
       } else {
-        console.log('[RealTimeMetrics] No real data, using demo mode');
         setHasRealData(false);
 
         // Initialize with demo data
@@ -122,8 +113,6 @@ export default function RealTimeMetrics() {
     const handleMetricsUpdate = async () => {
       const service = MetricsService.getInstance();
       const aggregated = await service.getAggregatedMetrics('today');
-
-      console.log('[RealTimeMetrics] Metrics updated, total calls:', aggregated.totalCalls);
 
       if (aggregated.totalCalls > 0) {
         setHasRealData(true);

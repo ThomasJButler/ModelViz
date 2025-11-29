@@ -27,8 +27,8 @@ export function Navigation() {
   ];
 
   return (
-    <nav 
-      className="fixed w-full z-50 bg-background/80 backdrop-blur-sm border-b border-border"
+    <nav
+      className="fixed w-full z-50 bg-black/90 backdrop-blur-xl border-b border-matrix-primary/20"
       role="navigation"
       aria-label="Main navigation"
     >

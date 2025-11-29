@@ -254,17 +254,8 @@ export async function generatePlaygroundResponse(request: PlaygroundRequest): Pr
       confidence: confidence
     };
 
-    console.log('[API] Recording success metric:', {
-      provider: metricData.provider,
-      model: metricData.model,
-      latency: `${metricData.latency.toFixed(0)}ms`,
-      cost: `$${metricData.estimatedCost.toFixed(4)}`,
-      tokens: metricData.tokensUsed
-    });
-
     try {
       await metricsService.recordMetric(metricData);
-      console.log('[API] Metric recorded successfully');
     } catch (error) {
       console.error('[API] Failed to record metric:', error);
       throw error;
@@ -308,15 +299,8 @@ export async function generatePlaygroundResponse(request: PlaygroundRequest): Pr
       responseLength: 0
     };
 
-    console.log('[API] Recording error metric:', {
-      provider: errorMetricData.provider,
-      model: errorMetricData.model,
-      error: errorMetricData.errorMessage
-    });
-
     try {
       await metricsService.recordMetric(errorMetricData);
-      console.log('[API] Error metric recorded successfully');
     } catch (recordError) {
       console.error('[API] Failed to record error metric:', recordError);
     }

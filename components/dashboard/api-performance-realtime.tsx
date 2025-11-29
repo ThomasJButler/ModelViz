@@ -37,13 +37,6 @@ export function APIPerformanceRealtime() {
       const service = MetricsService.getInstance();
       const aggregated = await service.getAggregatedMetrics('today');
 
-      console.log('[APIPerformanceRealtime] Aggregated data:', {
-        hasHourlyStats: !!aggregated.hourlyStats,
-        hourlyStatsLength: aggregated.hourlyStats?.length || 0,
-        totalCalls: aggregated.totalCalls,
-        hasProviders: Object.keys(aggregated.byProvider).length
-      });
-
       if (aggregated.hourlyStats && aggregated.hourlyStats.length > 0) {
         // Transform hourly stats to show latency by provider
         const hourlyData: PerformanceData[] = [];
@@ -54,7 +47,6 @@ export function APIPerformanceRealtime() {
 
         // Get recent metrics to populate hourly data
         const recentMetrics = await service.getRecentMetrics(200);
-        console.log('[APIPerformanceRealtime] Recent metrics:', recentMetrics.length);
 
         recentMetrics.forEach(metric => {
           const hour = new Date(metric.timestamp).getHours();
@@ -74,8 +66,6 @@ export function APIPerformanceRealtime() {
           providerSet.add(metric.provider);
         });
 
-        console.log('[APIPerformanceRealtime] Hours with data:', hourMap.size, 'Providers:', Array.from(providerSet));
-
         // Convert to chart format
         hourMap.forEach((providers, hour) => {
           const dataPoint: PerformanceData = {
@@ -94,12 +84,9 @@ export function APIPerformanceRealtime() {
           return hourA - hourB;
         });
 
-        console.log('[APIPerformanceRealtime] Chart data points:', hourlyData.length);
-
         setData(hourlyData);
         setProviders(Array.from(providerSet));
       } else {
-        console.log('[APIPerformanceRealtime] Using demo data - no real metrics available');
         // Demo data
         const demoData: PerformanceData[] = Array.from({ length: 12 }, (_, i) => ({
           timestamp: `${i * 2}:00`,
@@ -160,8 +147,8 @@ export function APIPerformanceRealtime() {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1a1a1a',
-                border: '1px solid #333',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                border: '1px solid rgba(0, 255, 65, 0.2)',
                 borderRadius: '8px',
               }}
               formatter={(value: any) => [`${Math.round(value)}ms`, '']}

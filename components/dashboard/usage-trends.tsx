@@ -204,8 +204,8 @@ export function UsageTrends() {
             <YAxis stroke="#666" style={{ fontSize: '11px' }} />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1a1a1a',
-                border: '1px solid #333',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                border: '1px solid rgba(0, 255, 65, 0.2)',
                 borderRadius: '8px',
               }}
               formatter={(value: number, name: string) => [

@@ -31,12 +31,6 @@ export function ModelUsageOverview() {
       const service = MetricsService.getInstance();
       const aggregated = await service.getAggregatedMetrics('week');
 
-      console.log('[ModelUsageOverview] Aggregated data:', {
-        models: Object.keys(aggregated.byModel),
-        totalCalls: aggregated.totalCalls,
-        totalCost: aggregated.totalCost
-      });
-
       if (Object.keys(aggregated.byModel).length > 0) {
         // Real data
         const modelMetrics: ModelMetrics[] = Object.entries(aggregated.byModel).map(([key, stats]) => {
@@ -55,10 +49,8 @@ export function ModelUsageOverview() {
 
         // Sort by usage
         modelMetrics.sort((a, b) => b.calls - a.calls);
-        console.log('[ModelUsageOverview] Using real data:', modelMetrics.length, 'models');
         setModels(modelMetrics);
       } else {
-        console.log('[ModelUsageOverview] Using demo data - no models available');
         // Demo data
         const demoModels: ModelMetrics[] = [
           {

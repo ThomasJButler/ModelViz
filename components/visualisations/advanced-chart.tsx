@@ -54,17 +54,9 @@ export default function AdvancedChart() {
       const service = MetricsService.getInstance();
       const aggregated = await service.getAggregatedMetrics('today');
 
-      console.log('[AdvancedChart] Aggregated data:', {
-        hasHourlyStats: !!aggregated.hourlyStats,
-        hourlyStatsLength: aggregated.hourlyStats?.length || 0,
-        totalCalls: aggregated.totalCalls,
-        models: Object.keys(aggregated.byModel)
-      });
-
       if (aggregated.hourlyStats && aggregated.hourlyStats.length > 0) {
         // Real data - transform hourly stats to show latency by model
         const recentMetrics = await service.getRecentMetrics(200);
-        console.log('[AdvancedChart] Recent metrics:', recentMetrics.length);
 
         // Group by hour and model
         const hourMap = new Map<number, Map<string, { total: number; count: number }>>();
@@ -105,12 +97,9 @@ export default function AdvancedChart() {
         // Sort by hour
         chartData.sort((a, b) => a.timestamp - b.timestamp);
 
-        console.log('[AdvancedChart] Using real data:', chartData.length, 'data points,', modelSet.size, 'models');
-
         setData(chartData);
         setModels(Array.from(modelSet));
       } else {
-        console.log('[AdvancedChart] Using demo data - no hourly stats available');
         // Demo data
         setData(generateAIModelTimeSeries());
         setModels(['gpt4', 'claude', 'deepseek']);

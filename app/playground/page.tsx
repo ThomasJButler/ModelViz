@@ -131,11 +131,6 @@ export default function PlaygroundPage() {
       const models = groupModelsByProvider(simpleModels);
       setModelGroups(models);
 
-      console.log('[Playground] Loaded models:', {
-        totalModels: simpleModels.length,
-        providers: models.map(g => g.provider)
-      });
-
       if (models.length > 0 && models[0].models.length > 0) {
         const defaultModel = models[0].models[0];
         setSelectedModel(defaultModel.id);
@@ -158,7 +153,6 @@ export default function PlaygroundPage() {
 
     // Listen for API key changes to reload models in real-time
     const handleApiKeyChange = () => {
-      console.log('[Playground] API key changed, reloading models...');
       loadModels();
     };
 
@@ -183,11 +177,6 @@ export default function PlaygroundPage() {
       const service = MetricsService.getInstance();
       const aggregated = await service.getAggregatedMetrics('today');
 
-      console.log('[Playground] Loaded persistent metrics:', {
-        totalCalls: aggregated.totalCalls,
-        totalCost: aggregated.totalCost
-      });
-
       setAlltimeMetrics({
         requestCount: aggregated.totalCalls,
         avgLatency: Math.round(aggregated.avgLatency),
@@ -203,11 +192,7 @@ export default function PlaygroundPage() {
     const initializeAndLoadMetrics = async () => {
       try {
         const service = MetricsService.getInstance();
-
-        // Explicitly initialize the service
-        console.log('[Playground] Initializing MetricsService...');
         await service.init();
-        console.log('[Playground] MetricsService initialized');
 
         // Load initial metrics
         await loadPersistentMetrics();
@@ -221,7 +206,6 @@ export default function PlaygroundPage() {
 
     // Listen for metrics updates
     const handleMetricsUpdate = () => {
-      console.log('[Playground] Metrics update event received');
       loadPersistentMetrics();
     };
 

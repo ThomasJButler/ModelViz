@@ -43,9 +43,6 @@ export function APIHealthMonitor() {
       const recentMetrics = await service.getRecentMetrics(500);
       const aggregated = await service.getAggregatedMetrics('today');
 
-      console.log('[APIHealthMonitor] Recent metrics:', recentMetrics.length);
-      console.log('[APIHealthMonitor] Providers:', Object.keys(aggregated.byProvider));
-
       if (Object.keys(aggregated.byProvider).length > 0) {
         // Real data - group by provider
         const providerMap = new Map<string, {

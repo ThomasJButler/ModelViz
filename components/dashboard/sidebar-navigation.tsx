@@ -265,30 +265,6 @@ export function SidebarNavigation({ onNavigate, isOpen = true, onClose, onCollap
         })}
       </nav>
 
-      {/* Bottom Section - Stats Summary */}
-      {!isCollapsed && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="absolute bottom-0 left-0 right-0 p-4 border-t border-matrix-primary/20"
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 text-matrix-secondary" />
-            <span className="text-xs text-foreground/70">System Status</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="p-2 bg-matrix-primary/5 rounded-lg">
-              <div className="text-xs text-foreground/50">APIs Active</div>
-              <div className="text-sm font-bold text-matrix-primary">4</div>
-            </div>
-            <div className="p-2 bg-matrix-secondary/5 rounded-lg">
-              <div className="text-xs text-foreground/50">Success Rate</div>
-              <div className="text-sm font-bold text-matrix-secondary">98.5%</div>
-            </div>
-          </div>
-        </motion.div>
-      )}
 
       {/* Matrix Rain Effect Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10 -z-10">

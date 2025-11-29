@@ -39,12 +39,6 @@ export function CostTrackingChart() {
       const service = MetricsService.getInstance();
       const aggregated = await service.getAggregatedMetrics('week');
 
-      console.log('[CostTrackingChart] Aggregated data:', {
-        hasDailyStats: !!aggregated.dailyStats,
-        dailyStatsLength: aggregated.dailyStats?.length || 0,
-        totalCost: aggregated.totalCost
-      });
-
       if (aggregated.dailyStats && aggregated.dailyStats.length > 0) {
         // Real data - group by provider
         const providerSet = new Set<string>();
@@ -52,7 +46,6 @@ export function CostTrackingChart() {
 
         // Get recent metrics to calculate daily costs per provider
         const recentMetrics = await service.getRecentMetrics(500);
-        console.log('[CostTrackingChart] Recent metrics:', recentMetrics.length);
 
         recentMetrics.forEach(metric => {
           const date = format(new Date(metric.timestamp), 'MMM dd');
@@ -73,8 +66,6 @@ export function CostTrackingChart() {
         // Sort by date
         chartData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-        console.log('[CostTrackingChart] Using real data:', chartData.length, 'days,', Array.from(providerSet).length, 'providers');
-
         setDailyCosts(chartData);
         setProviders(Array.from(providerSet));
         setTotalCost(aggregated.totalCost);
@@ -86,7 +77,6 @@ export function CostTrackingChart() {
           setProjectedMonthlyCost(avgDailyCost * 30);
         }
       } else {
-        console.log('[CostTrackingChart] Using demo data - no daily stats available');
         // Demo data
         const demoData: CostData[] = Array.from({ length: 7 }, (_, i) => ({
           date: format(subDays(new Date(), 6 - i), 'MMM dd'),
@@ -193,8 +183,8 @@ export function CostTrackingChart() {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1a1a1a',
-                border: '1px solid #333',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                border: '1px solid rgba(0, 255, 65, 0.2)',
                 borderRadius: '8px',
               }}
               formatter={(value: any) => [`$${Number(value).toFixed(3)}`, '']}

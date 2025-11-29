@@ -55,8 +55,6 @@ export function RequestTimeline() {
       const service = MetricsService.getInstance();
       const recentMetrics = await service.getRecentMetrics(1000);
 
-      console.log('[RequestTimeline] Loaded metrics:', recentMetrics.length);
-
       if (recentMetrics.length > 0) {
         const timelineEvents: TimelineEvent[] = recentMetrics.map((metric, index) => ({
           id: `event-${index}-${metric.timestamp}`,
