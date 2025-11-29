@@ -367,7 +367,7 @@ export function OutputDisplay({
       </div>
 
       <motion.div
-        className={`relative rounded-lg bg-card border overflow-hidden transition-all duration-300 ${
+        className={`relative rounded-lg bg-card border overflow-hidden transition-all duration-300 flex flex-col ${
           isExpanded ? 'fixed inset-4 z-50' : 'min-h-[20rem] sm:min-h-[24rem] lg:min-h-[28rem]'
         } ${output?.error ? 'border-destructive/50' : 'border-border hover:border-matrix-primary/30'}`}
         layout
@@ -386,9 +386,9 @@ export function OutputDisplay({
           )}
         </AnimatePresence>
 
-        <div className={`relative ${isExpanded ? 'h-full' : 'h-full'}`}>
+        <div className={`relative flex-1 flex flex-col ${isExpanded ? 'h-full' : ''}`}>
           {isProcessing ? (
-            <div className="h-full flex items-center justify-center p-8">
+            <div className="flex-1 flex items-center justify-center p-8">
               <EnhancedLoading
                 variant="ai"
                 message="Processing your request"
@@ -405,14 +405,14 @@ export function OutputDisplay({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="h-full overflow-auto scrollbar-thin scrollbar-thumb-matrix-primary/30 scrollbar-track-transparent"
+              className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-matrix-primary/30 scrollbar-track-transparent"
               style={{ maxHeight: isExpanded ? 'none' : '50rem' }}
             >
               {renderVisualisation()}
             </motion.div>
           ) : (
             <motion.div
-              className="h-full flex items-center justify-center text-foreground/50"
+              className="flex-1 flex items-center justify-center text-foreground/50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
