@@ -20,10 +20,10 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const links = [
+    { href: '/about', label: 'About', icon: BookOpen },
     { href: '/dashboard', label: 'Dashboard', icon: Layout },
     { href: '/playground', label: 'Playground', icon: Playground },
-    { href: '/about', label: 'About', icon: BookOpen },
-    { href: '/docs', label: 'Documentation', icon: Code },
+    { href: '/docs', label: 'Docs', icon: Code },
   ];
 
   return (

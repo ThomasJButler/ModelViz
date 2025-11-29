@@ -1,15 +1,23 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import LandingPage from '@/app/page'
+import { useRouter } from 'next/navigation'
 
 // Mock the child components
 jest.mock('@/components/loading-animation', () => ({
-  LoadingAnimation: ({ isLoading }: { isLoading: boolean }) => 
+  LoadingAnimation: ({ isLoading }: { isLoading: boolean }) =>
     isLoading ? <div data-testid="loading-animation">Loading...</div> : null
 }))
 
-jest.mock('@/components/main-content', () => ({
-  MainContent: () => <div data-testid="main-content">Main Content</div>
+// Mock useRouter
+const mockPush = jest.fn()
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: mockPush,
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+  })),
 }))
 
 describe('LandingPage', () => {
@@ -19,36 +27,36 @@ describe('LandingPage', () => {
 
   it('renders the landing page with correct initial state', () => {
     render(<LandingPage />)
-    
+
     // Check for main elements
     expect(screen.getByText('ModelViz')).toBeInTheDocument()
     expect(screen.getByText('Compare Leading AI Models Side by Side')).toBeInTheDocument()
     expect(screen.getByText('Enter Showcase')).toBeInTheDocument()
-    
-    // Should not show loading or main content initially
+
+    // Should not show loading animation initially
     expect(screen.queryByTestId('loading-animation')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('main-content')).not.toBeInTheDocument()
   })
 
   it('handles enter button click correctly', async () => {
-    const user = userEvent.setup()
+    jest.useFakeTimers()
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime })
     render(<LandingPage />)
-    
+
     const enterButton = screen.getByText('Enter Showcase')
-    
+
     // Click the enter button
     await user.click(enterButton)
-    
+
     // Should show loading animation
     expect(screen.getByTestId('loading-animation')).toBeInTheDocument()
-    
-    // Wait for main content to appear
-    await waitFor(() => {
-      expect(screen.getByTestId('main-content')).toBeInTheDocument()
-    }, { timeout: 200 })
-    
-    // Landing page elements should be gone
-    expect(screen.queryByText('ModelViz')).not.toBeInTheDocument()
+
+    // Fast-forward timers to trigger navigation (150ms timeout in component)
+    jest.advanceTimersByTime(200)
+
+    // Should navigate to dashboard
+    expect(mockPush).toHaveBeenCalledWith('/dashboard')
+
+    jest.useRealTimers()
   })
 
   it('applies hover effect on enter button', async () => {

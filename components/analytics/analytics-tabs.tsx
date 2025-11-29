@@ -9,8 +9,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Shield, Network, Activity, LineChart, BarChart, Clock, AlertTriangle, Target, BarChart as ChartBar, Layers } from 'lucide-react';
-import { UsagePatterns } from './usage-patterns';
+import { Brain, Shield, Network, Activity, BarChart, Clock, AlertTriangle, Target, BarChart as ChartBar, Layers } from 'lucide-react';
 import { ResourceUtilization } from './resource-utilization';
 import { CostAnalysis } from './cost-analysis';
 import { RetentionMetrics } from './retention-metrics';
@@ -20,13 +19,6 @@ import { APIGateway } from './api-gateway';
 import { AIScorecard } from './ai-scorecard';
 
 const tabs = [
-  {
-    id: 'usage',
-    label: 'Usage Patterns',
-    icon: LineChart,
-    component: UsagePatterns,
-    description: 'Recharts area charts showing token consumption trends by provider with time range selection'
-  },
   {
     id: 'resources',
     label: 'Resource Utilisation',

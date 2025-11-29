@@ -38,13 +38,3 @@ export function useIsMobile(): boolean {
 export function useReducedMotion(): boolean {
   return useMediaQuery('(prefers-reduced-motion: reduce)');
 }
-
-/**
- * Combined hook for visual effects - disabled on mobile or when user prefers reduced motion
- * @returns true if visual effects should be enabled
- */
-export function useEffectsEnabled(): boolean {
-  const isMobile = useIsMobile();
-  const prefersReducedMotion = useReducedMotion();
-  return !isMobile && !prefersReducedMotion;
-}

@@ -21,7 +21,7 @@ export default function LandingPage() {
   const handleEnter = () => {
     setIsEntering(true);
     setTimeout(() => {
-      router.push('/dashboard');
+      router.push('/about');
     }, 150);
   };
 

@@ -69,7 +69,7 @@ export async function generatePlaygroundResponse(request: PlaygroundRequest): Pr
 
   try {
     // Check if API key is configured for this provider (skip check for demo mode)
-    if (request.provider !== 'Demo') {
+    if (request.provider.toLowerCase() !== 'demo') {
       const provider = request.provider as Provider;
       const hasKey = hasApiKey(provider);
 
@@ -115,9 +115,12 @@ export async function generatePlaygroundResponse(request: PlaygroundRequest): Pr
       systemPrompt = "You are a code analyst. Analyze the following code and provide insights, improvements, and potential issues.";
     }
     
+    // Normalize provider name to lowercase for consistent matching
+    const normalizedProvider = request.provider.toLowerCase();
+
     // Handle different providers
-    switch (request.provider) {
-      case 'OpenAI':
+    switch (normalizedProvider) {
+      case 'openai':
         try {
           // OpenAI API call
           const completion = await apiService.getOpenAI().generateCompletion(
@@ -134,8 +137,8 @@ export async function generatePlaygroundResponse(request: PlaygroundRequest): Pr
           throw new Error(`OpenAI API error: ${error.message || 'Unknown error'}`);
         }
         break;
-        
-      case 'Anthropic':
+
+      case 'anthropic':
         try {
           // Anthropic API call
           const completion = await apiService.getAnthropic().generateCompletion(
@@ -154,7 +157,7 @@ export async function generatePlaygroundResponse(request: PlaygroundRequest): Pr
         }
         break;
 
-      case 'Perplexity':
+      case 'perplexity':
         try {
           // Perplexity API call
           const completion = await apiService.getPerplexity().generateCompletion(
@@ -173,7 +176,7 @@ export async function generatePlaygroundResponse(request: PlaygroundRequest): Pr
         }
         break;
 
-      case 'Google':
+      case 'google':
         try {
           // Google Gemini API call
           const completion = await apiService.getGoogle().generateCompletion(
@@ -196,7 +199,7 @@ export async function generatePlaygroundResponse(request: PlaygroundRequest): Pr
         }
         break;
 
-      case 'Demo':
+      case 'demo':
         // Simulate API call for demo models
         await new Promise(resolve => setTimeout(resolve, 1000));
         

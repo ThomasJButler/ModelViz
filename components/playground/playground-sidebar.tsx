@@ -14,7 +14,6 @@ import {
   FileCode2,
   FlaskConical,
   BarChart3,
-  GitCompare,
   ChevronLeft,
   ChevronRight,
   Sparkles,
@@ -65,7 +64,7 @@ export function PlaygroundSidebar({
   onClose,
   onCollapseChange
 }: PlaygroundSidebarProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const router = useRouter();
 
@@ -98,14 +97,6 @@ export function PlaygroundSidebar({
           icon: <Layers className="w-5 h-5" />,
           description: 'Overview & metrics',
           onClick: () => router.push('/dashboard')
-        },
-        {
-          id: 'compare',
-          label: 'Compare Models',
-          icon: <GitCompare className="w-5 h-5" />,
-          description: 'Side-by-side comparison',
-          onClick: () => router.push('/compare'),
-          badge: 'NEW'
         },
         {
           id: 'analytics',

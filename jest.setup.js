@@ -65,6 +65,24 @@ global.IDBKeyRange = {
   only: jest.fn((value) => ({ value, type: 'only' })),
 }
 
+// Mock PointerEvent for Framer Motion tests
+class MockPointerEvent extends Event {
+  constructor(type, props) {
+    super(type, props)
+    this.pointerId = props?.pointerId || 0
+    this.pointerType = props?.pointerType || 'mouse'
+    this.clientX = props?.clientX || 0
+    this.clientY = props?.clientY || 0
+    this.button = props?.button || 0
+    this.buttons = props?.buttons || 0
+    this.ctrlKey = props?.ctrlKey || false
+    this.shiftKey = props?.shiftKey || false
+    this.altKey = props?.altKey || false
+    this.metaKey = props?.metaKey || false
+  }
+}
+global.PointerEvent = MockPointerEvent
+
 // Suppress console errors in tests unless explicitly testing error scenarios
 const originalError = console.error
 beforeAll(() => {
