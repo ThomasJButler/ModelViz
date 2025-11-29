@@ -103,12 +103,19 @@ export async function getAvailableModelsSimple(): Promise<SimpleModel[]> {
                        apiConfig.anthropic?.apiKey;
 
   if (hasAnthropic) {
-    // Only allow tested working models - exclude Opus 4.5 (doesn't work)
-    const allowedAnthropicModels = [
-      'claude-sonnet-4-5-20250514',
-      'claude-3-5-sonnet-20241022',
-      'claude-3-5-haiku-20241022'
-    ];
+    // Only allow tested working models - exclude Opus (doesn't work)
+    // Match by pattern since API may return different date suffixes
+    const isAllowedAnthropicModel = (modelName: string): boolean => {
+      const name = modelName.toLowerCase();
+      // Allow Claude 4.5 Sonnet, 3.5 Sonnet, 3.5 Haiku - exclude Opus
+      return (
+        (name.includes('claude') && name.includes('sonnet') && (name.includes('4-5') || name.includes('4.5'))) ||
+        (name.includes('claude') && name.includes('3-5') && name.includes('sonnet')) ||
+        (name.includes('claude') && name.includes('3-5') && name.includes('haiku')) ||
+        (name.includes('claude') && name.includes('3.5') && name.includes('sonnet')) ||
+        (name.includes('claude') && name.includes('3.5') && name.includes('haiku'))
+      ) && !name.includes('opus');
+    };
 
     try {
       const apiService = ApiService.getInstance();
@@ -117,7 +124,7 @@ export async function getAvailableModelsSimple(): Promise<SimpleModel[]> {
         const anthropicModels = await apiService.getAnthropic().listModels();
 
         anthropicModels
-          .filter((model: any) => allowedAnthropicModels.includes(model.name))
+          .filter((model: any) => isAllowedAnthropicModel(model.name))
           .forEach((model: any) => {
             models.push({
               id: model.name,
