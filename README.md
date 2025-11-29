@@ -6,15 +6,7 @@ Interactive analytics platform for comparing AI models across multiple providers
 
 Compare OpenAI, Anthropic, Google (Gemini), and Perplexity models side by side. Test prompts across multiple models simultaneously, track usage metrics, analyze costs, and visualize API performance with an immersive cyberpunk-themed interface.
 
-## v2.0 Features
-
-- **Real Data Integration** - Track actual API usage, costs, and performance metrics
-- **Multi-Provider Support** - OpenAI, Anthropic, Google Gemini, Perplexity
-- **Model Comparison** - Run the same prompt across multiple models simultaneously
-- **3D Visualizations** - Interactive network graphs and data stream visualizations
-- **Cost Analytics** - Real-time cost tracking with provider comparisons
-- **Cyberpunk UI** - Matrix-themed interface with holographic effects
-- **Privacy-First** - All data stored client-side (localStorage + IndexedDB)
+<img width="1164" height="771" alt="image" src="https://github.com/user-attachments/assets/8450977e-f3b3-4087-8300-3846541f272e" />
 
 ## Installation
 
