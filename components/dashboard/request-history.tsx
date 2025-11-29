@@ -103,6 +103,7 @@ export function RequestHistory() {
     const now = Date.now();
     const timeRanges: Record<string, number> = {
       '1h': 3600000,
+      '3h': 10800000,
       '24h': 86400000,
       '7d': 604800000,
       '30d': 2592000000
@@ -239,6 +240,7 @@ export function RequestHistory() {
           className="px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground"
         >
           <option value="1h">Last Hour</option>
+          <option value="3h">Last 3 Hours</option>
           <option value="24h">Last 24 Hours</option>
           <option value="7d">Last 7 Days</option>
           <option value="30d">Last 30 Days</option>

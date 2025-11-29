@@ -7,21 +7,18 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useEffectsEnabled, useIsMobile } from "@/hooks/use-media-query";
+import { useIsMobile } from "@/hooks/use-media-query";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Activity,
   Zap,
   DollarSign,
-  TrendingUp,
   Brain,
   Network,
   AlertCircle,
   CheckCircle,
   XCircle,
-  Sparkles,
   BarChart3,
-  GitCompare,
   ChevronRight
 } from "lucide-react";
 import dynamic from 'next/dynamic';
@@ -35,40 +32,13 @@ import Link from 'next/link';
 import { SidebarNavigation } from '@/components/dashboard/sidebar-navigation';
 import { APIPerformanceRealtime } from '@/components/dashboard/api-performance-realtime';
 import { CostTrackingChart } from '@/components/dashboard/cost-tracking-chart';
-import { ModelUsageOverview } from '@/components/dashboard/model-usage-overview';
-import { ProviderDistribution } from '@/components/dashboard/provider-distribution';
-import { RealTimeStream } from '@/components/dashboard/real-time-stream';
-import { ProviderComparison } from '@/components/dashboard/provider-comparison';
 import { APIHealthMonitor } from '@/components/dashboard/api-health-monitor';
 import { TokenEfficiency } from '@/components/dashboard/token-efficiency';
-import { RequestTimeline } from '@/components/dashboard/request-timeline';
-import { RateLimits } from '@/components/dashboard/rate-limits';
-import { ErrorAnalysis } from '@/components/dashboard/error-analysis';
 import { RequestHistory } from '@/components/dashboard/request-history';
-
-// Import epic visualization components
-import { MatrixRain } from '@/components/effects/MatrixRain';
-import { ParticleField } from '@/components/effects/ParticleField';
-import { HolographicCard } from '@/components/effects/HolographicCard';
-import { FloatingMetrics } from '@/components/3d/FloatingMetrics';
-import { DataStream3D } from '@/components/dashboard/DataStream3D';
-
-// Dynamically import 3D components
-const NetworkGraph3D = dynamic(() => import('@/components/3d/NetworkGraph3D').then(mod => ({ default: mod.NetworkGraph3D })), {
-  loading: () => <div className="flex items-center justify-center h-64"><Network className="w-20 h-20 text-matrix-primary animate-pulse" /></div>,
-  ssr: false
-});
-
-// Dynamically import Analytics components
-const UsagePatterns = dynamic(() => import('@/components/analytics/usage-patterns').then(mod => ({ default: mod.UsagePatterns })), {
-  loading: () => <div className="flex items-center justify-center h-64"><Brain className="w-20 h-20 text-matrix-primary animate-pulse" /></div>,
-  ssr: false
-});
-
-const ModelPerformance = dynamic(() => import('@/components/analytics/model-performance').then(mod => ({ default: mod.ModelPerformance })), {
-  loading: () => <div className="flex items-center justify-center h-64"><Brain className="w-20 h-20 text-matrix-primary animate-pulse" /></div>,
-  ssr: false
-});
+import { UsageTrends } from '@/components/dashboard/usage-trends';
+import { ModelInsights } from '@/components/dashboard/model-insights';
+import { ProviderHealthDashboard } from '@/components/dashboard/provider-health';
+import { ModelOutputStats } from '@/components/dashboard/model-output-stats';
 
 const CostAnalysis = dynamic(() => import('@/components/analytics/cost-analysis').then(mod => ({ default: mod.CostAnalysis })), {
   loading: () => <div className="flex items-center justify-center h-64"><Brain className="w-20 h-20 text-matrix-primary animate-pulse" /></div>,
@@ -95,13 +65,7 @@ export default function DashboardPage() {
     modelsUsed: 0
   });
   const [hasApiKeys, setHasApiKeys] = useState(false);
-  const [userEffectsPreference, setUserEffectsPreference] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // Check if effects should be enabled (disabled on mobile or reduced motion)
-  const effectsEnabled = useEffectsEnabled();
-  const showEffects = effectsEnabled && userEffectsPreference;
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const isMobile = useIsMobile();
 
   // Check if user has API keys configured
@@ -156,80 +120,44 @@ export default function DashboardPage() {
           <div className="space-y-6">
             {/* Summary Stats Cards Only */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-              <HolographicCard intensity={0.7} glowColor="rgba(0, 255, 0, 0.5)">
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="p-4 bg-black/50 rounded-lg border border-matrix-primary/20"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <BarChart3 className="w-4 h-4 text-matrix-primary" />
-                    <span className="text-xs text-foreground/60">Total Calls</span>
-                  </div>
-                  <motion.p
-                    className="text-2xl font-bold text-matrix-primary"
-                    animate={{
-                      textShadow: [
-                        '0 0 10px rgba(0, 255, 0, 0.5)',
-                        '0 0 20px rgba(0, 255, 0, 0.8)',
-                        '0 0 10px rgba(0, 255, 0, 0.5)'
-                      ]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    {summaryStats.totalCalls.toLocaleString()}
-                  </motion.p>
-                </motion.div>
-              </HolographicCard>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-black/50 rounded-lg border border-matrix-primary/20"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart3 className="w-4 h-4 text-matrix-primary" />
+                  <span className="text-xs text-foreground/60">Total Calls</span>
+                </div>
+                <p className="text-2xl font-bold text-matrix-primary">
+                  {summaryStats.totalCalls.toLocaleString()}
+                </p>
+              </motion.div>
 
-              <HolographicCard intensity={0.7} glowColor="rgba(0, 255, 255, 0.5)">
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="p-4 bg-black/50 rounded-lg border border-matrix-secondary/20"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <Zap className="w-4 h-4 text-matrix-secondary" />
-                    <span className="text-xs text-foreground/60">Avg Latency</span>
-                  </div>
-                  <motion.p
-                    className="text-2xl font-bold text-matrix-secondary"
-                    animate={{
-                      textShadow: [
-                        '0 0 10px rgba(0, 255, 255, 0.5)',
-                        '0 0 20px rgba(0, 255, 255, 0.8)',
-                        '0 0 10px rgba(0, 255, 255, 0.5)'
-                      ]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 0.2 }}
-                  >
-                    {summaryStats.avgLatency}ms
-                  </motion.p>
-                </motion.div>
-              </HolographicCard>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-black/50 rounded-lg border border-matrix-secondary/20"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Zap className="w-4 h-4 text-matrix-secondary" />
+                  <span className="text-xs text-foreground/60">Avg Latency</span>
+                </div>
+                <p className="text-2xl font-bold text-matrix-secondary">
+                  {summaryStats.avgLatency}ms
+                </p>
+              </motion.div>
 
-              <HolographicCard intensity={0.7} glowColor="rgba(255, 0, 255, 0.5)">
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="p-4 bg-black/50 rounded-lg border border-matrix-tertiary/20"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <DollarSign className="w-4 h-4 text-matrix-tertiary" />
-                    <span className="text-xs text-foreground/60">Total Cost</span>
-                  </div>
-                  <motion.p
-                    className="text-2xl font-bold text-matrix-tertiary"
-                    animate={{
-                      textShadow: [
-                        '0 0 10px rgba(255, 0, 255, 0.5)',
-                        '0 0 20px rgba(255, 0, 255, 0.8)',
-                        '0 0 10px rgba(255, 0, 255, 0.5)'
-                      ]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 0.4 }}
-                  >
-                    ${summaryStats.totalCost.toFixed(2)}
-                  </motion.p>
-                </motion.div>
-              </HolographicCard>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-black/50 rounded-lg border border-matrix-tertiary/20"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <DollarSign className="w-4 h-4 text-matrix-tertiary" />
+                  <span className="text-xs text-foreground/60">Total Cost</span>
+                </div>
+                <p className="text-2xl font-bold text-matrix-tertiary">
+                  ${summaryStats.totalCost.toFixed(2)}
+                </p>
+              </motion.div>
 
               <motion.div
                 whileHover={{ scale: 1.02 }}
@@ -286,11 +214,9 @@ export default function DashboardPage() {
               <h3 className="text-lg font-semibold text-matrix-primary mb-4">Quick Navigation</h3>
               <div className="flex flex-col divide-y divide-matrix-primary/20">
                 {[
-                  { label: 'Real-Time', icon: Activity, view: 'real-time', description: 'Live API activity stream' },
-                  { label: 'Performance', icon: Zap, view: 'performance', description: 'API latency & health metrics' },
-                  { label: 'Cost Analysis', icon: DollarSign, view: 'cost', description: 'Spending & cost tracking' },
-                  { label: 'Compare', icon: GitCompare, view: 'compare', description: 'Provider comparison' },
-                  { label: 'Network', icon: Network, view: 'network', description: '3D visualization' },
+                  { label: 'Usage Trends', icon: Activity, view: 'trends', description: 'Usage patterns & growth' },
+                  { label: 'Model Insights', icon: Brain, view: 'insights', description: 'Model rankings & efficiency' },
+                  { label: 'Provider Health', icon: Network, view: 'health', description: 'Uptime & reliability' },
                 ].map((item) => (
                   <motion.button
                     key={item.view}
@@ -314,13 +240,47 @@ export default function DashboardPage() {
           </div>
         );
 
-      case 'real-time':
+      case 'trends':
         return (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
           >
-            <DataStream3D />
+            <UsageTrends />
+          </motion.div>
+        );
+
+      case 'insights':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <ModelInsights />
+          </motion.div>
+        );
+
+      case 'health':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <ProviderHealthDashboard />
+          </motion.div>
+        );
+
+      case 'output':
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
+          >
+            <ModelOutputStats />
           </motion.div>
         );
 
@@ -373,101 +333,6 @@ export default function DashboardPage() {
           </div>
         );
 
-      case 'compare':
-        return (
-          <div className="grid grid-cols-1 gap-6">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-            >
-              <ProviderComparison />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-            >
-              <ModelUsageOverview />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-            >
-              <ProviderDistribution />
-            </motion.div>
-          </div>
-        );
-
-      case 'network':
-        return (
-          <div className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, rotateY: -10 }}
-              animate={{ opacity: 1, rotateY: 0 }}
-              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-            >
-              <h2 className="text-2xl font-bold text-matrix-primary mb-4 flex items-center gap-3">
-                <Network className="w-6 h-6" />
-                3D Network Visualization
-              </h2>
-              <NetworkGraph3D />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <FloatingMetrics />
-            </motion.div>
-          </div>
-        );
-
-      case 'insights':
-        return (
-          <div className="grid grid-cols-1 gap-6">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-            >
-              <UsagePatterns />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-            >
-              <RequestTimeline />
-            </motion.div>
-          </div>
-        );
-
-      case 'rate-limits':
-        return (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-          >
-            <RateLimits />
-          </motion.div>
-        );
-
-      case 'errors':
-        return (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="p-6 bg-black/50 rounded-xl border border-matrix-primary/20"
-          >
-            <ErrorAnalysis />
-          </motion.div>
-        );
-
       case 'history':
         return (
           <motion.div
@@ -486,14 +351,6 @@ export default function DashboardPage() {
 
   return (
     <div className="bg-gradient-to-br from-black via-gray-900 to-black overflow-x-hidden">
-      {/* Epic Background Effects - Very Subtle - Show on all devices */}
-      {showEffects && (
-        <div className="fixed inset-0 pointer-events-none z-0">
-          <MatrixRain intensity={0.05} speed={0.3} fontSize={10} color="#00ff00" />
-          <ParticleField particleCount={25} color="#00ff00" connectionDistance={60} />
-        </div>
-      )}
-
       {/* Animated Background - Very Subtle */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-matrix-primary/[0.02] rounded-full blur-3xl animate-pulse" />
@@ -508,6 +365,7 @@ export default function DashboardPage() {
             onNavigate={handleViewChange}
             isOpen={true}
             onCollapseChange={setSidebarCollapsed}
+            activeView={currentView}
           />
         </div>
 
@@ -523,13 +381,9 @@ export default function DashboardPage() {
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-matrix-primary mb-2 flex items-center gap-2 sm:gap-3 flex-wrap">
-                  <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 flex-shrink-0" />
-                  <span>ModelViz Analytics</span>
+                <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-matrix-primary mb-2">
+                  ModelViz Analytics
                 </h1>
-                <p className="text-sm md:text-base text-foreground/60">
-                  The magnum opus of API visualization and analytics
-                </p>
               </div>
 
               {/* API Keys Alert */}

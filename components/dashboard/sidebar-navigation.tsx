@@ -10,22 +10,17 @@ import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
-  Activity,
-  BarChart3,
+  TrendingUp,
   DollarSign,
-  GitCompare,
   ChevronLeft,
   ChevronRight,
   Zap,
-  Network,
-  Brain,
   Sparkles,
   X,
-  Gauge,
-  AlertTriangle,
-  History
+  History,
+  Lightbulb,
+  HeartPulse
 } from 'lucide-react';
-import { ModelVizLogo } from '@/components/ui/modelviz-logo';
 
 interface NavItem {
   id: string;
@@ -44,13 +39,6 @@ const navItems: NavItem[] = [
     description: 'Main dashboard overview'
   },
   {
-    id: 'real-time',
-    label: 'Real-Time Monitor',
-    icon: <Activity className="w-5 h-5" />,
-    path: '/dashboard/real-time',
-    description: 'Live API activity stream'
-  },
-  {
     id: 'performance',
     label: 'Performance',
     icon: <Zap className="w-5 h-5" />,
@@ -65,39 +53,32 @@ const navItems: NavItem[] = [
     description: 'Cost tracking & projections'
   },
   {
-    id: 'comparison',
-    label: 'Model Compare',
-    icon: <GitCompare className="w-5 h-5" />,
-    path: '/dashboard/compare',
-    description: 'Compare providers & models'
-  },
-  {
-    id: 'network',
-    label: '3D Network',
-    icon: <Network className="w-5 h-5" />,
-    path: '/dashboard/network',
-    description: 'Interactive network visualization'
+    id: 'trends',
+    label: 'Usage Trends',
+    icon: <TrendingUp className="w-5 h-5" />,
+    path: '/dashboard/trends',
+    description: 'Usage patterns & growth'
   },
   {
     id: 'insights',
-    label: 'AI Insights',
-    icon: <Brain className="w-5 h-5" />,
+    label: 'Model Insights',
+    icon: <Lightbulb className="w-5 h-5" />,
     path: '/dashboard/insights',
-    description: 'AI-powered analytics'
+    description: 'Model rankings & efficiency'
   },
   {
-    id: 'rate-limits',
-    label: 'Rate Limits',
-    icon: <Gauge className="w-5 h-5" />,
-    path: '/dashboard/rate-limits',
-    description: 'API rate limit tracking'
+    id: 'output',
+    label: 'Output Stats',
+    icon: <Sparkles className="w-5 h-5" />,
+    path: '/dashboard/output',
+    description: 'Words, tokens & response metrics'
   },
   {
-    id: 'errors',
-    label: 'Error Analysis',
-    icon: <AlertTriangle className="w-5 h-5" />,
-    path: '/dashboard/errors',
-    description: 'Failed requests & debugging'
+    id: 'health',
+    label: 'Provider Health',
+    icon: <HeartPulse className="w-5 h-5" />,
+    path: '/dashboard/health',
+    description: 'Uptime & reliability'
   },
   {
     id: 'history',
@@ -113,10 +94,11 @@ interface SidebarNavigationProps {
   isOpen?: boolean;
   onClose?: () => void;
   onCollapseChange?: (collapsed: boolean) => void;
+  activeView?: string;
 }
 
-export function SidebarNavigation({ onNavigate, isOpen = true, onClose, onCollapseChange }: SidebarNavigationProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+export function SidebarNavigation({ onNavigate, isOpen = true, onClose, onCollapseChange, activeView }: SidebarNavigationProps) {
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -171,21 +153,12 @@ export function SidebarNavigation({ onNavigate, isOpen = true, onClose, onCollap
         </button>
       )}
 
-      {/* Logo Section */}
+      {/* Collapse Toggle */}
       <div className="p-4 border-b border-matrix-primary/20">
-        <div className="flex items-center gap-3">
-          <div className="flex-shrink-0">
-            <ModelVizLogo size="sm" animated={false} />
-          </div>
-
-          <div className={`flex-1 min-w-0 transition-all ${isCollapsed ? 'hidden' : 'block'}`}>
-            <span className="text-matrix-primary font-bold text-lg block truncate">ModelViz</span>
-            <span className="text-xs text-matrix-primary/60 block truncate">API Analytics</span>
-          </div>
-
+        <div className="flex items-center justify-center">
           <button
             onClick={handleCollapse}
-            className="flex-shrink-0 p-2 rounded-lg border border-matrix-primary/20 bg-black/80
+            className="p-2 rounded-lg border border-matrix-primary/20 bg-black/80
                      hover:bg-matrix-primary/10 transition-colors hidden lg:flex items-center justify-center"
           >
             {isCollapsed ? (
@@ -200,8 +173,10 @@ export function SidebarNavigation({ onNavigate, isOpen = true, onClose, onCollap
       {/* Navigation Items */}
       <nav className="p-4 space-y-2">
         {navItems.map((item, index) => {
-          const isActive = pathname === item.path ||
-                          (item.path === '/dashboard' && pathname === '/dashboard');
+          // Use activeView prop if provided (for in-page navigation), otherwise use pathname
+          const isActive = activeView
+            ? (item.id === activeView || (item.id === 'overview' && activeView === 'overview'))
+            : (pathname === item.path || (item.path === '/dashboard' && pathname === '/dashboard'));
           const isHovered = hoveredItem === item.id;
 
           return (

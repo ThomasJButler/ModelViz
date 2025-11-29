@@ -48,50 +48,37 @@ marked.setOptions({
 const content = {
   'getting-started': {
     title: 'Getting Started',
-    description: 'Get your AI analytics dashboard up and running in 4 simple steps.',
+    description: 'Get your AI analytics dashboard up and running in minutes.',
     content: `
-# How to Use ModelViz
+# Getting Started with ModelViz
 
-ModelViz visualizes your AI API usage in real-time. Follow these simple steps to get started:
+ModelViz lets you test and compare AI models from different providers. No account needed, no payments required - just bring your API keys.
 
-## Step 1: Add Your API Keys
+## Quick Start
 
-Go to **Settings** and add your API keys for the providers you use:
-- **OpenAI** - GPT-4, GPT-3.5, DALL-E
-- **Anthropic** - Claude 3.5 Sonnet, Claude 3 Haiku
-- **Google** - Gemini 2.0 Flash, Gemini 1.5 Pro
-- **Perplexity** - Sonar models
+1. **Add your API keys** - Go to Settings and paste your keys
+2. **Test models** - Use the Playground to test different AI models
+3. **View analytics** - See your usage stats on the Dashboard
 
-Your keys are stored securely in your browser's local storage and never sent to any external server.
+## Supported Providers
 
-## Step 2: Refresh the Page
+| Provider | Working Models |
+|----------|---------------|
+| OpenAI | GPT-3.5 Turbo, GPT-4o, GPT-4o Mini |
+| Anthropic | Claude 4.5 Sonnet, Claude 3.5 Sonnet, Claude 3.5 Haiku |
+| Google | Gemini 2.0 Flash |
+| Perplexity | Sonar, Sonar Pro, Sonar Pro Reasoning |
 
-After adding your API keys, refresh the page to ensure everything is loaded correctly.
+## Security First
 
-## Step 3: Test on the Playground
+Security is at the heart of ModelViz:
 
-Head to the **Playground** and make some API calls:
-1. Select a provider and model
-2. Enter a prompt
-3. Click "Generate" to make an API call
-
-Each call will be tracked and recorded for your analytics.
-
-## Step 4: View Analytics on Dashboard
-
-Your usage statistics will automatically populate on the **Dashboard**:
-- **Total API calls** - Track your overall usage
-- **Cost tracking** - Monitor spending across providers
-- **Response times** - Analyze latency and performance
-- **Provider distribution** - See which APIs you use most
-
-The more you use the Playground, the more data you'll see in your analytics!
-
-## Tips
-
-- Use the real-time stream to watch API calls as they happen
-- Compare provider performance in the comparison view
-- Export your data for external analysis
+- **No account required** - Start using immediately with zero signup
+- **No payments** - We don't collect payment info; you use your own API keys
+- **100% client-side** - All data stored locally in your browser
+- **Direct API calls** - Requests go straight to providers, not through us
+- **No tracking** - We don't collect analytics or usage data
+- **Easy removal** - Clear browser data or remove keys in Settings anytime
     `
   },
   'api-reference': {
@@ -207,22 +194,50 @@ const client = new ModelViz({
     `
   },
   'guides': {
-    title: 'Guides',
-    description: 'Advanced usage, troubleshooting, and best practices.',
+    title: 'API Key Setup',
+    description: 'How to get API keys from each provider.',
     content: `
-# Guides
+# API Key Setup Guide
 
-## Best Practices
-Learn to fine-tune requests, handle streaming responses, and more.
+Your API keys are stored securely in your browser's local storage. They are never sent to any server except the AI provider you're querying.
 
-## Error Handling
-Tips for common integration issues and performance optimizations.
+## OpenAI
 
-## Advanced Topics
-Deep dive into advanced features and capabilities.
+1. Visit [platform.openai.com](https://platform.openai.com)
+2. Sign in or create an account
+3. Go to **API Keys** in the left sidebar
+4. Click **Create new secret key**
+5. Copy the key and add it in ModelViz Settings
 
-## Security
-Best practices for securing your API keys and data.
+## Anthropic
+
+1. Visit [console.anthropic.com](https://console.anthropic.com)
+2. Sign in or create an account
+3. Go to **API Keys** section
+4. Click **Create Key**
+5. Copy the key and add it in ModelViz Settings
+
+## Google (Gemini)
+
+1. Visit [aistudio.google.com](https://aistudio.google.com)
+2. Sign in with your Google account
+3. Click **Get API key**
+4. Create or select a project
+5. Copy the key and add it in ModelViz Settings
+
+## Perplexity
+
+1. Visit [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api)
+2. Sign in or create an account
+3. Generate a new API key
+4. Copy the key and add it in ModelViz Settings
+
+## Security Tips
+
+- **Keys stored locally** - Your keys never leave your browser
+- **Set usage limits** - Use provider dashboards to control costs
+- **Easy removal** - Clear keys anytime in Settings or clear browser data
+- **No server storage** - We have no backend; your data stays with you
     `
   }
 };
