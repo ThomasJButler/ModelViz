@@ -103,23 +103,32 @@ export async function getAvailableModelsSimple(): Promise<SimpleModel[]> {
                        apiConfig.anthropic?.apiKey;
 
   if (hasAnthropic) {
+    // Only allow tested working models - exclude Opus 4.5 (doesn't work)
+    const allowedAnthropicModels = [
+      'claude-sonnet-4-5-20250514',
+      'claude-3-5-sonnet-20241022',
+      'claude-3-5-haiku-20241022'
+    ];
+
     try {
       const apiService = ApiService.getInstance();
       // Only try to get models if the client method exists and key is configured
       if (apiService.getAnthropic && apiConfig.anthropic?.apiKey) {
         const anthropicModels = await apiService.getAnthropic().listModels();
 
-        anthropicModels.forEach((model: any) => {
-          models.push({
-            id: model.name,
-            provider: 'anthropic',
-            name: formatModelName(model.name, 'Anthropic')
+        anthropicModels
+          .filter((model: any) => allowedAnthropicModels.includes(model.name))
+          .forEach((model: any) => {
+            models.push({
+              id: model.name,
+              provider: 'anthropic',
+              name: formatModelName(model.name, 'Anthropic')
+            });
           });
-        });
       }
     } catch (error) {
       console.error('Error loading Anthropic models:', error);
-      // Add working Anthropic models as fallback (Claude 4.5 Sonnet, 3.5 Sonnet, 3.5 Haiku tested and working)
+      // Add working Anthropic models as fallback
       models.push(
         { id: 'claude-sonnet-4-5-20250514', provider: 'anthropic', name: 'Claude 4.5 Sonnet' },
         { id: 'claude-3-5-sonnet-20241022', provider: 'anthropic', name: 'Claude 3.5 Sonnet' },
@@ -134,19 +143,24 @@ export async function getAvailableModelsSimple(): Promise<SimpleModel[]> {
                     apiConfig.google?.apiKey;
 
   if (hasGoogle) {
+    // Only allow tested working model - all others failed or produced no output
+    const allowedGoogleModels = ['gemini-2.0-flash'];
+
     try {
       const apiService = ApiService.getInstance();
       // Only try to get models if the client method exists and key is configured
       if (apiService.getGoogle && apiConfig.google?.apiKey) {
         const googleModels = await apiService.getGoogle().listModels();
 
-        googleModels.forEach((model: any) => {
-          models.push({
-            id: model.name,
-            provider: 'google',
-            name: formatModelName(model.name, 'Google')
+        googleModels
+          .filter((model: any) => allowedGoogleModels.includes(model.name))
+          .forEach((model: any) => {
+            models.push({
+              id: model.name,
+              provider: 'google',
+              name: formatModelName(model.name, 'Google')
+            });
           });
-        });
       }
     } catch (error) {
       console.error('Error loading Google models:', error);
